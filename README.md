@@ -4,6 +4,8 @@ React 를 처음 배우는 학생을 위한 **2단계(기초 · 심화) 학습 �
 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다.
 서버는 **Spring Boot**(IntelliJ IDEA 로 실행)를 씁니다.
 
+**웹 교안: https://sinaboro.github.io/react-spring-postgresql/** (PC·휴대폰에서 장별로 읽기, 코드 복사 단추)
+
 > 같은 교안의 FastAPI(파이썬) 서버판: https://github.com/sinaboro/react-fastapi-postgresql
 > 두 저장소의 React 코드와 API 모양(JSON)은 같고, 서버만 다릅니다.
 
@@ -43,6 +45,7 @@ docs/
 tools/
   make_figures.py          개념 그림 만들기
   build_guide.py           원고 → PDF (코드 상자는 저장소의 실제 파일로 자동 채움)
+  build_site.py            원고 → 웹 교안 (docs/index.html, docs/basic·advanced/*.html)
 ```
 
 ## 실행 환경
@@ -75,10 +78,11 @@ npm run dev                        # http://localhost:5173
 ## 교안 다시 만들기
 
 ```powershell
-pip install reportlab matplotlib
+pip install reportlab matplotlib markdown
 python tools\make_figures.py
 python tools\build_guide.py              # 두 권 모두
 python tools\build_guide.py basic        # 기초만
+python tools\build_site.py               # 웹 교안 (GitHub Pages, docs/ 폴더)
 ```
 
 강사 김대철

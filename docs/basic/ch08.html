@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>8장. useEffect 와 데이터 불러오기 - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="8장. useEffect 와 데이터 불러오기 - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html">3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html">5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html">6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html" class=on>8장 useEffect 와 데이터 불러오기</a><a href="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html">3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html">5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html">6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html" selected>8장 useEffect 와 데이터 불러오기</option><option value="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="8장-useeffect-와-데이터-불러오기">8장. useEffect 와 데이터 불러오기</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li><code>useEffect</code> 가 "화면을 그린 뒤에" 실행된다는 것을 안다.</li>
+<li>의존성 배열(<code>[]</code>, <code>[값]</code>, 생략)에 따라 언제 실행되는지 구분한다.</li>
+<li><code>fetch</code> 로 데이터를 받아 화면에 그리고, 로딩·오류 상태를 보여 준다.</li>
+<li>타이머처럼 정리(clean-up)가 필요한 일을 정리 함수로 끝낸다.</li>
+</ul>
+<h2 id="8-1-부수-효과side-effect와-useeffect">8-1. 부수 효과(side effect)와 useEffect</h2>
+<p>컴포넌트 함수가 하는 일은 원래 하나다. <strong>props·state 를 받아 JSX 를 돌려주는 것.</strong> 그런데 실제 앱에는 화면 그리기 말고도 할 일이 있다.</p>
+<ul>
+<li>서버에 데이터 요청하기</li>
+<li>브라우저 탭 제목 바꾸기</li>
+<li>타이머 켜기·끄기</li>
+</ul>
+<p>이런 일을 <strong>부수 효과</strong>라고 하고, <code>useEffect</code> 안에 넣는다. useEffect 는 <strong>화면을 다 그린 뒤에</strong> 실행된다.</p>
+<figure><a href="../images/fig_effect_timing.png" target="_blank"><img src="../images/fig_effect_timing.png" alt="useEffect 는 화면을 그린 뒤에 실행된다" loading="lazy"></a><figcaption>useEffect 는 화면을 그린 뒤에 실행된다</figcaption></figure>
+<pre><code class="language-jsx">useEffect(() =&gt; {
+  // 할 일
+  return () =&gt; {
+    // (선택) 정리할 일
+  };
+}, [의존성 배열]);
+</code></pre>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>의존성 배열</th>
+<th>실행 시점</th>
+<th>주로 쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[]</code> (빈 배열)</td>
+<td>처음 화면에 나타났을 때 <strong>한 번</strong></td>
+<td>처음 데이터 불러오기</td>
+</tr>
+<tr>
+<td><code>[id]</code></td>
+<td>처음 + <code>id</code> 가 바뀔 때마다</td>
+<td>id 에 맞는 글 불러오기</td>
+</tr>
+<tr>
+<td>생략</td>
+<td>그릴 때마다 매번</td>
+<td>거의 쓰지 않는다</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="8-2-실행-시점-눈으로-보기">8-2. 실행 시점 눈으로 보기</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch08/Ex0801Effect.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch08/Ex0801Effect.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0801Effect.jsx - useEffect: 화면을 그린 &quot;뒤에&quot; 할 일
+//
+// 이 예제가 보여 주는 것
+//   useEffect(할 일, [의존성 배열])
+//   - 배열을 아예 안 쓰면   : 그릴 때마다 매번 실행
+//   - 빈 배열 []            : 처음 화면에 나타났을 때 한 번만 실행 (데이터 불러오기에 쓴다)
+//   - [count] 처럼 값을 쓰면 : 처음 + 그 값이 바뀔 때마다 실행
+//   - 할 일 안에서 함수를 return 하면 &quot;정리(clean-up)&quot; 함수. 사라지기 직전에 실행된다.
+//
+//   브라우저 개발자 도구(F12) → Console 탭에서 찍히는 순서를 확인하자.
+//   (개발 모드의 StrictMode 는 일부러 처음에 두 번 실행해 실수를 찾게 해 준다. 8장 본문 참고)
+
+import { useEffect, useState } from &quot;react&quot;;
+
+function Ex0801Effect() {
+  const [count, setCount] = useState(0);
+  const [text, setText] = useState(&quot;&quot;);
+
+  // 1) 처음 한 번만
+  useEffect(() =&gt; {
+    console.log(&quot;① 처음 한 번: 화면에 나타났다&quot;);
+    return () =&gt; console.log(&quot;① 정리: 화면에서 사라진다&quot;);
+  }, []);
+
+  // 2) count 가 바뀔 때마다 → 브라우저 탭 제목을 바꾼다 (화면 밖의 일 = 부수 효과)
+  useEffect(() =&gt; {
+    console.log(&quot;② count 가 바뀜:&quot;, count);
+    document.title = `클릭 ${count}번`;
+  }, [count]);
+
+  // 3) 의존성 배열이 없으면 글자를 칠 때도, 버튼을 눌러도 매번 실행된다
+  useEffect(() =&gt; {
+    console.log(&quot;③ 그릴 때마다 실행&quot;);
+  });
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;클릭 {count}&lt;/button&gt;
+      &lt;p&gt;
+        &lt;input value={text} onChange={(e) =&gt; setText(e.target.value)} placeholder=&quot;글자를 쳐 보세요&quot; /&gt;
+      &lt;/p&gt;
+      &lt;p&gt;브라우저 탭 제목과 콘솔(F12)을 함께 보세요.&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0801Effect;
+</code></pre>
+<figure><a href="../images/b8_effect.png" target="_blank"><img src="../images/b8_effect.png" alt="Ex0801Effect - 버튼을 한 번 누른 뒤. 화면에는 안 보이지만 브라우저 탭 제목도 &quot;클릭 1번&quot; 으로 바뀌어 있다" loading="lazy"></a><figcaption>Ex0801Effect - 버튼을 한 번 누른 뒤. 화면에는 안 보이지만 브라우저 탭 제목도 &quot;클릭 1번&quot; 으로 바뀌어 있다</figcaption></figure>
+<p>예제를 열고 <strong>클릭 0</strong> 버튼을 한 번 누른 뒤 콘솔을 보면 이렇게 찍혀 있다. (실제로 실행해 모은 로그)</p>
+<pre><code class="language-text">① 처음 한 번: 화면에 나타났다
+② count 가 바뀜: 0
+③ 그릴 때마다 실행
+① 정리: 화면에서 사라진다
+① 처음 한 번: 화면에 나타났다
+② count 가 바뀜: 0
+③ 그릴 때마다 실행
+② count 가 바뀜: 1
+③ 그릴 때마다 실행
+</code></pre>
+<ul>
+<li>처음 세 줄 → <strong>정리</strong> → 다시 세 줄: 개발 모드의 <strong>StrictMode</strong> 가 "화면에 붙였다 → 뗐다 → 다시 붙였다" 를 일부러 해 본 것이다. 정리 함수를 빠뜨린 실수를 찾게 해 주는 기능이며, 배포 빌드에서는 한 번만 실행된다.</li>
+<li>버튼을 누르면 <code>②</code> 와 <code>③</code> 만 실행된다. <code>①</code> 은 <code>[]</code> 라서 다시 실행되지 않는다.</li>
+<li>입력 칸에 글자를 치면 <code>③</code> 만 실행된다. <code>count</code> 가 안 바뀌었으니 <code>②</code> 는 쉰다.</li>
+</ul>
+<h2 id="8-3-fetch-로-데이터-불러오기">8-3. fetch 로 데이터 불러오기</h2>
+<p>서버에서 데이터를 받아 오는 코드는 거의 항상 이 모양이다.</p>
+<ol>
+<li>state 3개: <code>데이터</code>, <code>loading</code>(기다리는 중?), <code>error</code>(실패 이유)</li>
+<li><code>useEffect(..., [])</code> 안에서 <code>fetch</code> 로 요청</li>
+<li>결과에 따라 state 를 바꾸고, 화면은 state 에 따라 세 가지로 나눠 그린다</li>
+</ol>
+<p>이 예제는 <code>public/data/products.json</code> 파일을 서버 대신 쓴다. Vite 는 <code>public</code> 폴더의 파일을 그대로 내려주므로 <code>/data/products.json</code> 주소로 받을 수 있다.</p>
+<div class="file"><span>📄 basic/examples/public/data/products.json</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/public/data/products.json" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-json">[
+  { &quot;id&quot;: 101, &quot;name&quot;: &quot;키보드&quot;, &quot;price&quot;: 35000 },
+  { &quot;id&quot;: 102, &quot;name&quot;: &quot;마우스&quot;, &quot;price&quot;: 18000 },
+  { &quot;id&quot;: 103, &quot;name&quot;: &quot;모니터&quot;, &quot;price&quot;: 210000 }
+]
+</code></pre>
+<div class="file"><span>📄 basic/examples/src/examples/ch08/Ex0802Fetch.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch08/Ex0802Fetch.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0802Fetch.jsx - useEffect + fetch 로 데이터 불러오기 (로딩·오류 처리 포함)
+//
+// 이 예제가 보여 주는 것
+//   - 화면에 처음 나타날 때([]) 데이터를 요청한다.
+//   - 데이터가 오기 전 / 온 뒤 / 실패했을 때를 state 3개로 나눠 보여 준다.
+//       loading : 기다리는 중인가?   error : 실패했나?   products : 받은 데이터
+//   - useEffect 에 넘기는 함수 자체는 async 로 만들 수 없다.
+//     그래서 안쪽에 async 함수를 만들고 바로 부른다.
+//   데이터는 public/data/products.json (Vite 가 /data/products.json 주소로 내려준다).
+//   9장에서는 이 주소만 Spring Boot 서버 주소로 바뀐다.
+
+import { useEffect, useState } from &quot;react&quot;;
+
+function Ex0802Fetch() {
+  const [products, setProducts] = useState([]); // 처음엔 빈 배열 (map 이 오류 나지 않게)
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [url, setUrl] = useState(&quot;/data/products.json&quot;); // 일부러 틀린 주소로 바꿔 오류도 보자
+
+  useEffect(() =&gt; {
+    async function load() {
+      setLoading(true);
+      setError(null);
+      try {
+        await new Promise((r) =&gt; setTimeout(r, 700)); // 느린 서버 흉내 (로딩 문구를 보려고)
+        const res = await fetch(url); //                 요청 보내고 응답 기다리기
+        if (!res.ok) throw new Error(`요청 실패 (상태 코드 ${res.status})`); // 404, 500 등
+        // Vite 개발 서버는 없는 파일을 요청하면 404 대신 index.html(HTML, 상태 200)을 돌려준다.
+        // 그대로 res.json() 을 하면 &quot;Unexpected token '&lt;'&quot; 오류가 나므로, JSON 인지 한 번 더 확인한다.
+        if (!res.headers.get(&quot;content-type&quot;)?.includes(&quot;application/json&quot;)) {
+          throw new Error(&quot;JSON 이 아닌 응답을 받았습니다. 주소를 확인하세요.&quot;);
+        }
+        const data = await res.json(); //                응답 본문(JSON 글자)을 객체로 바꾸기
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+        setProducts([]);
+      } finally {
+        setLoading(false); // 성공이든 실패든 기다림은 끝
+      }
+    }
+    load();
+  }, [url]); // url 이 바뀌면 다시 불러온다
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setUrl(&quot;/data/products.json&quot;)}&gt;올바른 주소&lt;/button&gt;
+      &lt;button onClick={() =&gt; setUrl(&quot;/data/nothing.json&quot;)}&gt;틀린 주소&lt;/button&gt;
+      &lt;p&gt;요청 주소: {url}&lt;/p&gt;
+
+      {/* 세 가지 상태에 따라 다른 화면 */}
+      {loading &amp;&amp; &lt;p&gt;⏳ 불러오는 중...&lt;/p&gt;}
+      {error &amp;&amp; &lt;p style={{ color: &quot;crimson&quot; }}&gt;⚠️ {error}&lt;/p&gt;}
+      {!loading &amp;&amp; !error &amp;&amp; (
+        &lt;ul&gt;
+          {products.map((p) =&gt; (
+            &lt;li key={p.id}&gt;
+              {p.name} - {p.price.toLocaleString()}원
+            &lt;/li&gt;
+          ))}
+        &lt;/ul&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0802Fetch;
+</code></pre>
+<figure><a href="../images/b8_fetch.png" target="_blank"><img src="../images/b8_fetch.png" alt="불러오기 성공" loading="lazy"></a><figcaption>불러오기 성공</figcaption></figure>
+<figure><a href="../images/b8_fetch_error.png" target="_blank"><img src="../images/b8_fetch_error.png" alt="틀린 주소로 요청했을 때" loading="lazy"></a><figcaption>틀린 주소로 요청했을 때</figcaption></figure>
+<blockquote class="note">
+<p><strong>왜 404 가 아니라 "JSON 이 아닌 응답" 일까?</strong> Vite 개발 서버는 없는 주소를 요청받으면 404 대신 <strong>index.html</strong>(상태 200)을 돌려준다. 화면 주소(라우팅)를 위한 기능인데, fetch 입장에서는 "성공(200)했는데 내용이 HTML" 이 된다. 이 검사가 없으면 <code>res.json()</code> 이 <code>Unexpected token '&lt;', "&lt;!doctype "... is not valid JSON</code> 오류를 낸다. 이 오류를 보면 <strong>주소가 틀려서 HTML 을 받았구나</strong> 하고 떠올리자. Spring Boot 같은 API 서버는 없는 글에 진짜 <strong>404</strong> 를 돌려주므로 <code>res.ok</code> 검사에서 걸린다(9장).</p>
+</blockquote>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>코드</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>await fetch(url)</code></td>
+<td>요청을 보내고 <strong>응답(Response)</strong> 이 올 때까지 기다린다</td>
+</tr>
+<tr>
+<td><code>res.ok</code></td>
+<td>상태 코드가 200~299 면 <code>true</code>. 404·500 이면 <code>false</code> (fetch 는 이때 오류를 던지지 않으니 직접 검사!)</td>
+</tr>
+<tr>
+<td><code>res.headers.get("content-type")</code></td>
+<td>응답 내용의 종류. JSON 이면 <code>application/json</code> 이 들어 있다</td>
+</tr>
+<tr>
+<td><code>await res.json()</code></td>
+<td>응답 본문(JSON 글자)을 자바스크립트 값으로 바꾼다</td>
+</tr>
+<tr>
+<td><code>catch</code></td>
+<td>서버가 꺼져 있는 등 응답 자체를 못 받으면 여기로 온다</td>
+</tr>
+<tr>
+<td><code>finally</code></td>
+<td>성공이든 실패든 마지막에 실행 → <code>setLoading(false)</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="note">
+<p><strong>useEffect 에 async 를 바로 붙이면 안 된다.</strong> <code>useEffect(async () =&gt; {...})</code> 처럼 쓰면 함수가 Promise 를 돌려주는데, React 는 useEffect 가 "정리 함수" 나 아무것도 돌려주지 않기를 기대한다. 그래서 안쪽에 <code>async function load()</code> 를 만들고 바로 <code>load()</code> 를 부른다.</p>
+<p><strong>F12 → Network 탭</strong>을 열고 다시 불러오면 <code>products.json</code> 요청과 상태 코드(200, 404)를 직접 볼 수 있다. 9장에서 서버와 통신할 때 가장 많이 보게 될 탭이다.</p>
+</blockquote>
+<h2 id="8-4-정리clean-up-함수">8-4. 정리(clean-up) 함수</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch08/Ex0803Clock.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch08/Ex0803Clock.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0803Clock.jsx - 정리(clean-up) 함수가 필요한 경우: 타이머
+//
+// 이 예제가 보여 주는 것
+//   - setInterval 로 1초마다 시각을 바꾸는 시계
+//   - 컴포넌트가 사라질 때 clearInterval 로 타이머를 멈추지 않으면,
+//     보이지 않는 곳에서 타이머가 계속 돌아 메모리와 CPU 를 낭비한다.
+//   - &quot;시계 숨기기&quot; 를 누르면 Clock 이 사라지면서 정리 함수가 실행된다(콘솔 확인).
+
+import { useEffect, useState } from &quot;react&quot;;
+
+function Clock() {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() =&gt; {
+    const id = setInterval(() =&gt; setNow(new Date()), 1000); // 1초마다 새 시각
+    console.log(&quot;타이머 시작&quot;, id);
+    return () =&gt; {
+      clearInterval(id); // 정리: 타이머 멈춤
+      console.log(&quot;타이머 정리&quot;, id);
+    };
+  }, []);
+
+  return &lt;h2&gt;🕒 {now.toLocaleTimeString(&quot;ko-KR&quot;)}&lt;/h2&gt;;
+}
+
+function Ex0803Clock() {
+  const [show, setShow] = useState(true);
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setShow(!show)}&gt;{show ? &quot;시계 숨기기&quot; : &quot;시계 보이기&quot;}&lt;/button&gt;
+      {show &amp;&amp; &lt;Clock /&gt;} {/* show 가 false 가 되면 Clock 이 화면에서 사라진다 */}
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0803Clock;
+</code></pre>
+<p>"시계 숨기기" 를 누르면 Clock 이 화면에서 사라지면서 정리 함수가 실행되어 <code>타이머 정리</code> 가 찍힌다. 정리 함수가 없으면 시계가 안 보여도 타이머가 1초마다 계속 <code>setNow</code> 를 부른다.</p>
+<p>정리가 필요한 대표적인 일: <code>setInterval</code>/<code>setTimeout</code>, 이벤트 리스너(<code>window.addEventListener</code>), 웹소켓 연결.</p>
+<h2 id="정리">정리</h2>
+<ul>
+<li><code>useEffect(할일, [의존성])</code> 은 <strong>화면을 그린 뒤</strong> 실행된다.</li>
+<li><code>[]</code> 처음 한 번, <code>[값]</code> 값이 바뀔 때마다, 생략하면 매번.</li>
+<li>데이터 불러오기 = state 3개(데이터·loading·error) + useEffect + fetch + try/catch/finally.</li>
+<li><code>fetch</code> 는 404·500 에서도 오류를 던지지 않는다 → <code>res.ok</code> 를 검사한다. (Vite 개발 서버의 없는 파일은 index.html 로 오므로 content-type 도 확인)</li>
+<li>타이머 등은 return 하는 정리 함수로 끝낸다.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>다음 세 useEffect 가 각각 언제 실행되는지 쓰시오.</li>
+</ol>
+<pre><code class="language-jsx">useEffect(() =&gt; { console.log(&quot;A&quot;); });
+useEffect(() =&gt; { console.log(&quot;B&quot;); }, []);
+useEffect(() =&gt; { console.log(&quot;C&quot;); }, [keyword]);
+</code></pre>
+<ol start="2">
+<li>Spring Boot 서버에 없는 글을 요청한 <code>fetch("http://localhost:8080/api/posts/999")</code> 는 404 응답을 받는데도 <code>catch</code> 로 가지 않는다. 왜 그런지, 그리고 어떻게 실패로 처리하는지 쓰시오.</li>
+<li><code>public/data/notices.json</code> 에 공지 3개(<code>id</code>, <code>title</code>)를 만들고, 불러와서 목록으로 보여 주는 <code>NoticeList</code> 컴포넌트를 만드시오. 로딩 중에는 "불러오는 중..." 을 보여 주시오.</li>
+<li>Ex0803Clock 의 <code>return () =&gt; clearInterval(id)</code> 를 지우고 시계를 숨겼다 보였다 여러 번 해 보시오. 콘솔에 무슨 일이 생기는지 관찰하고 이유를 설명하시오.</li>
+</ol>
+<nav class="pager"><a href="ch07.html"><small>← 이전</small>7장 폼 다루기와 할 일 앱</a><a class="next" href="ch09.html"><small>다음 →</small>9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

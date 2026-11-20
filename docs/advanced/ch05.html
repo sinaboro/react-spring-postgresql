@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5장. Context API - 2단계 React 심화</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="5장. Context API - 2단계 React 심화"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">2단계 React 심화</div><a href="ch00.html">0장 과정 안내</a><a href="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</a><a href="ch02.html">2장 useRef 와 useReducer</a><a href="ch03.html">3장 커스텀 훅</a><a href="ch04.html">4장 React Router</a><a href="ch05.html" class=on>5장 Context API</a><a href="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</a><a href="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</a><a href="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a href="ch09.html">9장 프로젝트 ③ React 로그인 연동</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../basic/ch00.html">→ 1단계 React 기초</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내</option><option value="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</option><option value="ch02.html">2장 useRef 와 useReducer</option><option value="ch03.html">3장 커스텀 훅</option><option value="ch04.html">4장 React Router</option><option value="ch05.html" selected>5장 Context API</option><option value="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</option><option value="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</option><option value="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</option><option value="ch09.html">9장 프로젝트 ③ React 로그인 연동</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="5장-context-api">5장. Context API</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>prop drilling 이 무엇이고 왜 불편한지 안다.</li>
+<li><code>createContext</code> → Provider → <code>useContext</code> 세 단계로 값을 나눠 쓴다.</li>
+<li>Context 를 쓰기 편하게 커스텀 훅(<code>useTheme</code>, <code>useAuth</code>)으로 감싼다.</li>
+<li>로그인 상태를 Context 로 관리하는 모양을 미리 익힌다 (9장 준비).</li>
+</ul>
+<h2 id="5-1-prop-drilling">5-1. prop drilling</h2>
+<p>로그인한 사용자 정보는 머리글, 글쓰기 버튼, 글 읽기 화면… 여러 곳에서 필요하다. props 로만 전달하면 <strong>쓰지도 않는 중간 컴포넌트들이 값을 받아서 아래로 넘기기만</strong> 해야 한다. 이것을 <strong>prop drilling</strong>(드릴로 뚫듯 내려보내기)이라 한다.</p>
+<figure><a href="../images/fig_context.png" target="_blank"><img src="../images/fig_context.png" alt="props 로 내려보내기 vs Context" loading="lazy"></a><figcaption>props 로 내려보내기 vs Context</figcaption></figure>
+<p><strong>Context</strong> 는 값을 Provider 에 한 번 올려 두면, 그 안쪽의 <strong>어느 깊이의 컴포넌트든 바로 꺼내 쓰게</strong> 해 준다.</p>
+<h2 id="5-2-context-만들기-3단계">5-2. Context 만들기 3단계</h2>
+<div class="file"><span>📄 advanced/examples/src/context/ThemeContext.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/examples/src/context/ThemeContext.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// ThemeContext.jsx - Context ① : 앱 전체가 함께 쓰는 &quot;밝은/어두운 테마&quot;
+//
+// 이 파일이 보여 주는 것 (Context 를 만드는 3단계)
+//   1. createContext()      : 값을 실어 나를 &quot;통로&quot; 를 만든다
+//   2. &lt;ThemeContext value&gt; : Provider. 이 태그 안쪽의 모든 컴포넌트가 값을 받을 수 있다
+//                             (React 19 부터는 &lt;ThemeContext.Provider&gt; 대신 &lt;ThemeContext&gt; 로 바로 쓴다)
+//   3. useContext()         : 받는 쪽. props 로 여러 단계를 내려보내지 않아도 바로 꺼낸다
+//   - 받는 쪽이 쓰기 편하게 useTheme() 라는 커스텀 훅으로 감싸 둔다.
+
+import { createContext, useContext, useState } from &quot;react&quot;;
+
+const ThemeContext = createContext(null); // 1. 통로 만들기
+
+// 2. 값을 공급하는 컴포넌트
+export function ThemeProvider({ children }) {
+  const [dark, setDark] = useState(false);
+  const toggle = () =&gt; setDark((d) =&gt; !d);
+
+  // 내려보낼 값: 지금 테마 + 바꾸는 함수
+  return &lt;ThemeContext value={{ dark, toggle }}&gt;{children}&lt;/ThemeContext&gt;;
+}
+
+// 3. 받는 쪽이 쓸 훅
+export function useTheme() {
+  const value = useContext(ThemeContext);
+  if (value === null) {
+    // Provider 바깥에서 쓰면 값이 없다 → 실수를 바로 알려 준다
+    throw new Error(&quot;useTheme 은 &lt;ThemeProvider&gt; 안에서만 쓸 수 있습니다&quot;);
+  }
+  return value;
+}
+</code></pre>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>코드</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 통로</td>
+<td><code>const ThemeContext = createContext(null)</code></td>
+<td>값을 실어 나를 통로</td>
+</tr>
+<tr>
+<td>② 공급</td>
+<td><code>&lt;ThemeContext value={...}&gt;{children}&lt;/ThemeContext&gt;</code></td>
+<td>안쪽 전체에 값 공급</td>
+</tr>
+<tr>
+<td>③ 사용</td>
+<td><code>useContext(ThemeContext)</code></td>
+<td>가장 가까운 Provider 의 값을 꺼냄</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="note">
+<p>React 18 까지는 공급할 때 <code>&lt;ThemeContext.Provider value={...}&gt;</code> 라고 썼다. React 19 부터는 <code>&lt;ThemeContext value={...}&gt;</code> 로 바로 쓸 수 있다. 인터넷 자료에서 <code>.Provider</code> 를 보면 같은 뜻으로 읽으면 된다.</p>
+</blockquote>
+<h2 id="5-3-테마-바꾸기-예제">5-3. 테마 바꾸기 예제</h2>
+<div class="file"><span>📄 advanced/examples/src/examples/ch05/Ex0501Theme.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/examples/src/examples/ch05/Ex0501Theme.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0501Theme.jsx - Context 로 테마 나눠 쓰기
+//
+// 이 예제가 보여 주는 것
+//   - Page → Section → Card 처럼 깊이 들어간 컴포넌트도 useTheme() 한 줄로 테마를 꺼낸다.
+//   - 중간의 Section 은 테마를 쓰지 않으므로 props 로 받지도 넘기지도 않는다.
+//     (props 로만 했다면 Section 이 쓰지도 않는 dark 를 받아서 Card 에 넘겨야 한다 = prop drilling)
+
+import { ThemeProvider, useTheme } from &quot;../../context/ThemeContext&quot;;
+
+function ThemeButton() {
+  const { dark, toggle } = useTheme();
+  return &lt;button onClick={toggle}&gt;{dark ? &quot;☀️ 밝게&quot; : &quot;🌙 어둡게&quot;}&lt;/button&gt;;
+}
+
+function Card({ title }) {
+  const { dark } = useTheme(); // 깊은 곳에서 바로 꺼낸다
+  const style = {
+    padding: 12,
+    margin: 6,
+    borderRadius: 8,
+    background: dark ? &quot;#2b2f36&quot; : &quot;#f4f7fb&quot;,
+    color: dark ? &quot;#e8eaed&quot; : &quot;#222&quot;,
+  };
+  return &lt;div style={style}&gt;{title}&lt;/div&gt;;
+}
+
+// 테마를 모르는 중간 컴포넌트
+function Section() {
+  return (
+    &lt;div&gt;
+      &lt;Card title=&quot;카드 1&quot; /&gt;
+      &lt;Card title=&quot;카드 2&quot; /&gt;
+    &lt;/div&gt;
+  );
+}
+
+function Page() {
+  const { dark } = useTheme();
+  return (
+    &lt;div style={{ padding: 12, borderRadius: 10, background: dark ? &quot;#16181d&quot; : &quot;white&quot;, border: &quot;1px solid #ccc&quot; }}&gt;
+      &lt;ThemeButton /&gt;
+      &lt;Section /&gt;
+    &lt;/div&gt;
+  );
+}
+
+function Ex0501Theme() {
+  // Provider 로 감싼 안쪽에서만 useTheme 을 쓸 수 있다
+  return (
+    &lt;ThemeProvider&gt;
+      &lt;Page /&gt;
+    &lt;/ThemeProvider&gt;
+  );
+}
+
+export default Ex0501Theme;
+</code></pre>
+<figure><a href="../images/a5_theme.png" target="_blank"><img src="../images/a5_theme.png" alt="어둡게 버튼을 누른 뒤" loading="lazy"></a><figcaption>어둡게 버튼을 누른 뒤</figcaption></figure>
+<p><code>Section</code> 은 테마를 모르는데도 그 안의 <code>Card</code> 는 테마를 받는다. Provider 의 값이 바뀌면 그 값을 <strong>쓰는</strong> 컴포넌트들이 다시 그려진다.</p>
+<h2 id="5-4-로그인-상태를-context-로-9장-미리-보기">5-4. 로그인 상태를 Context 로 (9장 미리 보기)</h2>
+<p>서버 없이 닉네임만으로 "로그인" 하는 연습판이다. 9장의 <code>AuthContext.jsx</code> 가 이 모양과 같다.</p>
+<div class="file"><span>📄 advanced/examples/src/context/FakeAuthContext.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/examples/src/context/FakeAuthContext.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// FakeAuthContext.jsx - Context ② : 로그인 상태를 앱 전체에 알리기 (서버 없는 연습판)
+//
+// 이 파일이 보여 주는 것
+//   - &quot;지금 로그인한 사용자&quot; 는 머리글, 글쓰기 버튼, 내 정보 화면 등 여러 곳에서 필요하다
+//     → Context 에 두기 딱 좋은 값이다.
+//   - Provider 가 user state 와 login / logout 함수를 함께 내려준다.
+//   - 심화 9장의 AuthContext.jsx 는 이 파일과 모양이 같고,
+//     login 안에서 진짜 Spring Boot 서버에 요청하는 것만 다르다.
+
+import { createContext, useContext, useState } from &quot;react&quot;;
+
+const AuthContext = createContext(null);
+
+export function FakeAuthProvider({ children }) {
+  const [user, setUser] = useState(null); // null = 로그인 안 함
+
+  const login = (nickname) =&gt; setUser({ nickname }); // 진짜 앱에서는 서버에 아이디·비밀번호를 보낸다
+  const logout = () =&gt; setUser(null);
+
+  return &lt;AuthContext value={{ user, login, logout }}&gt;{children}&lt;/AuthContext&gt;;
+}
+
+export function useFakeAuth() {
+  const value = useContext(AuthContext);
+  if (value === null) throw new Error(&quot;useFakeAuth 는 &lt;FakeAuthProvider&gt; 안에서만 쓸 수 있습니다&quot;);
+  return value;
+}
+</code></pre>
+<div class="file"><span>📄 advanced/examples/src/examples/ch05/Ex0502FakeAuth.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/examples/src/examples/ch05/Ex0502FakeAuth.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0502FakeAuth.jsx - 로그인 상태를 Context 로 나눠 쓰기 (9장 미리 보기)
+//
+// 이 예제가 보여 주는 것
+//   - Header, WriteButton, LoginBox 가 서로 props 를 주고받지 않는데도
+//     같은 로그인 상태를 보고 함께 바뀐다.
+//   - 로그인 여부에 따라 버튼을 보여 주거나 숨기는 조건부 렌더링 (기초 5장)
+
+import { useState } from &quot;react&quot;;
+import { FakeAuthProvider, useFakeAuth } from &quot;../../context/FakeAuthContext&quot;;
+
+function Header() {
+  const { user, logout } = useFakeAuth();
+  return (
+    &lt;div style={{ display: &quot;flex&quot;, justifyContent: &quot;space-between&quot;, padding: 8, background: &quot;#1f3a5f&quot;, color: &quot;white&quot; }}&gt;
+      &lt;strong&gt;내 게시판&lt;/strong&gt;
+      {user ? (
+        &lt;span&gt;
+          {user.nickname} 님 &lt;button onClick={logout}&gt;로그아웃&lt;/button&gt;
+        &lt;/span&gt;
+      ) : (
+        &lt;span&gt;로그인하지 않음&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+function WriteButton() {
+  const { user } = useFakeAuth();
+  if (!user) return &lt;p&gt;🔒 글을 쓰려면 로그인하세요.&lt;/p&gt;;
+  return &lt;button&gt;✏️ 글쓰기&lt;/button&gt;;
+}
+
+function LoginBox() {
+  const { user, login } = useFakeAuth();
+  const [name, setName] = useState(&quot;&quot;);
+  if (user) return null; // 로그인했으면 이 상자는 숨긴다 (null 을 돌려주면 아무것도 안 그림)
+  return (
+    &lt;form
+      onSubmit={(e) =&gt; {
+        e.preventDefault();
+        if (name.trim()) login(name.trim());
+      }}
+    &gt;
+      &lt;input value={name} onChange={(e) =&gt; setName(e.target.value)} placeholder=&quot;닉네임&quot; /&gt;
+      &lt;button type=&quot;submit&quot;&gt;로그인&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}
+
+function Ex0502FakeAuth() {
+  return (
+    &lt;FakeAuthProvider&gt;
+      &lt;Header /&gt;
+      &lt;div style={{ padding: 8 }}&gt;
+        &lt;LoginBox /&gt;
+        &lt;WriteButton /&gt;
+      &lt;/div&gt;
+    &lt;/FakeAuthProvider&gt;
+  );
+}
+
+export default Ex0502FakeAuth;
+</code></pre>
+<figure><a href="../images/a5_fakeauth.png" target="_blank"><img src="../images/a5_fakeauth.png" alt="닉네임으로 로그인한 뒤" loading="lazy"></a><figcaption>닉네임으로 로그인한 뒤</figcaption></figure>
+<p><code>Header</code>, <code>LoginBox</code>, <code>WriteButton</code> 은 서로 props 를 주고받지 않는다. 그런데 LoginBox 에서 로그인하면 셋이 <strong>동시에</strong> 바뀐다. 모두 같은 Provider 의 <code>user</code> 를 보고 있기 때문이다.</p>
+<h2 id="5-5-context-를-쓸-때-주의할-점">5-5. Context 를 쓸 때 주의할 점</h2>
+<ul>
+<li><strong>아무 값이나 Context 에 넣지 않는다.</strong> 정말 여러 곳에서 쓰는 값(로그인 사용자, 테마, 언어)만. 몇 단계 내려보내는 정도는 props 가 더 읽기 쉽다.</li>
+<li>Provider 의 값이 바뀌면 그 Context 를 쓰는 <strong>모든</strong> 컴포넌트가 다시 그려진다. 자주 바뀌는 값(입력 중인 글자 등)은 넣지 않는다.</li>
+<li>꺼내 쓰는 훅(<code>useTheme</code>)에서 Provider 밖이면 오류를 던지게 해 두면, Provider 로 감싸는 것을 잊었을 때 바로 알 수 있다.</li>
+</ul>
+<h2 id="정리">정리</h2>
+<ul>
+<li>prop drilling: 쓰지 않는 중간 컴포넌트가 값을 계속 전달하는 불편함.</li>
+<li><code>createContext</code> → <code>&lt;Ctx value={값}&gt;</code> 로 감싸기 → <code>useContext(Ctx)</code> 로 꺼내기.</li>
+<li>쓰는 쪽을 위해 <code>useXxx()</code> 커스텀 훅으로 감싸 두자.</li>
+<li>로그인 사용자 = Context 에 두기 가장 알맞은 값.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>Context 를 만들고 쓰는 세 단계를 코드 한 줄씩으로 쓰시오.</li>
+<li>Ex0501Theme 에서 <code>&lt;ThemeProvider&gt;</code> 감싸기를 지우면 어떤 일이 생기는가? 그 오류 문구는 어디서 나오는가?</li>
+<li><code>LanguageContext</code> 를 만들어 "한국어 / English" 버튼으로 바꾸고, 깊은 곳의 <code>Greeting</code> 컴포넌트가 <code>안녕하세요</code> 또는 <code>Hello</code> 를 보여 주게 하시오.</li>
+<li>FakeAuthContext 에 로그인한 시각(<code>loginAt</code>)을 함께 저장하고, Header 에 <code>민수 님 (10:30 로그인)</code> 처럼 보여 주시오.</li>
+</ol>
+<nav class="pager"><a href="ch04.html"><small>← 이전</small>4장 React Router</a><a class="next" href="ch06.html"><small>다음 →</small>6장 인증의 이해 - 해시, JWT, 401 과 403</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 2단계 React 심화 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

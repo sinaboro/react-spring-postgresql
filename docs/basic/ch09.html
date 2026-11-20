@@ -1,0 +1,1771 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>9장. 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="9장. 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html">3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html">5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html">6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html">8장 useEffect 와 데이터 불러오기</a><a href="ch09.html" class=on>9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html">3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html">5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html">6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html">8장 useEffect 와 데이터 불러오기</option><option value="ch09.html" selected>9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="9장-프로젝트---spring-boot-postgresql-게시판-crud">9장. 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>Docker 로 PostgreSQL 데이터베이스를 띄운다.</li>
+<li>IntelliJ IDEA 로 Spring Boot 프로젝트를 열고 실행한다.</li>
+<li>Spring Boot 로 게시글 CRUD REST API 를 만들고 <code>/docs</code> 에서 시험한다.</li>
+<li>React 에서 <code>fetch</code> 로 GET·POST·PUT·DELETE 요청을 보내 게시판을 완성한다.</li>
+<li>CORS 가 무엇이고 왜 서버에서 허락해 줘야 하는지 안다.</li>
+</ul>
+<h2 id="9-1-만들-것-한눈에-보기">9-1. 만들 것 한눈에 보기</h2>
+<p>글 목록 보기, 글 읽기, 글쓰기, 수정, 삭제가 되는 게시판이다. 글은 브라우저가 아니라 <strong>PostgreSQL 데이터베이스</strong>에 저장되므로 새로 고침해도, 브라우저를 껐다 켜도 남는다.</p>
+<figure><a href="../images/fig_architecture.png" target="_blank"><img src="../images/fig_architecture.png" alt="게시판의 세 부분" loading="lazy"></a><figcaption>게시판의 세 부분</figcaption></figure>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>부분</th>
+<th>기술</th>
+<th>주소</th>
+<th>실행 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>화면</td>
+<td>React (Vite)</td>
+<td>http://localhost:5173</td>
+<td>VS Code 터미널에서 <code>npm run dev</code></td>
+</tr>
+<tr>
+<td>API 서버</td>
+<td>Spring Boot 4 (내장 Tomcat)</td>
+<td>http://localhost:8080</td>
+<td>IntelliJ 에서 <code>BoardApplication</code> ▶ 실행</td>
+</tr>
+<tr>
+<td>데이터베이스</td>
+<td>PostgreSQL 18 (Docker)</td>
+<td>localhost:5433</td>
+<td><code>docker compose up -d</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>API 설계</strong> - 주소와 방식(HTTP 메서드)으로 "무엇을 할지" 를 나타낸다. 이런 규칙을 <strong>REST API</strong> 라고 부른다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>하는 일</th>
+<th>방식</th>
+<th>주소</th>
+<th>보내는 것</th>
+<th>받는 것 (성공 코드)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>글 목록 (Read)</td>
+<td>GET</td>
+<td><code>/api/posts</code></td>
+<td>-</td>
+<td>글 배열 (200)</td>
+</tr>
+<tr>
+<td>글 하나 (Read)</td>
+<td>GET</td>
+<td><code>/api/posts/3</code></td>
+<td>-</td>
+<td>글 객체 (200), 없으면 404</td>
+</tr>
+<tr>
+<td>글쓰기 (Create)</td>
+<td>POST</td>
+<td><code>/api/posts</code></td>
+<td><code>{title, writer, content}</code></td>
+<td>저장된 글 (201)</td>
+</tr>
+<tr>
+<td>수정 (Update)</td>
+<td>PUT</td>
+<td><code>/api/posts/3</code></td>
+<td><code>{title, writer, content}</code></td>
+<td>고친 글 (200)</td>
+</tr>
+<tr>
+<td>삭제 (Delete)</td>
+<td>DELETE</td>
+<td><code>/api/posts/3</code></td>
+<td>-</td>
+<td>내용 없음 (204)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>작업 순서</strong> - 아래쪽(데이터베이스)부터 위쪽(화면)으로 쌓는다. 아래가 잘 되는지 확인하고 올라가야 문제가 생겨도 어디서 났는지 금방 찾는다.</p>
+<ol>
+<li>9-2 Docker 로 PostgreSQL 켜기</li>
+<li>9-3 ~ 9-6 Spring Boot 서버를 IntelliJ 로 열고 <code>/docs</code> 에서 시험</li>
+<li>9-7 ~ 9-12 React 화면 만들기</li>
+</ol>
+<h2 id="9-2-실습-폴더-준비와-postgresql-켜기">9-2. 실습 폴더 준비와 PostgreSQL 켜기</h2>
+<p>이 장에서는 <code>C:\study\board</code> 폴더에 프로젝트를 만든다. 데이터베이스 설정과 API 서버(백엔드)는 <strong>저장소의 완성본을 복사해서 읽으며 이해</strong>하고, React 화면(프론트엔드)은 <strong>직접 만든다.</strong></p>
+<p><strong>[PS]</strong></p>
+<pre><code class="language-powershell">mkdir C:\study\board
+cd C:\study\board
+Copy-Item C:\study\react-spring-postgresql\basic\board\docker-compose.yml .
+Copy-Item -Recurse C:\study\react-spring-postgresql\basic\board\backend .\backend
+</code></pre>
+<blockquote class="note">
+<p><code>Copy-Item 원본 .</code> 의 마지막 점(<code>.</code>)은 "지금 폴더로" 라는 뜻이다.</p>
+</blockquote>
+<p>먼저 <strong>Docker Desktop 을 실행</strong>한다. (시작 메뉴 → Docker Desktop. 왼쪽 아래가 초록색 <strong>Engine running</strong> 이 될 때까지 기다린다.)</p>
+<div class="file"><span>📄 basic/board/docker-compose.yml</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/docker-compose.yml" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-yaml"># =====================================================================
+# 기초 과정 9장 - 게시판 데이터베이스 (PostgreSQL 18) 를 Docker 로 실행
+#
+#   시작        : docker compose up -d        (이 파일이 있는 폴더에서)
+#   상태 확인   : docker compose ps           (STATUS 가 healthy 이면 준비 완료)
+#   로그 보기   : docker compose logs -f db   (Ctrl+C 로 빠져나옴)
+#   멈추기      : docker compose stop         (데이터는 남는다)
+#   완전히 지우기: docker compose down -v      (컨테이너 + 데이터 볼륨 삭제, 되돌릴 수 없음)
+#
+# 접속 정보 (Spring Boot·DBeaver 공통)
+#   호스트 localhost / 포트 5433 / DB board / 사용자 postgres / 비밀번호 postgres
+#   ※ 5432 가 아니라 5433 이다. 다른 과정에서 만든 PostgreSQL(5432)과 겹치지 않게 하려고.
+# =====================================================================
+
+# 프로젝트 이름. 적지 않으면 &quot;폴더 이름&quot;(board)이 프로젝트 이름이 되는데,
+# 기초·심화 두 과정의 폴더 이름이 모두 board 라서 서로를 같은 프로젝트로 보고
+# 한쪽을 켜면 다른 쪽 컨테이너를 지워 버린다. 이름을 따로 붙여 이 문제를 막는다.
+name: react-spring-basic-board
+
+services:
+  db:
+    image: postgres:18                # Docker Hub 의 공식 PostgreSQL 18 이미지
+    container_name: spring-board-db    # docker 명령에서 부를 컨테이너 이름
+    restart: unless-stopped           # Docker Desktop 이 켜지면 자동으로 다시 시작
+    ports:
+      - &quot;5433:5432&quot;                   # &quot;내 PC 포트:컨테이너 포트&quot;
+    environment:
+      POSTGRES_USER: postgres         # 관리자 계정
+      POSTGRES_PASSWORD: postgres     # 실습용 비밀번호 (실제 서비스에서는 절대 이렇게 쓰지 않는다)
+      POSTGRES_DB: board              # 처음 시작할 때 만들어 둘 데이터베이스 이름
+      TZ: Asia/Seoul
+    command: [&quot;postgres&quot;, &quot;-c&quot;, &quot;timezone=Asia/Seoul&quot;]   # now() 가 한국 시간으로 나오게
+    volumes:
+      - board_data:/var/lib/postgresql   # 데이터는 볼륨에 → 컨테이너를 지워도 글이 남는다
+    healthcheck:                         # &quot;접속 받을 준비가 됐나?&quot; 를 5초마다 검사
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U postgres -d board&quot;]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  board_data:                         # Docker 가 관리하는 저장 공간
+</code></pre>
+<p><strong>[PS]</strong> <code>C:\study\board</code> 에서</p>
+<pre><code class="language-powershell">docker compose up -d
+</code></pre>
+<p>처음에는 <code>postgres:18</code> 이미지를 받느라 <code>Pulling</code> 줄이 여러 개 나오며 1~2분 걸린다. 끝나면 이렇게 나온다.</p>
+<pre><code class="language-text"> Network react-spring-basic-board_default Created
+ Volume react-spring-basic-board_board_data Created
+ Container spring-board-db Created
+ Container spring-board-db Started
+</code></pre>
+<p><strong>[PS]</strong> 상태 확인</p>
+<pre><code class="language-powershell">docker compose ps
+</code></pre>
+<p><code>spring-board-db</code> 의 <code>STATUS</code> 에 <strong>(healthy)</strong> 가 보이면 접속할 준비가 된 것이다. <code>(health: starting)</code> 이면 몇 초 뒤 다시 확인한다.</p>
+<blockquote class="note">
+<p><strong>name: 줄이 꼭 필요한 이유</strong> compose 는 <code>name:</code> 이 없으면 <strong>폴더 이름</strong>을 프로젝트 이름으로 쓴다. 심화 과정 폴더도 이름이 <code>board</code> 라서, 이름을 안 붙이면 한쪽을 켤 때 다른 쪽 컨테이너를 지워 버린다. 실제로 이 교안을 만들다가 겪은 일이다.</p>
+</blockquote>
+<h2 id="9-3-intellij-로-spring-boot-프로젝트-열기">9-3. IntelliJ 로 Spring Boot 프로젝트 열기</h2>
+<p><strong>Spring Boot</strong> 는 Java 로 웹 서버를 쉽게 만드는 프레임워크다. 설정을 거의 하지 않아도 내장 웹 서버(Tomcat)가 함께 실행된다. 프로젝트는 <strong>Gradle</strong> 이라는 빌드 도구로 관리하고, 서버 코드는 <strong>IntelliJ IDEA</strong> 로 연다.</p>
+<ol>
+<li>IntelliJ IDEA 를 실행하고 <strong>Open</strong> (메뉴에서는 <strong>File → Open</strong>) 을 누른다.</li>
+<li><code>C:\study\board\backend</code> 폴더를 고르고 <strong>OK</strong>. "Trust Project?" 라고 물으면 <strong>Trust Project</strong>.</li>
+<li>오른쪽 아래에 진행 막대가 보이며 Gradle 이 필요한 라이브러리를 받는다(<strong>Gradle sync</strong>). 처음에는 몇 분 걸린다. 끝날 때까지 기다린다.</li>
+<li>화면 위쪽에 <strong>"Project JDK is not defined"</strong> 같은 노란 줄이 보이면 JDK 를 골라 준다. <strong>Setup SDK</strong> → 설치한 <strong>21</strong> 버전을 고르거나, <strong>Download JDK</strong> → Version <strong>21</strong>, Vendor <strong>Eclipse Temurin</strong> → Download.</li>
+</ol>
+<blockquote class="note">
+<p><strong>IntelliJ 왼쪽 프로젝트 창이 비어 있거나 java 파일 아이콘에 빨간 표시가 있다면</strong> 아직 Gradle sync 가 끝나지 않았거나 JDK 가 지정되지 않은 것이다. 오른쪽 끝의 <strong>Gradle</strong> 창(코끼리 아이콘)을 열고 🔄 (Reload All Gradle Projects)을 누른다.</p>
+</blockquote>
+<p>열린 프로젝트는 이렇게 생겼다.</p>
+<pre><code class="language-text">backend
+├─ build.gradle                    ← 라이브러리 목록 (Gradle 설정)
+├─ settings.gradle                 ← 프로젝트 이름
+├─ gradlew, gradlew.bat, gradle/   ← Gradle 래퍼 (Gradle 을 따로 설치하지 않아도 된다)
+└─ src
+   ├─ main
+   │  ├─ java/com/example/board
+   │  │  ├─ BoardApplication.java      ← 시작점 (main 메서드, ▶ 실행)
+   │  │  ├─ post                        ← 게시글 기능
+   │  │  │  ├─ Post.java                  Entity: posts 테이블의 한 줄
+   │  │  │  ├─ PostRepository.java        DB 창구 (SQL 은 Spring 이 만든다)
+   │  │  │  ├─ PostRequest.java           요청 JSON 모양 + 입력 검사
+   │  │  │  ├─ PostResponse.java          응답 JSON 모양
+   │  │  │  ├─ PostService.java           업무 규칙 (없는 글이면 404 ...)
+   │  │  │  └─ PostController.java        주소(API) 담당
+   │  │  ├─ common                      ← 오류를 { &quot;detail&quot;: ... } JSON 으로
+   │  │  └─ config                      ← CORS 설정
+   │  └─ resources
+   │     └─ application.yml             ← 포트, DB 접속 정보 등 설정
+   └─ test                              ← 테스트 코드
+</code></pre>
+<blockquote class="note">
+<p><strong>이 프로젝트를 처음부터 만들고 싶다면</strong> https://start.spring.io 에서 Project <strong>Gradle - Groovy</strong>, Language <strong>Java</strong>, Spring Boot <strong>4.1.2</strong>, Group <code>com.example</code>, Artifact <code>board</code>, Java <strong>21</strong>, Dependencies 에 <strong>Spring Web</strong>, <strong>Spring Data JPA</strong>, <strong>PostgreSQL Driver</strong>, <strong>Validation</strong> 을 넣고 <strong>GENERATE</strong> 로 zip 을 받아 풀면 된다. 저장소의 backend 는 이렇게 만든 뒤 <code>/docs</code> 화면용 springdoc 한 줄을 더한 것이다.</p>
+</blockquote>
+<div class="file"><span>📄 basic/board/backend/build.gradle</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/build.gradle" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-groovy">// build.gradle - 기초 과정 게시판 API 서버의 빌드 설정 (Gradle)
+//
+// 이 파일이 하는 일
+//   - 어떤 Java 버전으로 빌드할지, 어떤 라이브러리(의존성)를 쓸지 적는다.
+//   - IntelliJ 로 backend 폴더를 열면 이 파일을 읽어 라이브러리를 자동으로 받는다.
+//     (처음 열 때 오른쪽 아래에 진행 막대가 보이고, 몇 분 걸릴 수 있다)
+//   - Spring Initializr(start.spring.io)가 만들어 준 파일에 springdoc 한 줄을 더하고 주석을 달았다.
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.2'              // Spring Boot
+    id 'io.spring.dependency-management' version '1.1.7'       // 라이브러리 버전을 Spring Boot 에 맞춰 준다
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)          // Java 21 로 빌드
+    }
+}
+
+repositories {
+    mavenCentral()                                            // 라이브러리를 받아 올 곳
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'      // REST API (@RestController)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'    // JPA (자바 객체 ↔ DB 테이블)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'  // 입력값 검사 (@NotBlank 등)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'  // API 시험 화면 (/docs)
+    runtimeOnly 'org.postgresql:postgresql'                                   // PostgreSQL 접속 드라이버
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/resources/application.yml</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/resources/application.yml" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-yaml"># application.yml - 게시판 API 서버 설정
+#
+#   들여쓰기(빈칸 2칸)가 곧 구조다. 탭 문자는 쓰지 않는다.
+#   ${이름:기본값} → 환경 변수 &quot;이름&quot; 이 있으면 그 값, 없으면 기본값
+
+server:
+  port: 8080                     # API 서버 주소 http://localhost:8080
+
+spring:
+  application:
+    name: board
+  datasource:                    # 데이터베이스 접속 정보 (docker-compose.yml 과 맞춘다)
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/board}
+    username: postgres
+    password: postgres           # 실습용 비밀번호
+  jpa:
+    hibernate:
+      ddl-auto: update           # 서버가 켜질 때 Entity 를 보고 테이블이 없으면 만들고, 열이 늘면 추가한다
+    show-sql: true               # 실행되는 SQL 을 콘솔에 보여 준다 (공부용)
+    properties:
+      hibernate:
+        format_sql: true         # SQL 을 보기 좋게 줄바꿈
+    open-in-view: false          # 요청이 끝날 때까지 DB 연결을 붙잡지 않는다 (권장 설정, 경고도 사라진다)
+
+springdoc:
+  swagger-ui:
+    path: /docs                  # API 시험 화면 주소 http://localhost:8080/docs
+</code></pre>
+<h2 id="9-4-entity-와-repository---db-담당">9-4. Entity 와 Repository - DB 담당</h2>
+<p>Spring Boot 는 <strong>JPA</strong>(Java Persistence API)라는 기술로 DB 를 다룬다. Java 클래스(Entity)를 테이블과 짝지어 두면, <code>INSERT</code>·<code>SELECT</code> 같은 SQL 을 직접 쓰지 않아도 객체를 저장하고 꺼낼 수 있다.</p>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/Post.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/Post.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+/**
+ * Post - 게시글 Entity (자바 객체 ↔ posts 테이블의 한 줄)
+ *
+ * 이 파일이 보여 주는 것
+ *   - @Entity 가 붙은 클래스는 JPA 가 관리하는 &quot;테이블과 짝지어진 객체&quot; 다.
+ *   - 필드 하나 = 열(column) 하나. ddl-auto: update 설정 덕분에 서버가 켜질 때 테이블이 자동으로 만들어진다.
+ *       id          bigint      자동 번호 (PRIMARY KEY)
+ *       title       varchar(100) not null
+ *       writer      varchar(30)  not null
+ *       content     text         not null
+ *       created_at  timestamp    not null   ← 필드 이름 createdAt 이 created_at 열이 된다
+ *       updated_at  timestamp    not null
+ *   - SQL 을 직접 쓰지 않아도 PostRepository 가 INSERT·SELECT·UPDATE·DELETE 를 만들어 준다.
+ */
+@Entity
+@Table(name = &quot;posts&quot;)
+public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // DB 가 1, 2, 3 ... 번호를 매긴다
+    private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String title;
+
+    @Column(nullable = false, length = 30)
+    private String writer;
+
+    @Column(nullable = false, columnDefinition = &quot;text&quot;)
+    private String content;
+
+    @Column(nullable = false, updatable = false) // 쓴 시각은 고칠 때 바뀌지 않게
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    /** JPA 가 DB 에서 읽어 올 때 쓰는 빈 생성자 (직접 쓰지 않는다) */
+    protected Post() {
+    }
+
+    public Post(String title, String writer, String content) {
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+    }
+
+    /** INSERT 직전에 JPA 가 자동으로 부른다: 쓴 시각과 고친 시각을 같은 값으로 */
+    @PrePersist
+    void onCreate() {
+        createdAt = now();
+        updatedAt = createdAt;
+    }
+
+    /** UPDATE 직전에 JPA 가 자동으로 부른다: 고친 시각만 바꾼다 */
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = now();
+    }
+
+    /** 지금 시각. PostgreSQL 은 마이크로초(소수점 6자리)까지만 저장하므로 거기에 맞춰 자른다.
+     *  (자르지 않으면 응답에 나노초 9자리가 나가서 브라우저가 날짜를 잘못 읽을 수 있다) */
+    private static LocalDateTime now() {
+        return LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
+    }
+
+    /** 글 수정. 값만 바꾸면 트랜잭션이 끝날 때 JPA 가 UPDATE 를 실행한다 (변경 감지) */
+    public void update(String title, String writer, String content) {
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+    }
+
+    // ---- 값 꺼내기 (getter) ----
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+    public String getWriter() { return writer; }
+    public String getContent() { return content; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/PostRepository.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/PostRepository.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+/**
+ * PostRepository - posts 테이블에 SQL 을 보내는 창구 (Spring Data JPA)
+ *
+ * 이 파일이 보여 주는 것
+ *   - 인터페이스만 만들면 Spring 이 구현을 자동으로 만들어 준다.
+ *   - JpaRepository&lt;Post, Long&gt; 을 물려받는 것만으로 아래 메서드를 바로 쓸 수 있다.
+ *       save(post)       INSERT (새 객체) / UPDATE (이미 있는 객체)
+ *       findById(id)     SELECT ... WHERE id = ?   → Optional&lt;Post&gt; (없을 수도 있음)
+ *       findAll()        SELECT ...
+ *       delete(post)     DELETE ...
+ *   - 메서드 이름 규칙으로 쿼리를 만들 수도 있다.
+ *       findAllByOrderByIdDesc()  →  SELECT ... ORDER BY id DESC
+ */
+public interface PostRepository extends JpaRepository&lt;Post, Long&gt; {
+
+    /** 글 목록 - 최근 글이 위로 오게 id 큰 순서 */
+    List&lt;Post&gt; findAllByOrderByIdDesc();
+}
+</code></pre>
+<p>서버를 처음 켜면 <code>ddl-auto: update</code> 설정 덕분에 Hibernate(JPA 구현체)가 Entity 를 보고 테이블을 만든다. IntelliJ 실행 창(Run)에 다음과 같은 SQL 이 찍힌다. (<code>show-sql: true</code> 설정)</p>
+<pre><code class="language-text">Hibernate:
+    create table posts (
+        id bigint generated by default as identity,
+        content text not null,
+        created_at timestamp(6) not null,
+        title varchar(100) not null,
+        updated_at timestamp(6) not null,
+        writer varchar(30) not null,
+        primary key (id)
+    )
+</code></pre>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Java (Entity)</th>
+<th>PostgreSQL (테이블)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@Entity @Table(name = "posts")</code> 클래스 <code>Post</code></td>
+<td><code>posts</code> 테이블</td>
+</tr>
+<tr>
+<td><code>@Id @GeneratedValue(IDENTITY) Long id</code></td>
+<td><code>id bigint generated by default as identity</code> (자동 번호)</td>
+</tr>
+<tr>
+<td><code>@Column(nullable = false, length = 100) String title</code></td>
+<td><code>title varchar(100) not null</code></td>
+</tr>
+<tr>
+<td><code>LocalDateTime createdAt</code></td>
+<td><code>created_at timestamp(6)</code> (이름의 대문자는 <code>_소문자</code> 로)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="9-5-dto-service-controller---api-담당">9-5. DTO · Service · Controller - API 담당</h2>
+<p>Spring 서버는 일을 세 층으로 나눈다. 각 층은 바로 아래 층만 부른다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>층</th>
+<th>클래스</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller</td>
+<td><code>PostController</code></td>
+<td>어떤 <strong>주소</strong>로 무엇이 왔는지 받고, 무엇을 돌려줄지 정한다</td>
+</tr>
+<tr>
+<td>Service</td>
+<td><code>PostService</code></td>
+<td><strong>규칙</strong>: 글이 없으면 404, 앞뒤 빈칸 지우기, 트랜잭션</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td><code>PostRepository</code></td>
+<td><strong>DB</strong>: SQL 실행</td>
+</tr>
+</tbody>
+</table></div>
+<p>요청·응답 JSON 의 모양은 <strong>DTO</strong>(Data Transfer Object, 데이터 운반용 객체)로 따로 정한다. Entity 를 그대로 주고받지 않는 이유는 각 파일의 주석에 적어 두었다.</p>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/PostRequest.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/PostRequest.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+/**
+ * PostRequest - 글쓰기·수정 때 React 가 보내는 JSON 의 모양 (요청 DTO)
+ *
+ *   { &quot;title&quot;: &quot;제목&quot;, &quot;writer&quot;: &quot;민수&quot;, &quot;content&quot;: &quot;내용&quot; }
+ *
+ * 이 파일이 보여 주는 것
+ *   - record: 값을 담기만 하는 클래스를 한 줄로 만드는 Java 문법. (생성자·getter 가 자동으로 생긴다)
+ *     꺼낼 때는 request.title() 처럼 괄호를 붙인다.
+ *   - 검사 규칙(Bean Validation): Controller 에서 @Valid 를 붙이면 Spring 이 먼저 검사하고,
+ *     어기면 메서드를 실행하지 않고 400 오류를 돌려준다. message 는 그때 보여 줄 문장.
+ *   - Entity(Post)를 그대로 받지 않고 DTO 를 따로 두는 이유: 클라이언트가 id, createdAt 같은
+ *     값을 마음대로 넣어 보내지 못하게, 받을 칸만 정확히 정하기 위해서다.
+ */
+public record PostRequest(
+        @NotBlank(message = &quot;제목을 입력하세요&quot;)                  // null, &quot;&quot;, &quot;   &quot; 모두 거절
+        @Size(max = 100, message = &quot;제목은 100자까지 쓸 수 있습니다&quot;)
+        String title,
+
+        @NotBlank(message = &quot;작성자를 입력하세요&quot;)
+        @Size(max = 30, message = &quot;작성자는 30자까지 쓸 수 있습니다&quot;)
+        String writer,
+
+        String content                                            // 비어도 된다 (null 이면 &quot;&quot; 로 바꿔 저장)
+) {
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/PostResponse.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/PostResponse.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+
+/**
+ * PostResponse - API 가 돌려주는 글 하나의 JSON 모양 (응답 DTO)
+ *
+ *   { &quot;id&quot;: 1, &quot;title&quot;: &quot;...&quot;, &quot;writer&quot;: &quot;민수&quot;, &quot;content&quot;: &quot;...&quot;,
+ *     &quot;created_at&quot;: &quot;2026-11-20T09:37:30.266017&quot;, &quot;updated_at&quot;: &quot;...&quot; }
+ *
+ * 이 파일이 보여 주는 것
+ *   - Entity(Post)를 JSON 으로 바로 내보내지 않고, 보여 줄 칸만 골라 담는다.
+ *   - Java 는 이름을 createdAt(카멜 표기)으로 쓰지만, React 쪽 코드는 created_at(밑줄 표기)을 쓴다.
+ *     @JsonProperty 로 JSON 에 나갈 이름을 정해 준다. (JavaScript 쪽 관례를 따르지 않고 DB 열 이름과 맞췄다)
+ *   - from(post) : Entity → DTO 로 바꾸는 작은 도우미 메서드
+ */
+public record PostResponse(
+        Long id,
+        String title,
+        String writer,
+        String content,
+        @JsonProperty(&quot;created_at&quot;) LocalDateTime createdAt,
+        @JsonProperty(&quot;updated_at&quot;) LocalDateTime updatedAt
+) {
+
+    public static PostResponse from(Post post) {
+        return new PostResponse(post.getId(), post.getTitle(), post.getWriter(), post.getContent(),
+                post.getCreatedAt(), post.getUpdatedAt());
+    }
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/PostService.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/PostService.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import com.example.board.common.ApiException;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * PostService - 게시글 &quot;업무 규칙&quot; 을 담당하는 계층
+ *
+ * 이 파일이 보여 주는 것
+ *   - Controller(주소 담당) → Service(규칙 담당) → Repository(DB 담당) 로 일을 나눈다.
+ *       Controller : 어떤 주소로 무엇이 왔는지, 무엇을 돌려줄지
+ *       Service    : 글이 없으면 404, 앞뒤 빈칸 지우기 같은 규칙
+ *       Repository : SQL 실행
+ *   - @Transactional : 메서드 안의 DB 작업을 하나로 묶는다. 중간에 오류가 나면 모두 취소(rollback)된다.
+ *     readOnly = true 는 &quot;읽기만 한다&quot; 는 표시 (조금 더 가볍게 동작한다).
+ *   - 생성자 주입: Spring 이 PostRepository 객체를 만들어 생성자로 넣어 준다. (new 를 직접 하지 않는다)
+ */
+@Service
+@Transactional(readOnly = true)
+public class PostService {
+
+    private final PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
+
+    /** 글 목록 (최근 글이 위로) */
+    public List&lt;PostResponse&gt; findAll() {
+        return postRepository.findAllByOrderByIdDesc().stream() // List&lt;Post&gt;
+                .map(PostResponse::from) //                        → List&lt;PostResponse&gt;
+                .toList();
+    }
+
+    /** 글 하나 */
+    public PostResponse findOne(Long id) {
+        return PostResponse.from(getPost(id));
+    }
+
+    /** 새 글 저장 → INSERT */
+    @Transactional // 쓰기 작업이므로 readOnly 를 풀어 준다
+    public PostResponse create(PostRequest request) {
+        Post post = new Post(request.title().strip(), request.writer().strip(), clean(request.content()));
+        return PostResponse.from(postRepository.save(post)); // save 후 id·시각이 채워진 객체를 돌려준다
+    }
+
+    /** 글 수정 → UPDATE (값만 바꾸면 메서드가 끝날 때 JPA 가 알아서 UPDATE 한다) */
+    @Transactional
+    public PostResponse update(Long id, PostRequest request) {
+        Post post = getPost(id);
+        post.update(request.title().strip(), request.writer().strip(), clean(request.content()));
+        postRepository.flush(); // UPDATE 를 지금 실행해 updatedAt 이 채워진 값으로 응답하게 한다
+        return PostResponse.from(post);
+    }
+
+    /** 글 삭제 → DELETE */
+    @Transactional
+    public void delete(Long id) {
+        postRepository.delete(getPost(id));
+    }
+
+    /** id 로 글을 찾고, 없으면 404 오류를 던진다 */
+    private Post getPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -&gt; new ApiException(HttpStatus.NOT_FOUND, &quot;글을 찾을 수 없습니다&quot;));
+    }
+
+    /** 내용은 비어도 되지만 null 은 &quot;&quot; 로, 앞뒤 빈칸은 지운다 */
+    private String clean(String content) {
+        return content == null ? &quot;&quot; : content.strip();
+    }
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/post/PostController.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/post/PostController.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.post;
+
+import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * PostController - 게시판 REST API 의 주소 담당
+ *
+ * 이 파일이 보여 주는 것
+ *   - @RestController : 메서드가 돌려주는 객체를 JSON 으로 바꿔 응답한다.
+ *   - @RequestMapping(&quot;/api/posts&quot;) : 아래 모든 주소 앞에 /api/posts 가 붙는다.
+ *   - 주소 + 방식(HTTP 메서드) 하나에 메서드 하나.
+ *
+ *   주소                 방식     메서드     CRUD     성공 상태 코드
+ *   /api/posts           GET      list       Read     200 OK
+ *   /api/posts/{id}      GET      get        Read     200 OK
+ *   /api/posts           POST     create     Create   201 Created
+ *   /api/posts/{id}      PUT      update     Update   200 OK
+ *   /api/posts/{id}      DELETE   delete     Delete   204 No Content
+ *
+ *   - @PathVariable : 주소의 {id} 자리 값을 Long 으로 받는다.
+ *   - @RequestBody  : 요청 본문(JSON)을 PostRequest 객체로 바꿔 받는다.
+ *   - @Valid        : PostRequest 의 검사 규칙(@NotBlank 등)을 먼저 검사한다. 어기면 400.
+ */
+@RestController
+@RequestMapping(&quot;/api/posts&quot;)
+public class PostController {
+
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    @GetMapping
+    public List&lt;PostResponse&gt; list() {
+        return postService.findAll(); // List → JSON 배열
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public PostResponse get(@PathVariable Long id) {
+        return postService.findOne(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // 성공하면 200 대신 201
+    public PostResponse create(@Valid @RequestBody PostRequest request) {
+        return postService.create(request);
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public PostResponse update(@PathVariable Long id, @Valid @RequestBody PostRequest request) {
+        return postService.update(id, request);
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT) // 204: 성공했지만 돌려줄 내용 없음
+    public void delete(@PathVariable Long id) {
+        postService.delete(id);
+    }
+}
+</code></pre>
+<blockquote class="note">
+<p><strong>객체를 new 로 만들지 않았는데 어떻게 쓰지?</strong> <code>@Service</code>, <code>@RestController</code>, <code>@Repository</code> 가 붙은 클래스는 Spring 이 서버를 켤 때 <strong>하나씩 만들어 보관</strong>한다(이런 객체를 <strong>Bean</strong> 이라 한다). 생성자에 필요한 것(<code>PostService(PostRepository ...)</code>)을 적어 두면 Spring 이 보관해 둔 객체를 넣어 준다. 이것을 <strong>의존성 주입</strong>(DI)이라 한다.</p>
+</blockquote>
+<p><strong>오류 응답을 한 곳에서</strong> - 없는 글, 입력 규칙 위반 등 모든 오류를 <code>{ "detail": "이유" }</code> 모양으로 돌려준다. React 쪽은 <code>data.detail</code> 하나만 읽으면 된다.</p>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/common/ApiException.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/common/ApiException.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.common;
+
+import org.springframework.http.HttpStatus;
+
+/**
+ * ApiException - &quot;이 상태 코드와 이 문장으로 응답해 줘&quot; 라는 뜻의 우리 앱 전용 예외
+ *
+ *   throw new ApiException(HttpStatus.NOT_FOUND, &quot;글을 찾을 수 없습니다&quot;);
+ *
+ * 던지기만 하면 GlobalExceptionHandler 가 받아서 { &quot;detail&quot;: &quot;글을 찾을 수 없습니다&quot; } (404) 로 응답한다.
+ * RuntimeException 을 물려받았으므로 throws 를 적지 않아도 된다.
+ */
+public class ApiException extends RuntimeException {
+
+    private final HttpStatus status;
+
+    public ApiException(HttpStatus status, String message) {
+        super(message);
+        this.status = status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+}
+</code></pre>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/common/GlobalExceptionHandler.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/common/GlobalExceptionHandler.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.common;
+
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+/**
+ * GlobalExceptionHandler - 오류를 한 곳에서 받아 같은 모양의 JSON 으로 응답한다
+ *
+ * 이 파일이 보여 주는 것
+ *   - @RestControllerAdvice : 모든 Controller 에서 던져진 예외를 여기서 받는다.
+ *   - @ExceptionHandler(예외클래스.class) : 그 예외가 나면 이 메서드가 응답을 만든다.
+ *   - 오류 응답은 항상 { &quot;detail&quot;: &quot;이유&quot; } 모양으로 맞춘다.
+ *     → React 쪽에서는 data.detail 하나만 읽으면 된다.
+ *     (여기서 처리하지 않으면 Spring 기본 모양 {&quot;timestamp&quot;:..., &quot;status&quot;:400, &quot;error&quot;:&quot;Bad Request&quot;} 이 나가서
+ *      화면에는 &quot;요청 실패 (400)&quot; 처럼 이유 없는 문구만 보이게 된다)
+ *
+ *   예외                                   상태 코드   언제
+ *   ApiException                           지정한 값   없는 글(404) 등 우리가 직접 던진 것
+ *   MethodArgumentNotValidException        400        @Valid 검사 실패 (제목이 비었음 등)
+ *   HttpMessageNotReadableException        400        본문이 비었거나 올바른 JSON 이 아님
+ *   MethodArgumentTypeMismatchException    400        /api/posts/abc 처럼 숫자 자리에 글자가 옴
+ *   NoResourceFoundException               404        /api/nothing 처럼 없는 주소
+ *   HttpRequestMethodNotSupportedException 405        PATCH 처럼 만들지 않은 요청 방식
+ *   HttpMediaTypeNotSupportedException     415        Content-Type 이 application/json 이 아님
+ */
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleApi(ApiException e) {
+        return detail(e.getStatus(), e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleValidation(MethodArgumentNotValidException e) {
+        return detail(HttpStatus.BAD_REQUEST, firstMessage(e));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleNotReadable(HttpMessageNotReadableException e) {
+        return detail(HttpStatus.BAD_REQUEST, &quot;요청 본문이 올바른 JSON 이 아닙니다&quot;);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        // e.getName() : 값이 잘못된 매개변수 이름 (id, user_id ...)
+        return detail(HttpStatus.BAD_REQUEST, &quot;'&quot; + e.getName() + &quot;' 값이 올바르지 않습니다 (숫자를 넣어야 합니다)&quot;);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleNoResource(NoResourceFoundException e) {
+        return detail(HttpStatus.NOT_FOUND, &quot;없는 주소입니다&quot;);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleMethod(HttpRequestMethodNotSupportedException e) {
+        return detail(HttpStatus.METHOD_NOT_ALLOWED, e.getMethod() + &quot; 방식은 이 주소에서 쓸 수 없습니다&quot;);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleMediaType(HttpMediaTypeNotSupportedException e) {
+        return detail(HttpStatus.UNSUPPORTED_MEDIA_TYPE, &quot;Content-Type 을 application/json 으로 보내세요&quot;);
+    }
+
+    /** { &quot;detail&quot;: message } 응답을 만드는 작은 도우미 */
+    private static ResponseEntity&lt;Map&lt;String, String&gt;&gt; detail(HttpStatus status, String message) {
+        return ResponseEntity.status(status).body(Map.of(&quot;detail&quot;, message));
+    }
+
+    /**
+     * 여러 칸이 한꺼번에 틀렸을 때 보여 줄 &quot;첫 번째&quot; 이유를 고른다.
+     *   - Spring 이 돌려주는 오류 목록은 순서가 매번 달라질 수 있다.
+     *     그래서 record 에 칸을 적은 순서(title → writer ...)대로 골라, 항상 위쪽 칸의 오류가 먼저 보이게 한다.
+     *   - 한 칸에 오류가 둘이면(빈 아이디: @NotBlank 와 @Pattern) &quot;입력하세요&quot;(NotBlank) 를 먼저 보여 준다.
+     */
+    private static String firstMessage(MethodArgumentNotValidException e) {
+        Object target = e.getBindingResult().getTarget(); // 검사한 객체 (PostRequest 등)
+        List&lt;String&gt; order = (target != null &amp;&amp; target.getClass().isRecord())
+                ? Arrays.stream(target.getClass().getRecordComponents()).map(RecordComponent::getName).toList()
+                : List.of();
+        return e.getBindingResult().getFieldErrors().stream()
+                .min(Comparator.&lt;FieldError&gt;comparingInt(err -&gt; order.indexOf(err.getField()))
+                        .thenComparingInt(err -&gt; &quot;NotBlank&quot;.equals(err.getCode()) ? 0 : 1))
+                .map(FieldError::getDefaultMessage)
+                .orElse(&quot;입력값을 확인하세요&quot;);
+    }
+}
+</code></pre>
+<p><strong>CORS 가 뭐길래?</strong> 브라우저는 보안을 위해, 지금 페이지의 <strong>출처</strong>(origin = 프로토콜 + 호스트 + 포트)와 다른 출처로 보내는 요청의 응답을 기본으로 막는다. React 는 <code>http://localhost:5173</code>, API 는 <code>http://localhost:8080</code> 이므로 포트가 달라 <strong>다른 출처</strong>다. 서버가 응답 헤더로 "5173 에서 온 요청은 괜찮아" 라고 말해 줘야 브라우저가 응답을 React 에게 넘긴다.</p>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/config/WebConfig.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/config/WebConfig.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * WebConfig - CORS 설정 (React 개발 서버에서 오는 요청 허락하기)
+ *
+ * 브라우저는 &quot;다른 출처(주소·포트)&quot; 로 보내는 요청의 응답을 기본으로 막는다.
+ *   React 개발 서버  http://localhost:5173
+ *   API 서버        http://localhost:8080   ← 포트가 다르면 다른 출처
+ * 그래서 API 서버가 &quot;5173 에서 온 요청은 받아도 된다&quot; 고 응답 헤더로 알려 줘야 한다.
+ *
+ * @Configuration : Spring 이 시작할 때 읽어 가는 설정 클래스라는 표시
+ */
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping(&quot;/api/**&quot;) //                                     /api 로 시작하는 주소에
+                .allowedOrigins(&quot;http://localhost:5173&quot;, &quot;http://127.0.0.1:5173&quot;) // 이 출처에서 온 요청을
+                .allowedMethods(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;) //               이 방식으로
+                .allowedHeaders(&quot;*&quot;); //                                         어떤 헤더든 허락
+    }
+}
+</code></pre>
+<p>CORS 설정을 빼면 브라우저 콘솔(F12)에 이런 빨간 오류가 뜬다.</p>
+<pre><code class="language-text">Access to fetch at 'http://localhost:8080/api/posts' from origin 'http://localhost:5173'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+</code></pre>
+<blockquote class="note">
+<p>CORS 는 <strong>브라우저</strong>가 하는 검사다. <code>/docs</code> 화면이나 PowerShell 로 보내는 요청에는 적용되지 않는다. "/docs 에서는 되는데 React 에서는 안 된다" 면 CORS 를 의심하자.</p>
+</blockquote>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>상태 코드</th>
+<th>뜻</th>
+<th>이 서버에서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200 OK</td>
+<td>성공</td>
+<td>목록, 읽기, 수정</td>
+</tr>
+<tr>
+<td>201 Created</td>
+<td>새로 만들었음</td>
+<td>글쓰기</td>
+</tr>
+<tr>
+<td>204 No Content</td>
+<td>성공, 돌려줄 내용 없음</td>
+<td>삭제</td>
+</tr>
+<tr>
+<td>400 Bad Request</td>
+<td>입력이 규칙에 안 맞음</td>
+<td>제목이 비었음, 100자 초과 (<code>@Valid</code> 검사), JSON 모양이 틀림, <code>/api/posts/abc</code> 처럼 번호 자리에 글자</td>
+</tr>
+<tr>
+<td>404 Not Found</td>
+<td>없음</td>
+<td>없는 글 번호, <code>/api/nothing</code> 처럼 없는 주소</td>
+</tr>
+<tr>
+<td>405 Method Not Allowed</td>
+<td>그 주소에 없는 요청 방식</td>
+<td><code>PATCH /api/posts/1</code> (만들지 않은 방식)</td>
+</tr>
+<tr>
+<td>415 Unsupported Media Type</td>
+<td>본문 종류가 틀림</td>
+<td><code>Content-Type: application/json</code> 을 빠뜨림</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="9-6-서버-실행과-docs-에서-시험하기">9-6. 서버 실행과 /docs 에서 시험하기</h2>
+<p>IntelliJ 에서 <code>src/main/java/com/example/board/BoardApplication.java</code> 를 연다.</p>
+<div class="file"><span>📄 basic/board/backend/src/main/java/com/example/board/BoardApplication.java</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/backend/src/main/java/com/example/board/BoardApplication.java" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-java">package com.example.board;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * BoardApplication - 게시판 API 서버의 시작점 (main 메서드)
+ *
+ * IntelliJ 에서 이 파일을 열고 class 이름 왼쪽의 초록색 ▶ 버튼을 누르면 서버가 켜진다.
+ * (터미널에서는 backend 폴더에서 .\gradlew.bat bootRun)
+ *
+ * @SpringBootApplication 은 &quot;이 패키지(com.example.board)와 그 아래 패키지를 훑어서
+ * @RestController, @Service, @Repository, @Configuration 이 붙은 클래스를 찾아 등록하라&quot; 는 뜻이다.
+ * 그래서 다른 클래스들은 반드시 com.example.board 아래 패키지에 둔다.
+ */
+@SpringBootApplication
+public class BoardApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BoardApplication.class, args);
+    }
+}
+</code></pre>
+<p><code>class BoardApplication</code> 왼쪽의 <strong>초록색 ▶</strong> → <strong>Run 'BoardApplication'</strong> 을 누른다. 아래쪽 <strong>Run</strong> 창에 로그가 흐르다가 다음 줄이 보이면 성공이다. (교안을 만들 때 실행한 로그에서 앞부분을 줄였다)</p>
+<pre><code class="language-text">... INFO ... o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
+... INFO ... com.example.board.BoardApplication : Started BoardApplication in 8.349 seconds (process running for 9.294)
+</code></pre>
+<blockquote class="note">
+<p><strong>노란색 WARN 줄은 괜찮다.</strong> 시작할 때 <code>SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production ...</code> 같은 WARN 이 두 줄 보인다. "실제 서비스에서는 API 시험 화면(/docs)을 꺼 두라" 는 안내일 뿐, 실습에서는 켜 두는 것이 맞다. <strong>ERROR</strong> 줄이 보이거나 <code>Started BoardApplication</code> 이 나오지 않을 때만 부록 A 를 찾아보자.</p>
+</blockquote>
+<p>한 번 실행한 뒤에는 화면 오른쪽 위의 ▶(Run) 버튼으로 다시 실행하고, ■(Stop) 버튼으로 끈다. 코드를 고쳤으면 <strong>■ 로 끄고 다시 ▶</strong>.</p>
+<blockquote class="note">
+<p><strong>터미널에서 실행하려면</strong> <code>C:\study\board\backend</code> 에서 <code>.\gradlew.bat bootRun</code> 을 친다. (JDK 설치 때 JAVA_HOME 을 설정했어야 한다.) 끌 때는 <strong>Ctrl+C</strong>.</p>
+<p><strong><code>Port 8080 was already in use</code></strong> 오류가 나면 이미 서버가 하나 켜져 있는 것이다. IntelliJ 의 Run 창 탭이 여러 개인지, 다른 터미널에서 bootRun 을 하고 있는지 확인해 하나를 끈다.</p>
+</blockquote>
+<p>브라우저에서 <strong>http://localhost:8080/docs</strong> 를 연다. springdoc 이 만들어 주는 API 시험 화면(<strong>Swagger UI</strong>)으로 바뀐다.</p>
+<figure><a href="../images/b9_docs.png" target="_blank"><img src="../images/b9_docs.png" alt="springdoc 이 자동으로 만든 /docs 화면" loading="lazy"></a><figcaption>springdoc 이 자동으로 만든 /docs 화면</figcaption></figure>
+<ol>
+<li><strong>POST /api/posts</strong> 를 눌러 펼치고 <strong>Try it out</strong> 을 누른다.</li>
+<li>Request body 를 아래처럼 고치고 <strong>Execute</strong>.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;title&quot;: &quot;React 게시판 첫 글입니다&quot;,
+  &quot;writer&quot;: &quot;민수&quot;,
+  &quot;content&quot;: &quot;Spring Boot 와 PostgreSQL 에 저장된 글입니다.&quot;
+}
+</code></pre>
+<ol start="3">
+<li>아래 Responses 에 <strong>Code 201</strong> 과 함께 저장된 글이 나온다.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;title&quot;: &quot;React 게시판 첫 글입니다&quot;,
+  &quot;writer&quot;: &quot;민수&quot;,
+  &quot;content&quot;: &quot;Spring Boot 와 PostgreSQL 에 저장된 글입니다.&quot;,
+  &quot;created_at&quot;: &quot;2026-11-20T10:43:20.882643&quot;,
+  &quot;updated_at&quot;: &quot;2026-11-20T10:43:20.882643&quot;
+}
+</code></pre>
+<ol start="4">
+<li>글을 두세 개 더 쓰고, <strong>GET /api/posts</strong> 를 Execute 해서 목록이 오는지 본다. 브라우저 주소창에 <code>http://localhost:8080/api/posts</code> 를 직접 쳐도 JSON 이 보인다.</li>
+<li>제목을 빈칸(<code>"  "</code>)으로 보내 보자. <strong>400</strong> 과 함께 <code>{"detail": "제목을 입력하세요"}</code> 가 온다. <code>PostRequest</code> 의 <code>@NotBlank</code> 규칙을 <code>@Valid</code> 가 검사하고, <code>GlobalExceptionHandler</code> 가 이 모양으로 바꿔 준 것이다.</li>
+</ol>
+<p><strong>데이터베이스에 정말 들어갔을까?</strong> 컨테이너 안의 psql 로 직접 확인해 보자.</p>
+<p><strong>[PS]</strong></p>
+<pre><code class="language-powershell">docker exec spring-board-db psql -U postgres -d board -c &quot;SELECT id, title, writer, created_at FROM posts ORDER BY id;&quot;
+</code></pre>
+<pre><code class="language-text"> id |           title            | writer |         created_at
+----+----------------------------+--------+----------------------------
+  1 | React 게시판 첫 글입니다   | 민수   | 2026-11-20 10:43:20.882643
+  2 | useEffect 로 목록 불러오기 | 지수   | 2026-11-20 10:43:20.898685
+  3 | CORS 오류가 났을 때        | 현우   | 2026-11-20 10:43:20.909459
+  4 | 오늘 배운 useState 정리    | 서연   | 2026-11-20 10:43:20.920226
+(4 rows)
+</code></pre>
+<p>내 화면에는 내가 쓴 글이 나온다. 그리고 IntelliJ Run 창에는 그때마다 JPA 가 만든 SQL(<code>insert into posts ...</code>, <code>select ... from posts ...</code>)이 찍힌다. 여기까지 되면 백엔드는 완성이다. <strong>서버는 켜 둔 채로</strong> 다음으로 넘어간다.</p>
+<h2 id="9-7-react-프로젝트-만들기">9-7. React 프로젝트 만들기</h2>
+<p><strong>[PS]</strong> 새 터미널(+)을 열고</p>
+<pre><code class="language-powershell">cd C:\study\board
+npm create vite@latest frontend -- --template react --no-interactive
+cd frontend
+npm install
+</code></pre>
+<p>1장에서처럼 정리한다.</p>
+<ol>
+<li><code>src/App.css</code>, <code>src/index.css</code> 의 내용을 지운다. (<code>App.css</code> 는 9-12 에서 채운다)</li>
+<li><code>src/assets</code> 폴더는 쓰지 않으니 지워도 된다.</li>
+<li><code>src/components</code> 폴더를 만든다.</li>
+</ol>
+<p>완성하면 폴더는 이렇게 된다.</p>
+<pre><code class="language-text">C:\study\board
+├─ docker-compose.yml
+├─ backend                    ← IntelliJ 로 연 Spring Boot 프로젝트
+│  ├─ build.gradle
+│  └─ src/main/java/com/example/board/...
+└─ frontend
+   ├─ index.html
+   └─ src
+      ├─ main.jsx
+      ├─ App.jsx               ← 화면 전환 (어떤 화면을 보여 줄지)
+      ├─ App.css               ← 게시판 모양
+      ├─ config.js             ← API 주소, 날짜 바꾸기 함수
+      └─ components
+         ├─ PostList.jsx       ← 목록      (GET 목록)
+         ├─ PostDetail.jsx     ← 글 읽기   (GET 하나, DELETE)
+         └─ PostForm.jsx       ← 글쓰기·수정 (POST, PUT)
+</code></pre>
+<h2 id="9-8-configjs-와-appjsx---화면-전환">9-8. config.js 와 App.jsx - 화면 전환</h2>
+<p>API 주소는 여러 파일에서 쓰므로 한 곳에 둔다.</p>
+<div class="file"><span>📄 basic/board/frontend/src/config.js</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/config.js" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-js">// config.js - 여러 파일이 함께 쓰는 설정 값
+//
+// API 서버(Spring Boot) 주소. 서버 주소가 바뀌면 이 한 줄만 고치면 된다.
+export const API_URL = &quot;http://localhost:8080/api&quot;;
+
+// 날짜 글자 &quot;2026-11-20T10:30:00.123+09:00&quot; → &quot;2026. 11. 20. 오전 10:30&quot; 처럼 읽기 좋게 바꾼다
+export function formatDate(text) {
+  return new Date(text).toLocaleString(&quot;ko-KR&quot;, {
+    year: &quot;numeric&quot;,
+    month: &quot;2-digit&quot;,
+    day: &quot;2-digit&quot;,
+    hour: &quot;2-digit&quot;,
+    minute: &quot;2-digit&quot;,
+  });
+}
+</code></pre>
+<p>이 게시판은 화면이 세 가지(목록·읽기·글쓰기/수정)다. <strong>"지금 어떤 화면인가"</strong> 를 App 의 state 하나로 관리하고, 화면을 바꾸는 함수를 자식들에게 props 로 내려준다 (6-5 state 끌어올리기).</p>
+<figure><a href="../images/fig_board_pages.png" target="_blank"><img src="../images/fig_board_pages.png" alt="기초 게시판의 화면 전환" loading="lazy"></a><figcaption>기초 게시판의 화면 전환</figcaption></figure>
+<div class="file"><span>📄 basic/board/frontend/src/App.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/App.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// App.jsx - 게시판의 &quot;화면 전환&quot; 을 맡는 부모 컴포넌트
+//
+// 이 파일이 보여 주는 것
+//   - 지금 어떤 화면을 보여 줄지를 state 하나(page)로 관리한다.
+//       { name: &quot;list&quot; }              → 글 목록
+//       { name: &quot;detail&quot;, id: 3 }     → 3번 글 읽기
+//       { name: &quot;form&quot; }              → 글쓰기
+//       { name: &quot;form&quot;,   id: 3 }     → 3번 글 수정
+//   - 화면을 바꾸는 함수(go...)를 자식에게 props 로 내려준다 (6장 state 끌어올리기).
+//   - 조건부 렌더링(5장)으로 page.name 에 맞는 컴포넌트 하나만 그린다.
+//
+//   ※ 이 방식은 주소창의 주소가 바뀌지 않는다. 그래서 새로 고침하면 목록으로 돌아가고,
+//     &quot;3번 글&quot; 주소를 친구에게 보낼 수도 없다. 심화 과정에서 React Router 로 해결한다.
+
+import { useState } from &quot;react&quot;;
+import PostList from &quot;./components/PostList&quot;;
+import PostDetail from &quot;./components/PostDetail&quot;;
+import PostForm from &quot;./components/PostForm&quot;;
+import &quot;./App.css&quot;;
+
+function App() {
+  const [page, setPage] = useState({ name: &quot;list&quot; }); // 처음 화면은 목록
+
+  // 화면을 바꾸는 함수들 - 자식 컴포넌트가 불러서 쓴다
+  const goList = () =&gt; setPage({ name: &quot;list&quot; });
+  const goDetail = (id) =&gt; setPage({ name: &quot;detail&quot;, id });
+  const goForm = (id) =&gt; setPage({ name: &quot;form&quot;, id }); // id 가 없으면 글쓰기, 있으면 수정
+
+  return (
+    &lt;div className=&quot;container&quot;&gt;
+      &lt;header className=&quot;header&quot;&gt;
+        {/* 제목을 누르면 언제든 목록으로 */}
+        &lt;h1 onClick={goList}&gt;📋 React 게시판&lt;/h1&gt;
+        &lt;span className=&quot;badge&quot;&gt;Spring Boot + PostgreSQL&lt;/span&gt;
+      &lt;/header&gt;
+
+      {page.name === &quot;list&quot; &amp;&amp; &lt;PostList onSelect={goDetail} onWrite={() =&gt; goForm()} /&gt;}
+      {page.name === &quot;detail&quot; &amp;&amp; (
+        &lt;PostDetail id={page.id} onBack={goList} onEdit={goForm} onDeleted={goList} /&gt;
+      )}
+      {page.name === &quot;form&quot; &amp;&amp; (
+        &lt;PostForm
+          id={page.id}
+          onSaved={goDetail} // 저장이 끝나면 그 글 읽기 화면으로
+          onCancel={() =&gt; (page.id ? goDetail(page.id) : goList())} // 수정 취소 → 글로, 글쓰기 취소 → 목록으로
+        /&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<blockquote class="note">
+<p>이 단계에서는 아직 세 컴포넌트 파일이 없어서 오류 화면이 뜬다. 9-9 ~ 9-11 에서 하나씩 만들면 사라진다.</p>
+</blockquote>
+<h2 id="9-9-postlist---목록-read">9-9. PostList - 목록 (Read)</h2>
+<p>8장의 Ex0802Fetch 와 같은 모양이다. 주소만 Spring Boot 서버로 바뀌었다.</p>
+<div class="file"><span>📄 basic/board/frontend/src/components/PostList.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/components/PostList.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostList.jsx - 글 목록 화면 (CRUD 의 R: Read 목록)
+//
+// 이 파일이 보여 주는 것
+//   - 화면에 처음 나타날 때 useEffect(..., []) 로 GET /api/posts 를 한 번 요청한다 (8장).
+//   - loading / error / posts 세 state 로 &quot;불러오는 중 · 실패 · 목록&quot; 을 나눠 그린다.
+//   - 제목을 누르면 부모(App)가 내려준 onSelect(id) 를 불러 읽기 화면으로 바꾼다.
+
+import { useEffect, useState } from &quot;react&quot;;
+import { API_URL, formatDate } from &quot;../config&quot;;
+
+function PostList({ onSelect, onWrite }) {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    async function load() {
+      try {
+        const res = await fetch(`${API_URL}/posts`); // GET 은 fetch(주소) 만 쓰면 된다
+        if (!res.ok) throw new Error(`목록을 불러오지 못했습니다 (${res.status})`);
+        setPosts(await res.json()); // JSON 배열 → 자바스크립트 배열
+      } catch (err) {
+        // 서버가 꺼져 있으면 fetch 자체가 실패한다 (TypeError: Failed to fetch)
+        setError(err.message === &quot;Failed to fetch&quot; ? &quot;API 서버에 연결할 수 없습니다. 서버가 켜져 있나요?&quot; : err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []); // [] → 처음 한 번만
+
+  if (loading) return &lt;p className=&quot;info&quot;&gt;⏳ 불러오는 중...&lt;/p&gt;;
+  if (error) return &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;div className=&quot;toolbar&quot;&gt;
+        &lt;span&gt;전체 {posts.length}개&lt;/span&gt;
+        &lt;button className=&quot;primary&quot; onClick={onWrite}&gt;
+          ✏️ 글쓰기
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      {posts.length === 0 ? (
+        &lt;p className=&quot;info&quot;&gt;아직 글이 없습니다. 첫 글을 써 보세요!&lt;/p&gt;
+      ) : (
+        &lt;table className=&quot;post-table&quot;&gt;
+          &lt;thead&gt;
+            &lt;tr&gt;
+              &lt;th className=&quot;col-id&quot;&gt;번호&lt;/th&gt;
+              &lt;th&gt;제목&lt;/th&gt;
+              &lt;th className=&quot;col-writer&quot;&gt;작성자&lt;/th&gt;
+              &lt;th className=&quot;col-date&quot;&gt;작성일&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+            {posts.map((post) =&gt; (
+              &lt;tr key={post.id}&gt;
+                &lt;td className=&quot;col-id&quot;&gt;{post.id}&lt;/td&gt;
+                &lt;td&gt;
+                  {/* 링크처럼 보이지만 주소 이동이 아니라 state 를 바꾸는 버튼 */}
+                  &lt;button className=&quot;link&quot; onClick={() =&gt; onSelect(post.id)}&gt;
+                    {post.title}
+                  &lt;/button&gt;
+                &lt;/td&gt;
+                &lt;td className=&quot;col-writer&quot;&gt;{post.writer}&lt;/td&gt;
+                &lt;td className=&quot;col-date&quot;&gt;{formatDate(post.created_at)}&lt;/td&gt;
+              &lt;/tr&gt;
+            ))}
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default PostList;
+</code></pre>
+<h2 id="9-10-postdetail---글-읽기-read-와-삭제-delete">9-10. PostDetail - 글 읽기 (Read) 와 삭제 (Delete)</h2>
+<div class="file"><span>📄 basic/board/frontend/src/components/PostDetail.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/components/PostDetail.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostDetail.jsx - 글 읽기 화면 (R: Read 하나 + D: Delete)
+//
+// 이 파일이 보여 주는 것
+//   - props 로 받은 id 의 글을 GET /api/posts/{id} 로 불러온다.
+//     useEffect 의 의존성 배열에 [id] 를 넣어, id 가 바뀌면 다시 불러온다.
+//   - 삭제: confirm 으로 한 번 더 묻고 → DELETE /api/posts/{id} → 성공(204)하면 목록으로.
+//   - 404(없는 글)도 오류 문구로 보여 준다.
+
+import { useEffect, useState } from &quot;react&quot;;
+import { API_URL, formatDate } from &quot;../config&quot;;
+
+function PostDetail({ id, onBack, onEdit, onDeleted }) {
+  const [post, setPost] = useState(null); // 아직 못 받았으면 null
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    async function load() {
+      try {
+        const res = await fetch(`${API_URL}/posts/${id}`);
+        if (res.status === 404) throw new Error(&quot;글을 찾을 수 없습니다. 이미 지워졌을 수 있어요.&quot;);
+        if (!res.ok) throw new Error(`글을 불러오지 못했습니다 (${res.status})`);
+        setPost(await res.json());
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    load();
+  }, [id]);
+
+  const handleDelete = async () =&gt; {
+    if (!confirm(&quot;정말 삭제할까요? 되돌릴 수 없습니다.&quot;)) return; // 취소를 누르면 여기서 끝
+    // fetch 의 두 번째 인자로 &quot;방식(method)&quot; 을 정한다. 기본값은 GET
+    const res = await fetch(`${API_URL}/posts/${id}`, { method: &quot;DELETE&quot; });
+    if (res.ok) {
+      onDeleted(); // 부모에게 &quot;지웠어요&quot; → 목록 화면으로
+    } else {
+      alert(`삭제하지 못했습니다 (${res.status})`);
+    }
+  };
+
+  if (error)
+    return (
+      &lt;div&gt;
+        &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;
+        &lt;button onClick={onBack}&gt;목록&lt;/button&gt;
+      &lt;/div&gt;
+    );
+  if (!post) return &lt;p className=&quot;info&quot;&gt;⏳ 불러오는 중...&lt;/p&gt;;
+
+  return (
+    &lt;article className=&quot;post-detail&quot;&gt;
+      &lt;h2&gt;{post.title}&lt;/h2&gt;
+      &lt;div className=&quot;meta&quot;&gt;
+        {post.writer} · {formatDate(post.created_at)}
+        {/* 고친 적이 있으면 고친 시각도 보여 준다 */}
+        {post.updated_at !== post.created_at &amp;&amp; ` · 수정 ${formatDate(post.updated_at)}`}
+      &lt;/div&gt;
+      {/* 줄바꿈을 그대로 보이게 하려고 CSS 에 white-space: pre-wrap 을 주었다 */}
+      &lt;div className=&quot;content&quot;&gt;{post.content || &quot;(내용 없음)&quot;}&lt;/div&gt;
+
+      &lt;div className=&quot;buttons&quot;&gt;
+        &lt;button onClick={onBack}&gt;목록&lt;/button&gt;
+        &lt;button onClick={() =&gt; onEdit(post.id)}&gt;수정&lt;/button&gt;
+        &lt;button className=&quot;danger&quot; onClick={handleDelete}&gt;
+          삭제
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/article&gt;
+  );
+}
+
+export default PostDetail;
+</code></pre>
+<p><code>fetch</code> 의 두 번째 인자로 요청 방식을 정한다. GET 은 기본값이라 생략했고, 삭제는 <code>{ method: "DELETE" }</code> 를 넘긴다.</p>
+<h2 id="9-11-postform---글쓰기-create-와-수정-update">9-11. PostForm - 글쓰기 (Create) 와 수정 (Update)</h2>
+<div class="file"><span>📄 basic/board/frontend/src/components/PostForm.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/components/PostForm.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostForm.jsx - 글쓰기 / 수정 화면 (C: Create, U: Update)
+//
+// 이 파일이 보여 주는 것
+//   - 하나의 폼으로 글쓰기와 수정을 함께 처리한다.
+//       id 가 없으면 → 빈 폼 → POST /api/posts         (새 글)
+//       id 가 있으면 → 그 글을 불러와 폼을 채움 → PUT /api/posts/{id}  (수정)
+//   - 입력 칸 여러 개를 객체 state 하나(form)로 관리한다 (7장 Ex0702Form 과 같은 모양).
+//   - JSON 을 보낼 때는 method, headers(Content-Type), body(JSON.stringify) 세 가지를 쓴다.
+//   - 저장 중에는 버튼을 막아(disabled) 두 번 눌러 글이 두 개 생기는 일을 막는다.
+
+import { useEffect, useState } from &quot;react&quot;;
+import { API_URL } from &quot;../config&quot;;
+
+const EMPTY = { title: &quot;&quot;, writer: &quot;&quot;, content: &quot;&quot; };
+
+function PostForm({ id, onSaved, onCancel }) {
+  const isEdit = id !== undefined; // 수정 화면인가?
+  const [form, setForm] = useState(EMPTY);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  // 수정 화면이면 원래 글을 불러와 폼에 채운다
+  useEffect(() =&gt; {
+    if (!isEdit) return; // 글쓰기면 할 일 없음
+    async function load() {
+      const res = await fetch(`${API_URL}/posts/${id}`);
+      if (!res.ok) {
+        setError(&quot;글을 불러오지 못했습니다&quot;);
+        return;
+      }
+      const post = await res.json();
+      // 서버가 준 글에는 id, created_at 등도 있지만 폼에는 세 칸만 필요하다
+      setForm({ title: post.title, writer: post.writer, content: post.content });
+    }
+    load();
+  }, [id, isEdit]);
+
+  const handleChange = (e) =&gt; {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    if (!form.title.trim() || !form.writer.trim()) {
+      setError(&quot;제목과 작성자를 입력하세요.&quot;);
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch(isEdit ? `${API_URL}/posts/${id}` : `${API_URL}/posts`, {
+        method: isEdit ? &quot;PUT&quot; : &quot;POST&quot;,
+        headers: { &quot;Content-Type&quot;: &quot;application/json&quot; }, // &quot;본문은 JSON 입니다&quot; 라고 알린다
+        body: JSON.stringify(form), //                      객체 → JSON 글자
+      });
+      if (!res.ok) throw new Error(`저장하지 못했습니다 (${res.status})`);
+      const saved = await res.json(); // 서버가 돌려준 글 (새 글이면 새 번호가 들어 있다)
+      onSaved(saved.id); //              부모에게 알림 → 그 글 읽기 화면으로
+    } catch (err) {
+      setError(err.message);
+      setSaving(false); // 실패했을 때만 버튼을 다시 살린다 (성공하면 화면이 바뀐다)
+    }
+  };
+
+  return (
+    &lt;form className=&quot;post-form&quot; onSubmit={handleSubmit}&gt;
+      &lt;h2&gt;{isEdit ? `${id}번 글 수정` : &quot;새 글 쓰기&quot;}&lt;/h2&gt;
+      {error &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;}
+
+      &lt;label&gt;
+        제목
+        &lt;input name=&quot;title&quot; value={form.title} onChange={handleChange} maxLength={100} /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        작성자
+        &lt;input name=&quot;writer&quot; value={form.writer} onChange={handleChange} maxLength={30} /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        내용
+        &lt;textarea name=&quot;content&quot; value={form.content} onChange={handleChange} rows={8} /&gt;
+      &lt;/label&gt;
+
+      &lt;div className=&quot;buttons&quot;&gt;
+        &lt;button type=&quot;button&quot; onClick={onCancel}&gt;
+          취소
+        &lt;/button&gt;
+        {/* type=&quot;button&quot; 이 아닌 버튼은 submit → onSubmit 실행 */}
+        &lt;button type=&quot;submit&quot; className=&quot;primary&quot; disabled={saving}&gt;
+          {saving ? &quot;저장 중...&quot; : &quot;저장&quot;}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  );
+}
+
+export default PostForm;
+</code></pre>
+<p>JSON 을 보내는 fetch 는 세 가지를 꼭 넣는다.</p>
+<pre><code class="language-jsx">fetch(주소, {
+  method: &quot;POST&quot;,                                   // ① 방식
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },  // ② &quot;본문은 JSON 입니다&quot;
+  body: JSON.stringify(form),                       // ③ 객체 → JSON 글자
+});
+</code></pre>
+<p><code>Content-Type</code> 을 빠뜨리면 브라우저가 글자 본문을 <code>text/plain</code> 으로 보내고, Spring 은 그 본문을 <code>PostRequest</code> 로 바꾸지 못해 <strong>415</strong> (<code>{"detail": "Content-Type 을 application/json 으로 보내세요"}</code>)를 돌려준다.</p>
+<h2 id="9-12-appcss---모양-입히기">9-12. App.css - 모양 입히기</h2>
+<div class="file"><span>📄 basic/board/frontend/src/App.css</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/board/frontend/src/App.css" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-css">/* App.css - 게시판 화면 꾸미기 (CSS 는 HTML 수업 때와 똑같다. className 으로 연결) */
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ---------- 머리글 */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 3px solid #61dafb;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #1f3a5f;
+  cursor: pointer;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eef3f8;
+  color: #03588c;
+  font-size: 12px;
+}
+
+/* ---------- 버튼 */
+button {
+  padding: 6px 14px;
+  border: 1px solid #c9d3df;
+  border-radius: 6px;
+  background: white;
+  font-family: inherit; /* 버튼은 기본으로 다른 글꼴을 쓰므로 바깥 글꼴을 물려받게 한다 */
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f2f6fa;
+}
+
+button.primary {
+  border-color: #03588c;
+  background: #03588c;
+  color: white;
+}
+
+button.danger {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 링크처럼 보이는 버튼 (목록의 제목) */
+button.link {
+  padding: 0;
+  font-size: 15px;
+  border: none;
+  background: none;
+  color: #1f3a5f;
+  text-align: left;
+}
+
+button.link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 목록 */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #6b7280;
+}
+
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.post-table th {
+  padding: 9px 6px;
+  background: #1f3a5f;
+  color: white;
+  font-weight: normal;
+}
+
+.post-table td {
+  padding: 9px 6px;
+  font-size: 15px;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.col-id,
+.col-writer {
+  width: 80px;
+  text-align: center;
+}
+
+.col-date {
+  width: 190px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* ---------- 읽기 */
+.post-detail h2 {
+  margin: 0 0 6px;
+}
+
+.meta {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e9ef;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.content {
+  min-height: 120px;
+  padding: 16px 2px;
+  white-space: pre-wrap; /* 내용의 줄바꿈을 그대로 보여 준다 */
+  line-height: 1.7;
+}
+
+.buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* ---------- 글쓰기·수정 */
+.post-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #374151;
+}
+
+.post-form input,
+.post-form textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #c9d3df;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: normal;
+}
+
+/* ---------- 안내·오류 문구 */
+.info {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fdecea;
+  color: #c0392b;
+}
+</code></pre>
+<p><code>src/index.css</code> 에는 1-4 의 내용(글꼴·여백)을 넣는다.</p>
+<h2 id="9-13-전체-실행하기">9-13. 전체 실행하기</h2>
+<p>세 가지가 모두 켜져 있어야 한다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>어디서</th>
+<th>폴더</th>
+<th>할 일</th>
+<th>확인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code 터미널 1</td>
+<td><code>C:\study\board</code></td>
+<td><code>docker compose up -d</code> (한 번 켜 두면 됨)</td>
+<td><code>docker compose ps</code> 가 healthy</td>
+</tr>
+<tr>
+<td>IntelliJ</td>
+<td><code>C:\study\board\backend</code></td>
+<td><code>BoardApplication</code> ▶ 실행</td>
+<td>http://localhost:8080/docs</td>
+</tr>
+<tr>
+<td>VS Code 터미널 2</td>
+<td><code>C:\study\board\frontend</code></td>
+<td><code>npm run dev</code></td>
+<td>http://localhost:5173</td>
+</tr>
+</tbody>
+</table></div>
+<p>http://localhost:5173 을 열면 게시판이 나온다. 처음에는 글이 없어서 이렇게 보인다.</p>
+<figure><a href="../images/b9_empty.png" target="_blank"><img src="../images/b9_empty.png" alt="글이 없을 때" loading="lazy"></a><figcaption>글이 없을 때</figcaption></figure>
+<p>글을 몇 개 쓰면 목록이 채워진다.</p>
+<figure><a href="../images/b9_list.png" target="_blank"><img src="../images/b9_list.png" alt="글 목록 (PostList)" loading="lazy"></a><figcaption>글 목록 (PostList)</figcaption></figure>
+<p><strong>글쓰기</strong> 버튼 → 제목·작성자·내용 입력 → <strong>저장</strong>.</p>
+<figure><a href="../images/b9_form.png" target="_blank"><img src="../images/b9_form.png" alt="글쓰기 (PostForm)" loading="lazy"></a><figcaption>글쓰기 (PostForm)</figcaption></figure>
+<p>저장하면 방금 쓴 글의 읽기 화면으로 바뀐다. <strong>수정</strong>, <strong>삭제</strong>(확인 창이 뜬다)도 해 보자.</p>
+<figure><a href="../images/b9_detail.png" target="_blank"><img src="../images/b9_detail.png" alt="글 읽기 (PostDetail)" loading="lazy"></a><figcaption>글 읽기 (PostDetail)</figcaption></figure>
+<blockquote class="note">
+<p><strong>IntelliJ Run 창도 함께 보자.</strong> 화면에서 무언가를 할 때마다 JPA 가 실행한 SQL(<code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>)이 찍힌다. React 의 버튼 하나가 서버를 거쳐 어떤 SQL 이 되는지 눈으로 확인할 수 있다.</p>
+</blockquote>
+<p><strong>F12 → Network 탭</strong>을 열어 두고 글쓰기를 해 보면, <code>posts</code> 요청을 눌러 <strong>Payload</strong>(보낸 JSON)와 <strong>Response</strong>(받은 JSON)를 직접 볼 수 있다. 무언가 안 될 때 가장 먼저 볼 곳이다. 글쓰기·수정·삭제 때는 그 앞에 <code>OPTIONS</code> 요청(preflight)이 먼저 보이는데, 브라우저가 "이 요청 보내도 돼?" 하고 CORS 를 미리 물어보는 <strong>사전 요청</strong>이다.</p>
+<blockquote class="note">
+<p>내 코드가 잘 안 되면 저장소의 완성본(<code>basic/board/frontend</code>)에서 <code>npm install</code> → <code>npm run dev</code> 로 실행해 비교해 보자. 완성본과 내 프로젝트를 동시에 켜면 하나는 5174 번 포트로 뜨는데, <strong>CORS 는 5173 만 허락</strong>했으므로 5174 쪽은 목록을 못 불러온다. 하나만 켜자.</p>
+</blockquote>
+<h2 id="9-14-끝내기와-다시-시작하기">9-14. 끝내기와 다시 시작하기</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>하고 싶은 일</th>
+<th>방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React 끄기</td>
+<td>VS Code 터미널에서 <strong>Ctrl+C</strong></td>
+</tr>
+<tr>
+<td>Spring Boot 끄기</td>
+<td>IntelliJ 의 ■ (Stop) 버튼 (터미널 bootRun 이면 Ctrl+C)</td>
+</tr>
+<tr>
+<td>DB 잠시 멈추기 (데이터 유지)</td>
+<td><code>docker compose stop</code></td>
+</tr>
+<tr>
+<td>DB 다시 켜기</td>
+<td><code>docker compose up -d</code></td>
+</tr>
+<tr>
+<td>DB 와 <strong>모든 글 삭제</strong></td>
+<td><code>docker compose down -v</code> (되돌릴 수 없음)</td>
+</tr>
+</tbody>
+</table></div>
+<p>다음 날 다시 할 때는 9-13 의 표 순서대로 세 가지를 켜면 된다. 글은 Docker 볼륨에 저장되어 있어서 그대로 남아 있다.</p>
+<h2 id="9-15-도전-과제">9-15. 도전 과제</h2>
+<p>스스로 해 보는 확장 과제다. 정답은 없고, 심화 과정에서 비슷한 기능을 만든다.</p>
+<ol>
+<li><strong>글 개수 표시 꾸미기</strong> - 목록 위에 "오늘 쓴 글 N개" 를 함께 보여 주기. (<code>created_at</code> 의 날짜를 오늘 날짜와 비교)</li>
+<li><strong>검색</strong> - 목록 위에 검색 칸을 두고, 제목에 검색어가 들어간 글만 보여 주기. (서버는 그대로 두고 React 에서 <code>filter</code>)</li>
+<li><strong>조회수</strong> - <code>Post</code> Entity 에 <code>int views</code> 필드를 추가하고(서버를 다시 켜면 <code>ddl-auto: update</code> 가 열을 추가한다), 글을 읽을 때마다 1 올리기. (<code>PostService.findOne</code> 을 <code>@Transactional</code> 로 바꾸고 <code>post.increaseViews()</code> 같은 메서드 호출)</li>
+</ol>
+<blockquote class="note">
+<p>2번 검색을 서버 쪽에서 하고 싶다면 <code>GET /api/posts?q=검색어</code> 처럼 <code>@RequestParam</code> 으로 받고, Repository 에 <code>List&lt;Post&gt; findByTitleContainingOrderByIdDesc(String q)</code> 를 추가하면 된다. 메서드 이름만으로 <code>WHERE title LIKE '%검색어%'</code> 가 만들어진다.</p>
+</blockquote>
+<h2 id="정리">정리</h2>
+<ul>
+<li>아래부터 쌓는다: DB(Docker) → API(Spring Boot, /docs 로 확인) → 화면(React).</li>
+<li>Spring 서버는 Controller(주소) → Service(규칙) → Repository(DB) 로 나누고, JSON 모양은 DTO 로 정한다.</li>
+<li>REST API: 같은 주소라도 방식(GET·POST·PUT·DELETE)으로 하는 일을 구분한다.</li>
+<li>React 는 <code>fetch(주소, { method, headers, body })</code> 로 요청하고, <code>res.ok</code> 로 성공을 확인한다.</li>
+<li>다른 출처(포트)의 API 를 부르려면 서버에서 <strong>CORS</strong> 를 허락해야 한다.</li>
+<li>기초 게시판은 state 로 화면을 바꾸므로 <strong>주소가 바뀌지 않는다.</strong> 새로 고침하면 목록으로 돌아가고, 3번 글 주소를 친구에게 보낼 수도 없다. → 심화 과정에서 <strong>React Router</strong> 로 해결한다.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>글 수정 요청의 방식과 주소, 성공했을 때의 상태 코드를 쓰시오. 그 요청을 받는 Java 메서드는 어느 클래스의 무엇인가?</li>
+<li>React 화면에서 글 목록이 안 나오고, 콘솔에 <code>blocked by CORS policy</code> 오류가 보인다. 무엇을 확인해야 하는가?</li>
+<li>PostForm 에서 <code>headers: { "Content-Type": "application/json" }</code> 을 지우면 저장할 때 어떤 일이 생기는지 직접 해 보고, Network 탭의 상태 코드를 쓰시오.</li>
+<li>Spring Boot 서버를 끈 상태에서 목록 화면을 새로 고치면 어떤 문구가 보이는가? 그 문구는 어느 파일의 어느 코드에서 나온 것인가?</li>
+<li><code>docker compose down</code> 과 <code>docker compose down -v</code> 의 차이를 쓰시오.</li>
+<li><code>PostRequest</code> 의 <code>@Size(max = 100 ...)</code> 를 <code>max = 50</code> 으로 바꾸고 서버를 다시 켠 뒤, 60자 제목으로 글을 써 보시오. 화면에 무엇이 보이는가?</li>
+</ol>
+<nav class="pager"><a href="ch08.html"><small>← 이전</small>8장 useEffect 와 데이터 불러오기</a><a class="next" href="appA.html"><small>다음 →</small>부록 A 자주 만나는 오류와 해결</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

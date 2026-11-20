@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부록 B. 용어 풀이 - 2단계 React 심화</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="부록 B. 용어 풀이 - 2단계 React 심화"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">2단계 React 심화</div><a href="ch00.html">0장 과정 안내</a><a href="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</a><a href="ch02.html">2장 useRef 와 useReducer</a><a href="ch03.html">3장 커스텀 훅</a><a href="ch04.html">4장 React Router</a><a href="ch05.html">5장 Context API</a><a href="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</a><a href="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</a><a href="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a href="ch09.html">9장 프로젝트 ③ React 로그인 연동</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html" class=on>부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../basic/ch00.html">→ 1단계 React 기초</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내</option><option value="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</option><option value="ch02.html">2장 useRef 와 useReducer</option><option value="ch03.html">3장 커스텀 훅</option><option value="ch04.html">4장 React Router</option><option value="ch05.html">5장 Context API</option><option value="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</option><option value="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</option><option value="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</option><option value="ch09.html">9장 프로젝트 ③ React 로그인 연동</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html" selected>부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="부록-b-용어-풀이">부록 B. 용어 풀이</h1>
+<p>기초 교안 부록 B 의 용어에 더해, 심화 과정에서 새로 나온 용어다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>용어</th>
+<th>풀이</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>리렌더링</strong></td>
+<td>state·props·Context 가 바뀌어 컴포넌트 함수가 다시 실행되는 것</td>
+</tr>
+<tr>
+<td><strong>useRef</strong></td>
+<td>다시 그려도 남고, 바꿔도 다시 그리지 않는 기억 상자. 태그(DOM)를 잡을 때도 쓴다</td>
+</tr>
+<tr>
+<td><strong>DOM</strong></td>
+<td>브라우저가 HTML 을 읽어 만든 태그 나무. <code>ref.current</code> 로 실제 태그에 접근</td>
+</tr>
+<tr>
+<td><strong>useReducer</strong></td>
+<td><code>(state, action) → 새 state</code> 리듀서 함수로 state 를 바꾸는 Hook</td>
+</tr>
+<tr>
+<td><strong>action / dispatch</strong></td>
+<td>"무엇을 할지" 를 담은 객체(<code>{ type }</code>) / 그 action 을 리듀서에게 보내는 함수</td>
+</tr>
+<tr>
+<td><strong>순수 함수</strong></td>
+<td>같은 입력에 항상 같은 결과, 바깥을 바꾸지 않는 함수. 리듀서가 그래야 한다</td>
+</tr>
+<tr>
+<td><strong>커스텀 훅</strong></td>
+<td><code>use</code> 로 시작하고 다른 Hook 을 쓰는 함수. Hook 코드를 재사용</td>
+</tr>
+<tr>
+<td><strong>localStorage</strong></td>
+<td>브라우저의 작은 글자 저장소. 브라우저를 닫아도 남는다</td>
+</tr>
+<tr>
+<td><strong>useCallback / useMemo / memo</strong></td>
+<td>함수 유지 / 계산 결과 재사용 / props 가 같으면 다시 그리기 건너뛰기 (최적화)</td>
+</tr>
+<tr>
+<td><strong>SPA</strong></td>
+<td>Single Page Application. HTML 한 장을 받고 자바스크립트가 화면을 바꾸는 앱</td>
+</tr>
+<tr>
+<td><strong>라우팅</strong></td>
+<td>주소(URL)에 맞는 화면을 고르는 것</td>
+</tr>
+<tr>
+<td><strong>React Router</strong></td>
+<td>React 의 라우팅 라이브러리 (<code>react-router</code> 패키지)</td>
+</tr>
+<tr>
+<td><strong>Route / Routes</strong></td>
+<td>주소 하나와 화면 하나의 연결 / 그 목록</td>
+</tr>
+<tr>
+<td><strong>Link / NavLink</strong></td>
+<td>페이지를 새로 받지 않고 주소를 바꾸는 링크 / 지금 주소면 active 가 붙는 링크</td>
+</tr>
+<tr>
+<td><strong>Outlet</strong></td>
+<td>부모 Route 의 화면 안에서 자식 Route 의 화면이 들어갈 자리</td>
+</tr>
+<tr>
+<td><strong>useParams / useSearchParams</strong></td>
+<td>주소 속 <code>:id</code> 값 / <code>?q=</code> 같은 쿼리 값을 읽는 Hook</td>
+</tr>
+<tr>
+<td><strong>useNavigate / navigate(-1)</strong></td>
+<td>코드로 주소를 바꾸는 함수 / 뒤로 가기</td>
+</tr>
+<tr>
+<td><strong>replace</strong></td>
+<td>이동하면서 지금 방문 기록을 바꿔치기 (뒤로 가기에 남지 않음)</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>Provider 로 올려 둔 값을 깊은 곳의 컴포넌트가 바로 꺼내 쓰게 하는 기능</td>
+</tr>
+<tr>
+<td><strong>prop drilling</strong></td>
+<td>쓰지 않는 중간 컴포넌트를 거쳐 props 를 계속 내려보내는 것</td>
+</tr>
+<tr>
+<td><strong>Provider</strong></td>
+<td>Context 값을 공급하는 컴포넌트 (<code>&lt;AuthContext value={...}&gt;</code>)</td>
+</tr>
+<tr>
+<td><strong>인증 / 인가</strong></td>
+<td>누구인지 확인(실패 401) / 그 일을 해도 되는지 확인(실패 403)</td>
+</tr>
+<tr>
+<td><strong>해시</strong></td>
+<td>한쪽으로만 바뀌는 변환. 비밀번호는 해시로 저장한다</td>
+</tr>
+<tr>
+<td><strong>소금 (salt)</strong></td>
+<td>해시할 때 섞는 무작위 값. 같은 비밀번호도 해시가 달라진다</td>
+</tr>
+<tr>
+<td><strong>BCrypt</strong></td>
+<td>비밀번호 전용 해시 방식. 일부러 느리고 소금을 섞는다. <code>$2a$10$...</code> 모양 (10 = 비용, 2의 10제곱 번 반복)</td>
+</tr>
+<tr>
+<td><strong>세션 방식</strong></td>
+<td>서버가 로그인 명단을 저장하고 브라우저는 세션 번호(쿠키)를 갖는 방식</td>
+</tr>
+<tr>
+<td><strong>토큰 방식 / JWT</strong></td>
+<td>서버가 서명한 토큰을 브라우저가 보관해 요청마다 보내는 방식 / 그 토큰의 표준 형식</td>
+</tr>
+<tr>
+<td><strong>payload / 서명</strong></td>
+<td>JWT 의 내용(sub, exp) / SECRET_KEY 로 만든 위조 방지 값</td>
+</tr>
+<tr>
+<td><strong>SECRET_KEY (jwt.secret)</strong></td>
+<td>서버만 아는 서명 열쇠. 새면 토큰을 위조할 수 있다. 이 과정은 application.yml 의 jwt.secret</td>
+</tr>
+<tr>
+<td><strong>sub / exp</strong></td>
+<td>JWT 의 주인(사용자 번호) / 만료 시각</td>
+</tr>
+<tr>
+<td><strong>Bearer 토큰</strong></td>
+<td><code>Authorization: Bearer &lt;토큰&gt;</code> 헤더로 보내는 토큰</td>
+</tr>
+<tr>
+<td><strong>Spring Security</strong></td>
+<td>요청이 Controller 에 닿기 전에 필터들을 거치게 해 로그인 여부·주소별 접근 규칙을 검사하는 Spring 라이브러리</td>
+</tr>
+<tr>
+<td><strong>필터 (Filter)</strong></td>
+<td>모든 요청이 Controller 전에 지나가는 관문. JwtAuthenticationFilter 가 토큰을 검사한다</td>
+</tr>
+<tr>
+<td><strong>SecurityContext / @AuthenticationPrincipal</strong></td>
+<td>"지금 요청한 사람" 을 담아 두는 곳 / Controller 에서 그 사람(LoginUser)을 꺼내는 표시</td>
+</tr>
+<tr>
+<td><strong>@ManyToOne</strong></td>
+<td>JPA 에서 "여러 개가 하나에 속한다" 는 관계. Post 여러 개 → User 하나, posts.user_id 외래 키가 된다</td>
+</tr>
+<tr>
+<td><strong>N+1 문제 / @EntityGraph</strong></td>
+<td>목록 N 개의 연관 데이터를 하나씩 따로 읽어 SELECT 가 N+1 번 실행되는 문제 / JOIN 으로 한 번에 읽게 하는 표시</td>
+</tr>
+<tr>
+<td><strong>외래 키 (FK)</strong></td>
+<td>다른 표의 기본 키를 가리키는 열. posts.user_id → users.id</td>
+</tr>
+<tr>
+<td><strong>ON DELETE CASCADE</strong></td>
+<td>가리키는 줄(사용자)이 지워지면 이 줄(글)도 함께 지운다</td>
+</tr>
+<tr>
+<td><strong>UNIQUE</strong></td>
+<td>같은 값이 두 번 들어갈 수 없게 하는 제약. 아이디 중복 방지</td>
+</tr>
+<tr>
+<td><strong>409 Conflict</strong></td>
+<td>이미 있는 것과 충돌 (중복 아이디)</td>
+</tr>
+<tr>
+<td><strong>ProtectedRoute</strong></td>
+<td>로그인 안 했으면 로그인 화면으로 보내는 "문지기" 컴포넌트 (이 과정에서 만든 이름)</td>
+</tr>
+<tr>
+<td><strong>XSS</strong></td>
+<td>페이지에 악성 스크립트를 끼워 넣는 공격. localStorage 의 토큰을 노릴 수 있다</td>
+</tr>
+<tr>
+<td><strong>httpOnly 쿠키</strong></td>
+<td>자바스크립트가 읽을 수 없는 쿠키. 토큰 보관에 더 안전한 방법</td>
+</tr>
+</tbody>
+</table></div>
+<nav class="pager"><a href="appA.html"><small>← 이전</small>부록 A 자주 만나는 오류와 해결</a><a class="next" href="appC.html"><small>다음 →</small>부록 C 확인 문제 풀이</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 2단계 React 심화 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

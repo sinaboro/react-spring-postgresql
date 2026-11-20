@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>React + Spring Boot + PostgreSQL 학습 교안</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="React + Spring Boot + PostgreSQL 학습 교안"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="basic/ch00.html">기초</a>
+<a class="btn hide-s" href="advanced/ch00.html">심화</a>
+<a class="btn" href="index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="hero"><div class="wrap">
+<h1>React + <b>Spring Boot</b> + PostgreSQL</h1>
+<p>React 를 처음 배우는 학생을 위한 <strong>2단계(기초 · 심화) 학습 교안과 실습 코드</strong>입니다.
+하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다.
+서버는 <strong>Spring Boot</strong>(IntelliJ IDEA 로 실행)를 씁니다.</p>
+<div class="cta">
+<a class="main" href="basic/ch00.html">1단계 기초 시작 →</a>
+<a class="sub" href="advanced/ch00.html">2단계 심화</a>
+<a class="sub" href="https://github.com/sinaboro/react-spring-postgresql/archive/refs/heads/main.zip">실습 코드 전체 받기 (ZIP)</a>
+</div>
+<p class="twin">같은 과정의 서버를 <b>FastAPI(Python)</b> 로 만든 판도 있습니다 → <a href="https://sinaboro.github.io/react-fastapi-postgresql/">react-fastapi-postgresql</a></p>
+</div></div>
+<div class="wrap">
+<section><h2>두 단계 과정</h2><p class="lead">하나의 게시판을 기초에서 만들고, 심화에서 Router · Context · 로그인을 더해 키워 갑니다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>1단계 React 기초</th>
+<th>2단계 React 심화</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>대상</td>
+<td>React 처음 배우는 학생</td>
+<td>React 기초 과정 수료자</td>
+</tr>
+<tr>
+<td>시간</td>
+<td>40시간 (5일)</td>
+<td>40시간 (5일)</td>
+</tr>
+<tr>
+<td>React</td>
+<td>JSX, 컴포넌트, props, state, 이벤트, 폼, useEffect, fetch</td>
+<td>useRef, useReducer, 커스텀 훅, React Router, Context</td>
+</tr>
+<tr>
+<td>Spring Boot</td>
+<td>게시글 CRUD REST API (JPA, 입력 검사, CORS)</td>
+<td>회원가입, 로그인(JWT), Spring Security, 소유권 검사</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Docker 로 DB 실행, posts 테이블</td>
+<td>users · posts 관계(@ManyToOne, FK), BCrypt 비밀번호 해시</td>
+</tr>
+<tr>
+<td>결과물</td>
+<td>게시판 CRUD 웹 서비스</td>
+<td>로그인 기반 게시판 (본인 글만 수정·삭제)</td>
+</tr>
+</tbody>
+</table></div>
+<figure><img src="images/a9_list_guest.png" alt="심화 과정에서 완성하는 로그인 게시판" loading="lazy"><figcaption>심화 과정에서 완성하는 로그인 게시판</figcaption></figure>
+</section>
+<section id="chapters"><h2>과정 목차</h2><p class="lead">각 장은 개념 → 따라 하기 → 실행 결과 → 확인 문제 순서입니다. 답은 부록 C 에 있습니다.</p>
+<div class="course"><div><h3>1단계 React 기초</h3><a class="pdf" href="React_%EA%B8%B0%EC%B4%88_%ED%95%99%EC%8A%B5%EA%B5%90%EC%95%88.pdf" target="_blank">PDF 교안 열기</a><ol><li><a href="basic/ch00.html"><img src="images/b9_list.png" alt="" loading="lazy"><span>0장 과정 안내와 실습 준비</span></a></li><li><a href="basic/ch01.html"><img src="images/b1_vite_default.png" alt="" loading="lazy"><span>1장 React 시작하기</span></a></li><li><a href="basic/ch02.html"><span class="noimg"></span><span>2장 React 를 위한 JavaScript 문법</span></a></li><li><a href="basic/ch03.html"><img src="images/b3_hello.png" alt="" loading="lazy"><span>3장 JSX - 자바스크립트 안의 HTML</span></a></li><li><a href="basic/ch04.html"><img src="images/b4_props.png" alt="" loading="lazy"><span>4장 컴포넌트와 props</span></a></li><li><a href="basic/ch05.html"><img src="images/b5_condition.png" alt="" loading="lazy"><span>5장 조건부 렌더링과 목록 그리기</span></a></li><li><a href="basic/ch06.html"><img src="images/b6_counter.png" alt="" loading="lazy"><span>6장 state 와 이벤트</span></a></li><li><a href="basic/ch07.html"><img src="images/b7_form.png" alt="" loading="lazy"><span>7장 폼 다루기와 할 일 앱</span></a></li><li><a href="basic/ch08.html"><img src="images/b8_effect.png" alt="" loading="lazy"><span>8장 useEffect 와 데이터 불러오기</span></a></li><li><a href="basic/ch09.html"><img src="images/b9_docs.png" alt="" loading="lazy"><span>9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</span></a></li><li><a href="basic/appA.html"><span class="noimg"></span><span>부록 A 자주 만나는 오류와 해결</span></a></li><li><a href="basic/appB.html"><span class="noimg"></span><span>부록 B 용어 풀이</span></a></li><li><a href="basic/appC.html"><span class="noimg"></span><span>부록 C 확인 문제 풀이</span></a></li></ol></div><div><h3>2단계 React 심화</h3><a class="pdf" href="React_%EC%8B%AC%ED%99%94_%ED%95%99%EC%8A%B5%EA%B5%90%EC%95%88.pdf" target="_blank">PDF 교안 열기</a><ol><li><a href="advanced/ch00.html"><img src="images/a9_list_user.png" alt="" loading="lazy"><span>0장 과정 안내</span></a></li><li><a href="advanced/ch01.html"><img src="images/a1_rerender.png" alt="" loading="lazy"><span>1장 기초 복습 - 다시 그리기와 컴포넌트 설계</span></a></li><li><a href="advanced/ch02.html"><img src="images/a2_ref.png" alt="" loading="lazy"><span>2장 useRef 와 useReducer</span></a></li><li><a href="advanced/ch03.html"><img src="images/a3_hooks.png" alt="" loading="lazy"><span>3장 커스텀 훅</span></a></li><li><a href="advanced/ch04.html"><img src="images/a4_users.png" alt="" loading="lazy"><span>4장 React Router</span></a></li><li><a href="advanced/ch05.html"><img src="images/a5_theme.png" alt="" loading="lazy"><span>5장 Context API</span></a></li><li><a href="advanced/ch06.html"><img src="images/fig_401_403.png" alt="" loading="lazy"><span>6장 인증의 이해 - 해시, JWT, 401 과 403</span></a></li><li><a href="advanced/ch07.html"><img src="images/a7_detail_url.png" alt="" loading="lazy"><span>7장 프로젝트 ① 게시판을 Router 로 바꾸기</span></a></li><li><a href="advanced/ch08.html"><img src="images/a8_docs.png" alt="" loading="lazy"><span>8장 프로젝트 ② Spring Boot 회원가입·로그인 API</span></a></li><li><a href="advanced/ch09.html"><img src="images/a9_list_guest.png" alt="" loading="lazy"><span>9장 프로젝트 ③ React 로그인 연동</span></a></li><li><a href="advanced/appA.html"><span class="noimg"></span><span>부록 A 자주 만나는 오류와 해결</span></a></li><li><a href="advanced/appB.html"><span class="noimg"></span><span>부록 B 용어 풀이</span></a></li><li><a href="advanced/appC.html"><span class="noimg"></span><span>부록 C 확인 문제 풀이</span></a></li></ol></div></div></section>
+<section id="code"><h2>실습 코드 폴더</h2><p class="lead">장마다 완성본이 들어 있습니다. 막히면 같은 장의 폴더와 비교해 보세요.
+한 번에 받으려면 <a href="https://github.com/sinaboro/react-spring-postgresql/archive/refs/heads/main.zip">전체 ZIP</a> 이 편합니다.</p>
+<div class="dl"><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/basic/js" target="_blank"><b>basic/js/</b><small>2장  React 를 위한 JavaScript 문법 (node 로 실행)</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/basic/examples" target="_blank"><b>basic/examples/</b><small>3~8장 예제 완성본 (Vite 앱, 왼쪽 메뉴에서 예제 선택)</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/basic/board" target="_blank"><b>basic/board/</b><small>9장  게시판 CRUD 완성본</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/advanced/examples" target="_blank"><b>advanced/examples/</b><small>1·2·3·5장 예제 완성본 (useRef, useReducer, 커스텀 훅, Context)</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/advanced/router-demo" target="_blank"><b>advanced/router-demo/</b><small>4장  React Router 연습 프로젝트</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/advanced/concepts" target="_blank"><b>advanced/concepts/</b><small>6장  BCrypt 해시 · JWT 실험 (AuthDemo.java, IntelliJ 로 열기)</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/advanced/board-router/frontend" target="_blank"><b>advanced/board-router/frontend/</b><small>7장  완성본: 기초 게시판 + React Router + API 모듈 (백엔드는 basic/board/backend)</small></a><a href="https://github.com/sinaboro/react-spring-postgresql/tree/main/advanced/board" target="_blank"><b>advanced/board/</b><small>8·9장 로그인 게시판 완성본</small></a></div></section>
+<section id="pdf"><h2>PDF 교안</h2><p class="lead">웹 교안과 같은 내용입니다. 인쇄하거나 내려받아 볼 때 쓰세요.</p>
+<div class="dl"><a href="React_%EA%B8%B0%EC%B4%88_%ED%95%99%EC%8A%B5%EA%B5%90%EC%95%88.pdf" target="_blank"><b>React_기초_학습교안.pdf</b><small>1단계 React 기초 전체 (인쇄용)</small></a><a href="React_%EC%8B%AC%ED%99%94_%ED%95%99%EC%8A%B5%EA%B5%90%EC%95%88.pdf" target="_blank"><b>React_심화_학습교안.pdf</b><small>2단계 React 심화 전체 (인쇄용)</small></a></div></section>
+</div>
+<footer>강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub 저장소</a></footer>
+
+</body></html>

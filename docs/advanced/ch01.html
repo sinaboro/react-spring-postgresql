@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1장. 기초 복습 - 다시 그리기와 컴포넌트 설계 - 2단계 React 심화</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="1장. 기초 복습 - 다시 그리기와 컴포넌트 설계 - 2단계 React 심화"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">2단계 React 심화</div><a href="ch00.html">0장 과정 안내</a><a href="ch01.html" class=on>1장 기초 복습 - 다시 그리기와 컴포넌트 설계</a><a href="ch02.html">2장 useRef 와 useReducer</a><a href="ch03.html">3장 커스텀 훅</a><a href="ch04.html">4장 React Router</a><a href="ch05.html">5장 Context API</a><a href="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</a><a href="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</a><a href="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a href="ch09.html">9장 프로젝트 ③ React 로그인 연동</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../basic/ch00.html">→ 1단계 React 기초</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내</option><option value="ch01.html" selected>1장 기초 복습 - 다시 그리기와 컴포넌트 설계</option><option value="ch02.html">2장 useRef 와 useReducer</option><option value="ch03.html">3장 커스텀 훅</option><option value="ch04.html">4장 React Router</option><option value="ch05.html">5장 Context API</option><option value="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</option><option value="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</option><option value="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</option><option value="ch09.html">9장 프로젝트 ③ React 로그인 연동</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="1장-기초-복습---다시-그리기와-컴포넌트-설계">1장. 기초 복습 - 다시 그리기와 컴포넌트 설계</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>컴포넌트가 언제 다시 그려지는지(리렌더링) 정확히 말할 수 있다.</li>
+<li><code>key</code> 를 바꾸면 컴포넌트가 새로 만들어지는 것을 안다.</li>
+<li>state 를 어디에 둘지, 컴포넌트를 어떻게 나눌지 기준을 세운다.</li>
+<li>기초 게시판의 한계 세 가지를 알고, 이 과정에서 무엇으로 해결할지 안다.</li>
+</ul>
+<h2 id="1-1-기초-과정-한-장-요약">1-1. 기초 과정 한 장 요약</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>개념</th>
+<th>핵심 한 줄</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSX</td>
+<td><code>{ }</code> 안에 식. <code>className</code>, <code>style={{ }}</code>, 부모 하나</td>
+</tr>
+<tr>
+<td>컴포넌트·props</td>
+<td>대문자 함수. 부모 → 자식으로 값을 내려준다 (읽기 전용)</td>
+</tr>
+<tr>
+<td>state</td>
+<td><code>const [x, setX] = useState(처음값)</code>. 바뀌면 다시 그린다</td>
+</tr>
+<tr>
+<td>불변성</td>
+<td>배열·객체 state 는 <code>...</code>, <code>map</code>, <code>filter</code> 로 <strong>새로</strong> 만든다</td>
+</tr>
+<tr>
+<td>이벤트</td>
+<td><code>onClick={() =&gt; ...}</code>. 자식은 부모가 내려준 함수를 불러 알린다</td>
+</tr>
+<tr>
+<td>useEffect</td>
+<td>그린 <strong>뒤에</strong> 실행. <code>[]</code> 처음 한 번, <code>[id]</code> id 가 바뀔 때</td>
+</tr>
+<tr>
+<td>fetch</td>
+<td><code>res.ok</code> 검사, <code>await res.json()</code>, JSON 보낼 땐 method·headers·body</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="1-2-언제-다시-그려지나">1-2. 언제 다시 그려지나?</h2>
+<p>컴포넌트가 다시 그려지는(함수가 다시 실행되는) 경우는 딱 세 가지다.</p>
+<ol>
+<li><strong>자기 state</strong> 가 바뀌었을 때</li>
+<li><strong>부모가 다시 그려졌을 때</strong> (props 가 같아도 자식은 기본적으로 함께 다시 그려진다)</li>
+<li>자기가 쓰는 <strong>Context 값</strong>이 바뀌었을 때 (5장)</li>
+</ol>
+<div class="file"><span>📄 advanced/examples/src/examples/ch01/Ex0101Rerender.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/examples/src/examples/ch01/Ex0101Rerender.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0101Rerender.jsx - &quot;언제 다시 그려지나?&quot; 를 눈으로 확인하기 (기초 복습)
+//
+// 이 예제가 보여 주는 것
+//   - state 가 바뀐 컴포넌트는 다시 그려지고(함수가 다시 실행되고), 그 자식들도 함께 다시 그려진다.
+//   - 다시 그려져도 state 값은 유지된다. 일반 변수는 매번 처음값으로 돌아간다.
+//   - key 가 바뀌면 React 는 &quot;다른 컴포넌트&quot; 로 보고 새로 만든다 → 안의 state 가 초기화된다.
+//   콘솔(F12)에 찍히는 순서를 보면서 버튼을 눌러 보자.
+
+import { useState } from &quot;react&quot;;
+
+// 자식: 자기 state(좋아요 수)를 가진다
+function Child({ label }) {
+  const [likes, setLikes] = useState(0);
+  console.log(`  └ Child(${label}) 그림, likes=${likes}`);
+  return (
+    &lt;div style={{ margin: &quot;6px 0 6px 20px&quot; }}&gt;
+      {label} &lt;button onClick={() =&gt; setLikes(likes + 1)}&gt;❤️ {likes}&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+function Ex0101Rerender() {
+  const [count, setCount] = useState(0);
+  const [resetKey, setResetKey] = useState(1);
+  console.log(`Parent 그림, count=${count}`);
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;부모 count +1 ({count})&lt;/button&gt;
+      &lt;button onClick={() =&gt; setResetKey(resetKey + 1)}&gt;B 의 key 바꾸기&lt;/button&gt;
+      {/* 부모가 다시 그려지면 A, B 모두 다시 그려지지만 각자의 likes 는 남아 있다 */}
+      &lt;Child label=&quot;A&quot; /&gt;
+      {/* key 가 바뀌면 B 는 새로 만들어진다 → likes 가 0 으로 */}
+      &lt;Child key={resetKey} label={`B (key=${resetKey})`} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0101Rerender;
+</code></pre>
+<figure><a href="../images/a1_rerender.png" target="_blank"><img src="../images/a1_rerender.png" alt="Ex0101Rerender 실행 화면" loading="lazy"></a><figcaption>Ex0101Rerender 실행 화면</figcaption></figure>
+<p>예제 앱에서 해 보자.</p>
+<ul>
+<li>A 의 ❤️ 를 몇 번 누른 뒤 <strong>부모 count +1</strong> → 콘솔에 Parent, Child(A), Child(B) 가 모두 찍힌다(2번 경우). 그래도 A 의 좋아요 수는 그대로다. 다시 그려지는 것과 state 가 사라지는 것은 다르다.</li>
+<li>B 의 ❤️ 를 누른 뒤 <strong>B 의 key 바꾸기</strong> → B 의 좋아요가 0 이 된다. React 는 key 가 다르면 <strong>다른 컴포넌트</strong>로 보고 이전 것을 버린 뒤 새로 만든다.</li>
+</ul>
+<blockquote class="note">
+<p><strong>key 로 초기화하는 기술</strong> 기초 예제 앱의 <code>&lt;Example key={current} /&gt;</code> 가 이 원리를 쓴 것이다. 예제를 바꿀 때마다 state 가 깨끗하게 새로 시작한다. 9장의 글 수정 화면처럼 "다른 글로 바뀌면 폼을 새로 시작" 할 때도 쓸 수 있다.</p>
+<p><strong>다시 그리기는 느리지 않을까?</strong> 대부분은 괜찮다. React 는 함수를 다시 실행해 새 화면을 계산한 뒤 <strong>실제로 달라진 부분만</strong> 브라우저에 반영한다. 정말 느린 경우에만 <code>memo</code>, <code>useMemo</code>, <code>useCallback</code> 으로 최적화한다(3장에서 맛보기).</p>
+</blockquote>
+<h2 id="1-3-state-를-어디에-둘까">1-3. state 를 어디에 둘까?</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>질문</th>
+<th>답</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>이 값이 바뀌면 화면이 바뀌어야 하나?</td>
+<td>아니면 state 가 아니다 (일반 변수나 ref - 2장)</td>
+</tr>
+<tr>
+<td>다른 state·props 로 <strong>계산</strong>할 수 있나?</td>
+<td>그러면 state 로 만들지 말고 그릴 때 계산한다 (예: <code>남은 할 일 개수</code>)</td>
+</tr>
+<tr>
+<td>이 값을 쓰는 컴포넌트가 여럿인가?</td>
+<td>그 컴포넌트들의 <strong>가장 가까운 공통 부모</strong>에 둔다 (state 끌어올리기)</td>
+</tr>
+<tr>
+<td>너무 멀리, 너무 많은 곳에서 쓰나?</td>
+<td><strong>Context</strong> (5장) - 로그인 사용자, 테마 등</td>
+</tr>
+<tr>
+<td>주소에 남아야 하나? (새로 고침·공유)</td>
+<td><strong>URL</strong> (4장) - 글 번호, 검색어, 탭</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="1-4-컴포넌트를-나누는-기준과-폴더-구조">1-4. 컴포넌트를 나누는 기준과 폴더 구조</h2>
+<ul>
+<li><strong>한 컴포넌트는 한 가지 일.</strong> 화면에서 "이 부분" 이라고 이름 붙일 수 있으면 컴포넌트 후보다.</li>
+<li><strong>보여 주기 전용</strong>(props 만 받아 그림) 컴포넌트와 <strong>데이터 담당</strong>(state, fetch) 컴포넌트를 구분하면 재사용하기 쉽다. 기초 과정 할 일 앱의 <code>TodoItem</code> 이 보여 주기 전용이었다.</li>
+<li>파일이 많아지면 역할별로 폴더를 나눈다. 이 과정의 게시판은 마지막에 이런 구조가 된다.</li>
+</ul>
+<pre><code class="language-text">src
+├─ main.jsx          시작점 (Router, AuthProvider 로 감싸기)
+├─ App.jsx           주소 → 화면 지도 (라우트)
+├─ api.js            서버와 통신하는 함수 모음 (7장)
+├─ format.js         날짜 표시 등 작은 함수
+├─ components        여러 화면이 함께 쓰는 조각 (Layout, ProtectedRoute)
+├─ pages             주소 하나에 연결되는 화면 (PostListPage, LoginPage ...)
+├─ hooks             커스텀 훅 (useApi)
+└─ context           Context (AuthContext)
+</code></pre>
+<h2 id="1-5-기초-게시판의-한계---이-과정의-로드맵">1-5. 기초 게시판의 한계 - 이 과정의 로드맵</h2>
+<p>기초 과정 게시판을 실행해서 직접 확인해 보자.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>한계</th>
+<th>해 보면</th>
+<th>해결 (장)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>주소가 항상 <code>/</code></td>
+<td>3번 글을 읽다가 F5 → 목록으로 돌아간다. 3번 글 주소를 친구에게 보낼 수 없다. 브라우저 <strong>뒤로 가기</strong>를 누르면 게시판을 아예 벗어난다</td>
+<td>React Router (4·7장)</td>
+</tr>
+<tr>
+<td>화면마다 비슷한 fetch 코드 반복</td>
+<td>PostList, PostDetail, PostForm 에 <code>useState</code> 3개 + <code>useEffect</code> + <code>try/catch</code> 가 거의 같다</td>
+<td>커스텀 훅, API 모듈 (3·7장)</td>
+</tr>
+<tr>
+<td>아무나 쓰고, 고치고, 지운다</td>
+<td>작성자 칸에 아무 이름이나 쓸 수 있고, 남의 글도 지울 수 있다</td>
+<td>로그인 + JWT + 소유권 검사 (6·8·9장)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="정리">정리</h2>
+<ul>
+<li>다시 그려지는 경우: 자기 state 변경, 부모가 다시 그려짐, 쓰는 Context 변경.</li>
+<li>key 가 바뀌면 컴포넌트가 새로 만들어진다 → state 초기화.</li>
+<li>state 는 필요한 가장 가까운 곳에. 계산 가능한 값은 state 로 만들지 않는다. 공유가 넓으면 Context, 주소에 남길 것은 URL.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>다음 중 state 로 만들 필요가 <strong>없는</strong> 것을 모두 고르고 이유를 쓰시오. (가) 입력 칸의 글자 (나) 할 일 배열 (다) 남은 할 일 개수 (라) 로그인한 사용자 (마) 할 일 배열의 길이</li>
+<li>부모 컴포넌트의 state 가 바뀌면, props 를 하나도 받지 않는 자식 컴포넌트도 다시 그려지는가? Ex0101Rerender 로 확인하고 답하시오.</li>
+<li>글 수정 폼 <code>&lt;PostForm id={3} /&gt;</code> 을 보다가 4번 글 수정으로 바뀌었는데, 폼에 3번 글 내용이 남아 있는 문제가 생겼다. key 로 해결하는 방법을 쓰시오.</li>
+</ol>
+<nav class="pager"><a href="ch00.html"><small>← 이전</small>0장 과정 안내</a><a class="next" href="ch02.html"><small>다음 →</small>2장 useRef 와 useReducer</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 2단계 React 심화 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

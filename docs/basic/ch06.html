@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6장. state 와 이벤트 - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="6장. state 와 이벤트 - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html">3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html">5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html" class=on>6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html">8장 useEffect 와 데이터 불러오기</a><a href="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html">3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html">5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html" selected>6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html">8장 useEffect 와 데이터 불러오기</option><option value="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="6장-state-와-이벤트">6장. state 와 이벤트</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>화면에서 바뀌는 값은 <code>useState</code> 로 만든 state 에 담는다.</li>
+<li><code>onClick</code>, <code>onMouseEnter</code> 같은 이벤트에 함수를 연결한다.</li>
+<li>이전 값으로 계산할 때 <code>setX(prev =&gt; ...)</code> 를 쓴다.</li>
+<li>배열·객체 state 를 "새로 만들어서" 바꾼다 (추가·삭제·수정).</li>
+<li>state 를 부모로 끌어올려 형제 컴포넌트가 함께 쓰게 한다.</li>
+</ul>
+<h2 id="6-1-일반-변수로는-화면이-안-바뀐다">6-1. 일반 변수로는 화면이 안 바뀐다</h2>
+<p>버튼을 누르면 숫자가 1 씩 오르는 카운터를 만들고 싶다. 일반 변수로 해 보면 실패한다. 값은 바뀌지만 <strong>React 는 그 사실을 모르기 때문에</strong> 화면을 다시 그리지 않는다.</p>
+<p>React 에게 "이 값이 바뀌면 화면을 다시 그려 줘" 라고 부탁하는 방법이 <strong>state</strong> 다.</p>
+<figure><a href="../images/fig_state_cycle.png" target="_blank"><img src="../images/fig_state_cycle.png" alt="state 가 바뀌면 화면이 다시 그려진다" loading="lazy"></a><figcaption>state 가 바뀌면 화면이 다시 그려진다</figcaption></figure>
+<pre><code class="language-jsx">import { useState } from &quot;react&quot;;
+
+const [count, setCount] = useState(0);
+//     지금 값  바꾸는 함수         처음값
+</code></pre>
+<ul>
+<li><code>useState</code> 처럼 <code>use</code> 로 시작하는 React 함수를 <strong>Hook(훅)</strong> 이라고 부른다.</li>
+<li><code>setCount(5)</code> 를 부르면 → count 가 5 가 되고 → React 가 <strong>컴포넌트 함수를 다시 실행</strong>해서 → 새 화면을 그린다.</li>
+<li>Hook 은 <strong>컴포넌트 함수의 맨 위쪽</strong>에서만 부른다. <code>if</code> 나 <code>for</code> 안, 일반 함수 안에서 부르면 안 된다.</li>
+</ul>
+<h2 id="6-2-카운터">6-2. 카운터</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch06/Ex0601Counter.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch06/Ex0601Counter.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0601Counter.jsx - state 와 이벤트의 첫걸음: 카운터
+//
+// 이 예제가 보여 주는 것
+//   - useState(처음값) 은 [지금 값, 값을 바꾸는 함수] 를 돌려준다.
+//   - 화면에 쓰이는 값이 바뀌어야 하면 일반 변수가 아니라 state 에 담는다.
+//   - set 함수로 값을 바꾸면 React 가 컴포넌트 함수를 &quot;다시 실행&quot; 해서 화면을 새로 그린다.
+//   - onClick={함수} 에는 함수를 &quot;넘긴다&quot;. onClick={함수()} 처럼 부르면 안 된다.
+
+import { useState } from &quot;react&quot;; // React 가 주는 Hook 을 가져온다
+
+function Ex0601Counter() {
+  const [count, setCount] = useState(0); // count 의 처음값은 0
+
+  // 일반 변수는 다시 그릴 때마다 처음값으로 돌아간다 → 화면 값 저장에 못 쓴다
+  let normal = 0;
+
+  console.log(&quot;Ex0601Counter 함수 실행! count =&quot;, count); // 다시 그려질 때마다 찍힌다
+
+  const handleMinus = () =&gt; setCount(count - 1); // 이벤트 처리 함수를 미리 만들어 두는 방법
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{count}&lt;/h2&gt;
+      {/* 함수를 바로 써 넣는 방법: 클릭할 때 화살표 함수가 실행된다 */}
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+1&lt;/button&gt;
+      &lt;button onClick={handleMinus}&gt;-1&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;처음으로&lt;/button&gt;
+
+      &lt;hr /&gt;
+      &lt;p&gt;일반 변수 normal = {normal}&lt;/p&gt;
+      &lt;button
+        onClick={() =&gt; {
+          normal = normal + 1; // 값은 바뀌지만 React 는 다시 그리지 않는다
+          console.log(&quot;normal =&quot;, normal);
+        }}
+      &gt;
+        일반 변수 +1 (화면은 그대로)
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0601Counter;
+</code></pre>
+<figure><a href="../images/b6_counter.png" target="_blank"><img src="../images/b6_counter.png" alt="Ex0601Counter 실행 화면 (+1 을 세 번 누름)" loading="lazy"></a><figcaption>Ex0601Counter 실행 화면 (+1 을 세 번 누름)</figcaption></figure>
+<p>F12 → Console 탭을 열고 버튼을 눌러 보자. 누를 때마다 <code>Ex0601Counter 함수 실행! count = ...</code> 이 찍힌다. <strong>state 가 바뀔 때마다 함수 전체가 다시 실행된다</strong>는 증거다. 그런데도 count 가 0 으로 돌아가지 않는 것은 React 가 state 값을 따로 기억해 두었다가 돌려주기 때문이다. 반면 일반 변수 <code>normal</code> 은 함수가 다시 실행될 때마다 <code>let normal = 0</code> 으로 다시 만들어진다.</p>
+<blockquote class="note">
+<p>처음 화면이 뜰 때 로그가 <strong>두 번</strong>(두 번째는 흐리게) 찍힌다. 개발 모드의 <code>StrictMode</code> 가 일부러 한 번 더 실행해 실수를 찾기 때문이다. 배포용 빌드에서는 한 번만 실행된다.</p>
+</blockquote>
+<p><strong>이벤트 연결에서 가장 흔한 실수</strong></p>
+<pre><code class="language-jsx">&lt;button onClick={setCount(count + 1)}&gt;   // ✗ 그리는 순간 바로 실행 → 무한 반복 오류
+&lt;button onClick={() =&gt; setCount(count + 1)}&gt;   // ✓ &quot;누르면 실행할 함수&quot; 를 넘긴다
+&lt;button onClick={handleMinus}&gt;   // ✓ 함수 이름만 (괄호 없이)
+</code></pre>
+<h2 id="6-3-여러-state-와-이벤트-객체">6-3. 여러 state 와 이벤트 객체</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch06/Ex0602Events.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch06/Ex0602Events.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0602Events.jsx - 여러 개의 state 와 여러 가지 이벤트
+//
+// 이 예제가 보여 주는 것
+//   - state 는 필요한 만큼 여러 개 만들 수 있다 (불린, 문자열, 숫자 ...)
+//   - 이벤트 이름은 camelCase: onClick, onMouseEnter, onChange ...
+//   - 이벤트 처리 함수는 이벤트 객체(e)를 받는다. e.target 은 이벤트가 일어난 태그
+//   - 값을 하나 올리는 것처럼 &quot;이전 값&quot; 을 바탕으로 바꿀 때는 setX(prev =&gt; prev + 1) 이 안전하다
+
+import { useState } from &quot;react&quot;;
+
+function Ex0602Events() {
+  const [isOn, setIsOn] = useState(false); // 전등 켜짐/꺼짐
+  const [message, setMessage] = useState(&quot;버튼 위로 마우스를 올려 보세요&quot;);
+  const [likes, setLikes] = useState(0);
+
+  // 이벤트 객체 e 에서 누른 버튼의 글자를 꺼낸다
+  const handleColor = (e) =&gt; {
+    setMessage(`&quot;${e.target.textContent}&quot; 버튼을 눌렀습니다`);
+  };
+
+  // 한 번 클릭에 3씩 올리고 싶다면?
+  const addThree = () =&gt; {
+    // setLikes(likes + 1) 을 세 번 쓰면 세 번 모두 같은 likes(예: 0) 를 보고 계산해서 1 만 오른다.
+    // 함수를 넘기면 React 가 &quot;바로 앞의 최신 값&quot; 을 prev 로 넣어 준다 → 정확히 3 오른다.
+    setLikes((prev) =&gt; prev + 1);
+    setLikes((prev) =&gt; prev + 1);
+    setLikes((prev) =&gt; prev + 1);
+  };
+
+  return (
+    &lt;div&gt;
+      {/* 1) 불린 state 뒤집기: !isOn */}
+      &lt;div style={{ fontSize: 40 }}&gt;{isOn ? &quot;💡&quot; : &quot;⚫&quot;}&lt;/div&gt;
+      &lt;button onClick={() =&gt; setIsOn(!isOn)}&gt;{isOn ? &quot;끄기&quot; : &quot;켜기&quot;}&lt;/button&gt;
+
+      {/* 2) 이벤트 객체와 마우스 이벤트 */}
+      &lt;p&gt;{message}&lt;/p&gt;
+      &lt;button onClick={handleColor} onMouseEnter={() =&gt; setMessage(&quot;마우스가 올라왔다!&quot;)}&gt;
+        빨강
+      &lt;/button&gt;
+      &lt;button onClick={handleColor}&gt;파랑&lt;/button&gt;
+
+      {/* 3) 이전 값으로 계산하기 */}
+      &lt;p&gt;❤️ {likes}&lt;/p&gt;
+      &lt;button onClick={addThree}&gt;좋아요 +3&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0602Events;
+</code></pre>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>이벤트</th>
+<th>언제</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onClick</code></td>
+<td>클릭</td>
+</tr>
+<tr>
+<td><code>onChange</code></td>
+<td>입력 칸 글자가 바뀔 때 (7장)</td>
+</tr>
+<tr>
+<td><code>onSubmit</code></td>
+<td>폼 제출 (7장)</td>
+</tr>
+<tr>
+<td><code>onMouseEnter</code> / <code>onMouseLeave</code></td>
+<td>마우스가 올라옴 / 나감</td>
+</tr>
+<tr>
+<td><code>onKeyDown</code></td>
+<td>키보드 누름</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong><code>setLikes(likes + 1)</code> 을 세 번 써도 1 만 오르는 이유</strong>: 한 번의 클릭 안에서 <code>likes</code> 는 계속 같은 값(예: 0)이다. 세 줄 모두 <code>setLikes(0 + 1)</code> 이 되어 결과가 1 이다. <strong>이전 값으로 계산</strong>할 때는 함수를 넘기자. <code>setLikes(prev =&gt; prev + 1)</code> 은 React 가 바로 앞의 최신 값을 <code>prev</code> 로 넣어 준다.</p>
+<h2 id="6-4-배열객체-state-바꾸기-불변성">6-4. 배열·객체 state 바꾸기 (불변성)</h2>
+<p>2장 2-4 에서 본 것처럼, React 는 "같은 배열이면 안 바뀐 것" 으로 본다. 그래서 배열·객체 state 는 <strong>원본을 고치지 말고 새로 만들어</strong> set 함수에 넘긴다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>하고 싶은 일</th>
+<th>✗ 원본 고치기</th>
+<th>✓ 새로 만들기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>추가</td>
+<td><code>arr.push(x)</code></td>
+<td><code>[...arr, x]</code></td>
+</tr>
+<tr>
+<td>삭제</td>
+<td><code>arr.splice(i, 1)</code></td>
+<td><code>arr.filter(item =&gt; item.id !== id)</code></td>
+</tr>
+<tr>
+<td>하나 수정</td>
+<td><code>arr[i].score = 90</code></td>
+<td><code>arr.map(item =&gt; item.id === id ? { ...item, score: 90 } : item)</code></td>
+</tr>
+<tr>
+<td>객체 수정</td>
+<td><code>obj.name = "새"</code></td>
+<td><code>{ ...obj, name: "새" }</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="file"><span>📄 basic/examples/src/examples/ch06/Ex0603ArrayState.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch06/Ex0603ArrayState.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0603ArrayState.jsx - 배열·객체 state 는 &quot;새로 만들어서&quot; 바꾼다 (불변성)
+//
+// 이 예제가 보여 주는 것
+//   - 배열에 추가: [...배열, 새것]            (push 쓰지 않기)
+//   - 배열에서 삭제: 배열.filter(x =&gt; 조건)    (splice 쓰지 않기)
+//   - 배열 안 하나 수정: 배열.map(x =&gt; x.id === id ? {...x, 바뀐값} : x)
+//   - 원본을 직접 고치면(push 등) 같은 배열이라서 React 가 바뀐 줄 모르고 다시 그리지 않는다.
+
+import { useState } from &quot;react&quot;;
+
+function Ex0603ArrayState() {
+  const [members, setMembers] = useState([
+    { id: 1, name: &quot;민수&quot;, score: 80 },
+    { id: 2, name: &quot;지수&quot;, score: 92 },
+  ]);
+  const [nextId, setNextId] = useState(3); // 새 회원에게 줄 번호
+
+  // 추가: 기존 배열을 펼치고 새 객체를 뒤에 붙인 &quot;새 배열&quot; 로 바꾼다
+  const addMember = () =&gt; {
+    setMembers([...members, { id: nextId, name: `회원${nextId}`, score: 50 }]);
+    setNextId(nextId + 1);
+  };
+
+  // 삭제: 그 id 만 빼고 남긴 새 배열
+  const removeMember = (id) =&gt; {
+    setMembers(members.filter((m) =&gt; m.id !== id));
+  };
+
+  // 수정: 그 id 의 객체만 점수를 +10 한 새 객체로 바꾼 새 배열
+  const addScore = (id) =&gt; {
+    setMembers(members.map((m) =&gt; (m.id === id ? { ...m, score: m.score + 10 } : m)));
+  };
+
+  // 잘못된 방법: 원본을 직접 고친다 → 화면이 바뀌지 않는다
+  const wrongAdd = () =&gt; {
+    members.push({ id: 999, name: &quot;몰래 추가&quot;, score: 0 });
+    setMembers(members); // 같은 배열이므로 React 는 &quot;그대로네&quot; 하고 넘어간다
+    console.log(&quot;배열 길이는 늘었는데 화면은 그대로:&quot;, members.length);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={addMember}&gt;회원 추가&lt;/button&gt;
+      &lt;button onClick={wrongAdd}&gt;잘못된 추가(push)&lt;/button&gt;
+      &lt;ul&gt;
+        {members.map((m) =&gt; (
+          &lt;li key={m.id}&gt;
+            {m.name} ({m.score}점) &lt;button onClick={() =&gt; addScore(m.id)}&gt;+10&lt;/button&gt;
+            {/* 인자를 넘겨야 하는 함수는 화살표 함수로 한 번 감싼다 */}
+            &lt;button onClick={() =&gt; removeMember(m.id)}&gt;삭제&lt;/button&gt;
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0603ArrayState;
+</code></pre>
+<figure><a href="../images/b6_array.png" target="_blank"><img src="../images/b6_array.png" alt="Ex0603ArrayState 실행 화면 (회원 추가 후 민수 +10)" loading="lazy"></a><figcaption>Ex0603ArrayState 실행 화면 (회원 추가 후 민수 +10)</figcaption></figure>
+<p><strong>잘못된 추가(push)</strong> 버튼을 눌러 보자. 콘솔에는 배열 길이가 늘었다고 찍히지만 화면은 그대로다. 그 상태에서 다른 버튼을 누르면 그제야 "몰래 추가" 가 나타난다. 이런 버그는 찾기 어렵기 때문에 처음부터 새로 만드는 습관을 들이자.</p>
+<h2 id="6-5-state-끌어올리기">6-5. state 끌어올리기</h2>
+<p>색을 고르는 컴포넌트와 고른 색을 보여 주는 컴포넌트가 <strong>같은 값</strong>을 써야 한다. 형제끼리는 props 를 주고받을 수 없으므로, state 를 <strong>공통 부모</strong>로 끌어올린다.</p>
+<div class="file"><span>📄 basic/examples/src/examples/ch06/Ex0604LiftingState.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch06/Ex0604LiftingState.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0604LiftingState.jsx - state 끌어올리기 (형제 컴포넌트끼리 값 나누기)
+//
+// 이 예제가 보여 주는 것
+//   - 두 자식이 같은 값을 써야 하면, state 를 &quot;공통 부모&quot; 에 둔다.
+//   - 부모는 값은 props 로, 값을 바꾸는 함수도 props 로 자식에게 내려준다.
+//   - 자식은 받은 함수를 불러서 부모에게 &quot;바꿔 줘&quot; 라고 알린다. (자식 → 부모 소통 방법)
+//   9장 게시판의 App.jsx 가 이 방식으로 &quot;지금 보여 줄 화면&quot; 을 관리한다.
+
+import { useState } from &quot;react&quot;;
+
+// 자식 1: 값을 바꾸는 버튼들. 값은 모르고 &quot;바꾸는 함수&quot; 만 받는다
+function ColorPicker({ onPick }) {
+  const colors = [&quot;tomato&quot;, &quot;seagreen&quot;, &quot;royalblue&quot;];
+  return (
+    &lt;div&gt;
+      {colors.map((c) =&gt; (
+        &lt;button key={c} onClick={() =&gt; onPick(c)} style={{ color: c }}&gt;
+          {c}
+        &lt;/button&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}
+
+// 자식 2: 값을 보여 주기만 한다
+function Preview({ color }) {
+  return (
+    &lt;div style={{ background: color, color: &quot;white&quot;, padding: 20, marginTop: 8, borderRadius: 8 }}&gt;
+      지금 고른 색: {color}
+    &lt;/div&gt;
+  );
+}
+
+// 부모: state 를 가지고 두 자식을 이어 준다
+function Ex0604LiftingState() {
+  const [color, setColor] = useState(&quot;tomato&quot;);
+  return (
+    &lt;div&gt;
+      &lt;ColorPicker onPick={setColor} /&gt; {/* 바꾸는 함수를 내려준다 */}
+      &lt;Preview color={color} /&gt; {/*        값을 내려준다 */}
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0604LiftingState;
+</code></pre>
+<figure><a href="../images/b6_lifting.png" target="_blank"><img src="../images/b6_lifting.png" alt="Ex0604LiftingState 실행 화면" loading="lazy"></a><figcaption>Ex0604LiftingState 실행 화면</figcaption></figure>
+<ol>
+<li>부모가 <code>color</code> state 를 가진다.</li>
+<li>값(<code>color</code>)은 Preview 에게, 바꾸는 함수(<code>setColor</code>)는 ColorPicker 에게 props 로 내려준다.</li>
+<li>ColorPicker 가 <code>onPick("seagreen")</code> 을 부르면 → 부모의 state 가 바뀌고 → 부모와 두 자식이 다시 그려진다.</li>
+</ol>
+<p><strong>자식이 부모에게 무언가 알릴 때는 "부모가 내려준 함수를 부른다".</strong> 9장 게시판에서 "제목을 누르면 읽기 화면으로" 를 이 방법으로 만든다.</p>
+<h2 id="정리">정리</h2>
+<ul>
+<li>화면에 쓰이고 바뀌는 값 → <code>const [값, set값] = useState(처음값)</code>.</li>
+<li>set 함수로 바꾸면 컴포넌트가 다시 실행되어 화면이 새로 그려진다.</li>
+<li>이벤트에는 함수를 넘긴다: <code>onClick={() =&gt; ...}</code> 또는 <code>onClick={함수이름}</code>.</li>
+<li>이전 값으로 계산: <code>setX(prev =&gt; prev + 1)</code>.</li>
+<li>배열·객체 state 는 <code>...</code>, <code>map</code>, <code>filter</code> 로 <strong>새로</strong> 만든다.</li>
+<li>여러 컴포넌트가 같이 쓰는 state 는 공통 부모에 두고 props 로 내려준다.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>버튼을 누를 때마다 <code>좋아요 👍</code> ↔ <code>좋아요 취소</code> 로 글자가 번갈아 바뀌는 컴포넌트를 만드시오.</li>
+<li>다음 코드는 무엇이 잘못되었고 어떻게 고쳐야 하는가?</li>
+</ol>
+<pre><code class="language-jsx">const [count, setCount] = useState(0);
+return &lt;button onClick={setCount(count + 1)}&gt;{count}&lt;/button&gt;;
+</code></pre>
+<ol start="3">
+<li><code>const [user, setUser] = useState({ name: "민수", age: 20 });</code> 에서 나이만 1 올리는 코드를 쓰시오.</li>
+<li>Ex0603ArrayState 에 <strong>"점수 높은 순 정렬"</strong> 버튼을 추가하시오. (힌트: <code>[...members].sort((a, b) =&gt; b.score - a.score)</code> - <code>sort</code> 는 원본을 바꾸므로 먼저 복사한다)</li>
+<li>0 부터 시작해 <code>+1</code>, <code>+5</code>, <code>-1</code> 버튼이 있고, 값이 0 보다 작아지지 않는 카운터를 만드시오.</li>
+</ol>
+<nav class="pager"><a href="ch05.html"><small>← 이전</small>5장 조건부 렌더링과 목록 그리기</a><a class="next" href="ch07.html"><small>다음 →</small>7장 폼 다루기와 할 일 앱</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

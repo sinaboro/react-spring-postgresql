@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>9장. 프로젝트 ③ React 로그인 연동 - 2단계 React 심화</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="9장. 프로젝트 ③ React 로그인 연동 - 2단계 React 심화"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">2단계 React 심화</div><a href="ch00.html">0장 과정 안내</a><a href="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</a><a href="ch02.html">2장 useRef 와 useReducer</a><a href="ch03.html">3장 커스텀 훅</a><a href="ch04.html">4장 React Router</a><a href="ch05.html">5장 Context API</a><a href="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</a><a href="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</a><a href="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a href="ch09.html" class=on>9장 프로젝트 ③ React 로그인 연동</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../basic/ch00.html">→ 1단계 React 기초</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내</option><option value="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</option><option value="ch02.html">2장 useRef 와 useReducer</option><option value="ch03.html">3장 커스텀 훅</option><option value="ch04.html">4장 React Router</option><option value="ch05.html">5장 Context API</option><option value="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</option><option value="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</option><option value="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</option><option value="ch09.html" selected>9장 프로젝트 ③ React 로그인 연동</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="9장-프로젝트-③-react-로그인-연동">9장. 프로젝트 ③ React 로그인 연동</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>api.js 가 모든 요청에 토큰을 자동으로 붙이게 한다.</li>
+<li>AuthContext 로 로그인 상태를 앱 전체에 공급하고, 새로 고침해도 로그인을 유지한다.</li>
+<li>회원가입·로그인 화면을 만들고, 로그인 후 원래 가려던 화면으로 돌려보낸다.</li>
+<li>ProtectedRoute 로 로그인이 필요한 화면을 막는다.</li>
+<li>글쓴이에게만 수정·삭제 버튼을 보여 주고, 토큰이 만료되면 자동으로 로그아웃한다.</li>
+</ul>
+<h2 id="9-1-무엇을-만드나">9-1. 무엇을 만드나</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>화면</th>
+<th>로그인 전</th>
+<th>로그인 후</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>머리글</td>
+<td>[로그인] [회원가입]</td>
+<td><strong>민수</strong> 님 [로그아웃]</td>
+</tr>
+<tr>
+<td>목록</td>
+<td>"전체" 탭, [🔒 로그인하고 글쓰기]</td>
+<td>[전체] [내 글] 탭, [✏️ 글쓰기], 내 글에 "내 글" 표시</td>
+</tr>
+<tr>
+<td>글 읽기</td>
+<td>[목록]</td>
+<td>내 글이면 [수정] [삭제] 도</td>
+</tr>
+<tr>
+<td>글쓰기·수정</td>
+<td>로그인 화면으로 보냄</td>
+<td>작성자 칸 없음 (서버가 토큰으로 정함)</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../images/a9_list_guest.png" target="_blank"><img src="../images/a9_list_guest.png" alt="로그인 전 목록" loading="lazy"></a><figcaption>로그인 전 목록</figcaption></figure>
+<p>새로 만드는 파일과 고치는 파일은 다음과 같다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>파일</th>
+<th>새로/고침</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/api.js</code></td>
+<td>고침</td>
+<td>토큰 보관함, Authorization 헤더, 401 처리, 인증 API</td>
+</tr>
+<tr>
+<td><code>src/context/AuthContext.jsx</code></td>
+<td><strong>새로</strong></td>
+<td>로그인 상태(user)와 login·logout·signup</td>
+</tr>
+<tr>
+<td><code>src/components/ProtectedRoute.jsx</code></td>
+<td><strong>새로</strong></td>
+<td>로그인 안 했으면 /login 으로</td>
+</tr>
+<tr>
+<td><code>src/pages/LoginPage.jsx</code>, <code>SignupPage.jsx</code></td>
+<td><strong>새로</strong></td>
+<td>로그인·회원가입 화면</td>
+</tr>
+<tr>
+<td><code>src/main.jsx</code>, <code>App.jsx</code></td>
+<td>고침</td>
+<td>AuthProvider 로 감싸기, 라우트 추가</td>
+</tr>
+<tr>
+<td><code>src/components/Layout.jsx</code></td>
+<td>고침</td>
+<td>머리글에 로그인 상태</td>
+</tr>
+<tr>
+<td><code>src/pages/PostListPage.jsx</code>, <code>PostDetailPage.jsx</code>, <code>PostFormPage.jsx</code></td>
+<td>고침</td>
+<td>내 글 탭, 본인만 버튼, 작성자 칸 없애기</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="9-2-준비">9-2. 준비</h2>
+<p>8장의 DB 와 로그인 API 서버가 켜져 있어야 한다 (8-2, 8-8).</p>
+<p>7장에서 만든 Router 게시판을 복사해서 시작한다.</p>
+<p><strong>[PS]</strong></p>
+<pre><code class="language-powershell">Copy-Item -Recurse C:\study\board\frontend-router C:\study\authboard\frontend
+cd C:\study\authboard\frontend
+npm install
+mkdir src\context
+</code></pre>
+<blockquote class="note">
+<p><code>node_modules</code> 까지 복사되어 조금 걸린다. 7장을 끝내지 못했다면 저장소의 <code>advanced\board-router\frontend</code> 를 복사한 뒤 <code>npm install</code> 하면 된다. 이 장의 완성본은 <code>advanced\board\frontend</code> 다.</p>
+</blockquote>
+<h2 id="9-3-apijs---토큰을-자동으로">9-3. api.js - 토큰을 자동으로</h2>
+<div class="file"><span>📄 advanced/board/frontend/src/api.js</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/api.js" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-js">// api.js - 서버와 주고받는 코드를 모은 API 모듈 (9장: 로그인 토큰 추가)
+//
+// 7장 api.js 에서 달라진 점
+//   1. 토큰 보관함(tokenStore): 로그인 토큰을 브라우저 localStorage 에 저장·꺼내기·지우기
+//   2. request 함수가 토큰이 있으면 모든 요청 헤더에 자동으로 붙인다
+//        Authorization: Bearer eyJhbGciOi...
+//      → 화면 코드는 토큰을 전혀 신경 쓰지 않아도 된다. (API 모듈로 모아 둔 덕분!)
+//   3. 서버가 401(토큰 만료·위조)을 돌려주면 토큰을 지우고, AuthContext 에 &quot;로그아웃 됐어요&quot; 라고 알린다.
+//   4. 회원가입 · 로그인 · 내 정보 API 함수 추가, 글쓰기에서 writer 가 빠짐
+
+export const API_URL = &quot;http://localhost:8080/api&quot;;
+
+// ---------------------------------------------------------------- 토큰 보관함
+// localStorage: 브라우저를 껐다 켜도 남는 저장소 (도메인별로 따로). 문자열만 저장된다.
+const TOKEN_KEY = &quot;access_token&quot;;
+export const tokenStore = {
+  get: () =&gt; localStorage.getItem(TOKEN_KEY),
+  set: (token) =&gt; localStorage.setItem(TOKEN_KEY, token),
+  clear: () =&gt; localStorage.removeItem(TOKEN_KEY),
+};
+
+// 401 을 받았을 때 부를 함수. AuthContext 가 setUnauthorizedHandler 로 등록해 둔다.
+let onUnauthorized = () =&gt; {};
+export function setUnauthorizedHandler(fn) {
+  onUnauthorized = fn;
+}
+
+export class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+// ---------------------------------------------------------------- 모든 요청이 거쳐 가는 함수
+export async function request(path, { method = &quot;GET&quot;, body } = {}) {
+  const headers = {};
+  if (body) headers[&quot;Content-Type&quot;] = &quot;application/json&quot;;
+  const token = tokenStore.get();
+  if (token) headers[&quot;Authorization&quot;] = `Bearer ${token}`; // ← 로그인했으면 토큰을 붙인다
+
+  let res;
+  try {
+    res = await fetch(API_URL + path, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new ApiError(0, &quot;API 서버에 연결할 수 없습니다. 서버가 켜져 있나요?&quot;);
+  }
+
+  if (res.status === 204) return null;
+
+  const data = await res.json().catch(() =&gt; null);
+  if (!res.ok) {
+    // 토큰을 보냈는데 401 → 토큰이 만료됐거나 잘못됐다. 지우고 로그아웃 상태로 만든다.
+    // (로그인 요청 자체의 401 &quot;비밀번호 틀림&quot; 은 토큰 없이 보내므로 여기에 걸리지 않는다)
+    if (res.status === 401 &amp;&amp; token) {
+      tokenStore.clear();
+      onUnauthorized();
+    }
+    // 서버(GlobalExceptionHandler)는 오류 이유를 { &quot;detail&quot;: &quot;한국어 메시지&quot; } 로 보낸다
+    const message = typeof data?.detail === &quot;string&quot; ? data.detail : `요청 실패 (${res.status})`;
+    throw new ApiError(res.status, message);
+  }
+  return data;
+}
+
+// ---------------------------------------------------------------- 인증 API
+export const signup = (form) =&gt; request(&quot;/auth/signup&quot;, { method: &quot;POST&quot;, body: form });
+export const login = (username, password) =&gt;
+  request(&quot;/auth/login&quot;, { method: &quot;POST&quot;, body: { username, password } }); // → { access_token, user }
+export const getMe = () =&gt; request(&quot;/auth/me&quot;);
+
+// ---------------------------------------------------------------- 게시글 API
+// userId 를 주면 그 사람 글만 (/posts?user_id=3)
+export const getPosts = (userId) =&gt; request(userId ? `/posts?user_id=${userId}` : &quot;/posts&quot;);
+export const getPost = (id) =&gt; request(`/posts/${id}`);
+export const createPost = (post) =&gt; request(&quot;/posts&quot;, { method: &quot;POST&quot;, body: post }); // post = { title, content }
+export const updatePost = (id, post) =&gt; request(`/posts/${id}`, { method: &quot;PUT&quot;, body: post });
+export const deletePost = (id) =&gt; request(`/posts/${id}`, { method: &quot;DELETE&quot; });
+</code></pre>
+<p>7장 api.js 와 비교하면 <code>request</code> 함수에 몇 줄이 늘었을 뿐인데, <strong>모든 요청</strong>에 토큰이 붙고 <strong>모든 요청</strong>의 401 이 처리된다. API 모듈로 모아 둔 효과다.</p>
+<p><strong><code>setUnauthorizedHandler</code> 는 왜 필요할까?</strong> api.js 는 React 컴포넌트가 아니라서 <code>useAuth()</code> 로 로그아웃 함수를 꺼낼 수 없다. 그래서 AuthContext 가 "401 이 나면 이 함수를 불러 줘" 하고 함수를 <strong>등록</strong>해 둔다.</p>
+<h2 id="9-4-authcontext---로그인-상태-공급">9-4. AuthContext - 로그인 상태 공급</h2>
+<p>5장 FakeAuthContext 와 비교하며 읽어 보자.</p>
+<div class="file"><span>📄 advanced/board/frontend/src/context/AuthContext.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/context/AuthContext.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// AuthContext.jsx - &quot;지금 누가 로그인했나&quot; 를 앱 전체에 알려 주는 Context (9장)
+//
+// 5장 FakeAuthContext 와 모양이 같다. 다른 점은
+//   - login : 진짜 서버(/api/auth/login)에 아이디·비밀번호를 보내고, 받은 토큰을 저장한다.
+//   - 앱을 새로 열었을 때 저장된 토큰이 있으면 /api/auth/me 로 &quot;아직 유효한지&quot; 확인해
+//     로그인 상태를 되살린다. 확인이 끝날 때까지는 ready=false (그동안 화면을 잠시 기다리게 한다)
+//   - 어떤 요청에서든 401 을 받으면(api.js) 자동으로 로그아웃 상태가 된다.
+//
+// 쓰는 쪽: const { user, login, logout } = useAuth();
+//   user 는 로그인 전에는 null, 로그인 후에는 { id, username, nickname }
+
+import { createContext, useContext, useEffect, useState } from &quot;react&quot;;
+import * as api from &quot;../api&quot;; // api.login, api.getMe ... 처럼 쓰려고 통째로 가져온다
+
+const AuthContext = createContext(null);
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [ready, setReady] = useState(false); // 처음 토큰 확인이 끝났나?
+
+  // 1) 앱이 처음 열릴 때: 저장된 토큰으로 로그인 상태 되살리기
+  useEffect(() =&gt; {
+    if (!api.tokenStore.get()) {
+      setReady(true); // 토큰이 없으면 확인할 것도 없다
+      return;
+    }
+    api
+      .getMe()
+      .then(setUser) //           토큰이 유효 → 사용자 정보 저장
+      .catch(() =&gt; api.tokenStore.clear()) // 만료·위조 → 토큰 버림
+      .finally(() =&gt; setReady(true));
+  }, []);
+
+  // 2) 어디서든 401 이 나면 로그아웃 상태로 (api.js 가 부른다)
+  useEffect(() =&gt; {
+    api.setUnauthorizedHandler(() =&gt; setUser(null));
+  }, []);
+
+  const login = async (username, password) =&gt; {
+    const data = await api.login(username, password); // 실패하면 ApiError 가 던져져 화면에서 잡는다
+    api.tokenStore.set(data.access_token);
+    setUser(data.user);
+  };
+
+  const logout = () =&gt; {
+    api.tokenStore.clear(); // JWT 는 서버에 저장되지 않으므로, 브라우저에서 지우면 로그아웃이다
+    setUser(null);
+  };
+
+  // 회원가입 후 바로 로그인까지
+  const signup = async (form) =&gt; {
+    await api.signup(form);
+    await login(form.username, form.password);
+  };
+
+  // 토큰 확인 중에는 화면 대신 안내만 (로그인한 사람이 잠깐 &quot;로그인 페이지&quot; 로 튕기는 것을 막는다)
+  if (!ready) return &lt;p className=&quot;info&quot;&gt;로그인 정보를 확인하는 중...&lt;/p&gt;;
+
+  return &lt;AuthContext value={{ user, login, logout, signup }}&gt;{children}&lt;/AuthContext&gt;;
+}
+
+export function useAuth() {
+  const value = useContext(AuthContext);
+  if (value === null) throw new Error(&quot;useAuth 는 &lt;AuthProvider&gt; 안에서만 쓸 수 있습니다&quot;);
+  return value;
+}
+</code></pre>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>시점</th>
+<th>일어나는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>앱이 처음 열릴 때</td>
+<td>localStorage 에 토큰이 있으면 <code>/api/auth/me</code> 로 확인 → 성공하면 user 복원 (새로 고침해도 로그인 유지)</td>
+</tr>
+<tr>
+<td>로그인</td>
+<td><code>/api/auth/login</code> → 받은 토큰을 localStorage 에 저장, user 갱신</td>
+</tr>
+<tr>
+<td>로그아웃</td>
+<td>localStorage 의 토큰을 지우고 user = null</td>
+</tr>
+<tr>
+<td>어떤 요청이 401</td>
+<td>api.js 가 토큰을 지우고 등록된 함수 호출 → user = null</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="note">
+<p><strong>JWT 로그아웃은 "토큰 버리기"</strong> 서버는 토큰을 저장하지 않으므로 서버에 "로그아웃" 요청을 보낼 필요가 없다. 대신 이미 발급된 토큰은 만료 시각(60분)까지 유효하다는 점은 알아 두자.</p>
+</blockquote>
+<h2 id="9-5-mainjsx-와-appjsx">9-5. main.jsx 와 App.jsx</h2>
+<div class="file"><span>📄 advanced/board/frontend/src/main.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/main.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// main.jsx - 앱의 시작점
+//   &lt;BrowserRouter&gt; : Router 기능 켜기 (4장)
+//   &lt;AuthProvider&gt;  : 로그인 상태를 앱 전체에 공급 (9장)
+//     AuthProvider 안에서도 Router 기능(useNavigate 등)을 쓸 수 있도록 BrowserRouter 가 바깥에 있다.
+
+import { StrictMode } from &quot;react&quot;;
+import { createRoot } from &quot;react-dom/client&quot;;
+import { BrowserRouter } from &quot;react-router&quot;;
+import { AuthProvider } from &quot;./context/AuthContext&quot;;
+import &quot;./index.css&quot;;
+import App from &quot;./App.jsx&quot;;
+
+createRoot(document.getElementById(&quot;root&quot;)).render(
+  &lt;StrictMode&gt;
+    &lt;BrowserRouter&gt;
+      &lt;AuthProvider&gt;
+        &lt;App /&gt;
+      &lt;/AuthProvider&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/StrictMode&gt;,
+);
+</code></pre>
+<div class="file"><span>📄 advanced/board/frontend/src/components/ProtectedRoute.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/components/ProtectedRoute.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// ProtectedRoute.jsx - 로그인한 사람만 들어올 수 있는 화면을 감싸는 &quot;문지기&quot;
+//
+// 이 파일이 보여 주는 것
+//   - 로그인 안 했으면 &lt;Navigate&gt; 로 /login 에 보낸다. (그리는 순간 주소를 바꾸는 컴포넌트)
+//   - state={{ from: 원래 가려던 주소 }} 를 함께 넘겨, 로그인 후 그 주소로 되돌려 보낸다.
+//   - replace : 막힌 주소를 방문 기록에 남기지 않는다 (뒤로 가기를 눌러도 다시 튕기지 않게)
+//   - 로그인했으면 감싼 화면(children)을 그대로 보여 준다.
+//
+//   ※ 이것은 &quot;화면&quot; 을 막을 뿐이다. 진짜 보안은 서버(Spring Boot)가 토큰을 검사하는 것이다.
+//     주소를 직접 쳐서 들어와도, 개발자 도구로 요청을 보내도 서버가 401/403 으로 막는다.
+
+import { Navigate, useLocation } from &quot;react-router&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+
+function ProtectedRoute({ children }) {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return &lt;Navigate to=&quot;/login&quot; replace state={{ from: location.pathname }} /&gt;;
+  }
+  return children;
+}
+
+export default ProtectedRoute;
+</code></pre>
+<div class="file"><span>📄 advanced/board/frontend/src/App.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/App.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// App.jsx - 주소 → 화면 지도 (9장: 로그인 화면과 보호된 화면 추가)
+//
+//   주소                 화면              누가?
+//   /                    PostListPage      누구나   (?mine=1 이면 내 글만)
+//   /posts/:id           PostDetailPage    누구나   (수정·삭제 버튼은 글쓴이에게만 보임)
+//   /posts/new           PostFormPage      로그인한 사람    ← ProtectedRoute
+//   /posts/:id/edit      PostFormPage      로그인한 사람    ← ProtectedRoute (+ 서버가 본인인지 검사)
+//   /login               LoginPage         누구나
+//   /signup              SignupPage        누구나
+
+import { Route, Routes } from &quot;react-router&quot;;
+import Layout from &quot;./components/Layout&quot;;
+import ProtectedRoute from &quot;./components/ProtectedRoute&quot;;
+import PostListPage from &quot;./pages/PostListPage&quot;;
+import PostDetailPage from &quot;./pages/PostDetailPage&quot;;
+import PostFormPage from &quot;./pages/PostFormPage&quot;;
+import LoginPage from &quot;./pages/LoginPage&quot;;
+import SignupPage from &quot;./pages/SignupPage&quot;;
+import NotFoundPage from &quot;./pages/NotFoundPage&quot;;
+import &quot;./App.css&quot;;
+
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route element={&lt;Layout /&gt;}&gt;
+        &lt;Route path=&quot;/&quot; element={&lt;PostListPage /&gt;} /&gt;
+        &lt;Route
+          path=&quot;/posts/new&quot;
+          element={
+            &lt;ProtectedRoute&gt;
+              &lt;PostFormPage /&gt;
+            &lt;/ProtectedRoute&gt;
+          }
+        /&gt;
+        &lt;Route path=&quot;/posts/:id&quot; element={&lt;PostDetailPage /&gt;} /&gt;
+        &lt;Route
+          path=&quot;/posts/:id/edit&quot;
+          element={
+            &lt;ProtectedRoute&gt;
+              &lt;PostFormPage /&gt;
+            &lt;/ProtectedRoute&gt;
+          }
+        /&gt;
+        &lt;Route path=&quot;/login&quot; element={&lt;LoginPage /&gt;} /&gt;
+        &lt;Route path=&quot;/signup&quot; element={&lt;SignupPage /&gt;} /&gt;
+        &lt;Route path=&quot;*&quot; element={&lt;NotFoundPage /&gt;} /&gt;
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<h2 id="9-6-머리글---layout">9-6. 머리글 - Layout</h2>
+<div class="file"><span>📄 advanced/board/frontend/src/components/Layout.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/components/Layout.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Layout.jsx - 머리글 + 본문 자리 (9장: 로그인 상태 표시 추가)
+//   로그인했으면 &quot;닉네임 님 · 로그아웃&quot;, 아니면 &quot;로그인 · 회원가입&quot; 링크.
+//   useAuth() 로 꺼내므로 App 이 props 로 user 를 내려줄 필요가 없다 (Context 의 힘).
+
+import { Link, Outlet, useNavigate } from &quot;react-router&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+
+function Layout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () =&gt; {
+    logout();
+    navigate(&quot;/&quot;); // 로그아웃하면 목록으로
+  };
+
+  return (
+    &lt;div className=&quot;container&quot;&gt;
+      &lt;header className=&quot;header&quot;&gt;
+        &lt;Link to=&quot;/&quot; className=&quot;logo&quot;&gt;
+          📋 React 게시판
+        &lt;/Link&gt;
+        &lt;span className=&quot;badge&quot;&gt;로그인&lt;/span&gt;
+        &lt;nav className=&quot;auth-nav&quot;&gt;
+          {user ? (
+            &lt;&gt;
+              &lt;span&gt;
+                &lt;strong&gt;{user.nickname}&lt;/strong&gt; 님
+              &lt;/span&gt;
+              &lt;button onClick={handleLogout}&gt;로그아웃&lt;/button&gt;
+            &lt;/&gt;
+          ) : (
+            &lt;&gt;
+              &lt;Link to=&quot;/login&quot; className=&quot;button&quot;&gt;
+                로그인
+              &lt;/Link&gt;
+              &lt;Link to=&quot;/signup&quot; className=&quot;button primary&quot;&gt;
+                회원가입
+              &lt;/Link&gt;
+            &lt;/&gt;
+          )}
+        &lt;/nav&gt;
+      &lt;/header&gt;
+      &lt;Outlet /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Layout;
+</code></pre>
+<h2 id="9-7-로그인과-회원가입-화면">9-7. 로그인과 회원가입 화면</h2>
+<div class="file"><span>📄 advanced/board/frontend/src/pages/LoginPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/pages/LoginPage.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// LoginPage.jsx - 로그인 ( /login )
+//
+// 이 파일이 보여 주는 것
+//   - 아이디·비밀번호 폼 → useAuth().login() → 성공하면 원래 가려던 곳으로 이동
+//   - ProtectedRoute 가 보내 준 location.state.from 에 &quot;원래 가려던 주소&quot; 가 들어 있다.
+//     (없으면 목록 &quot;/&quot; 로)
+//   - 이미 로그인했으면 이 화면을 보여 줄 필요가 없으므로 &lt;Navigate&gt; 로 목록에 보낸다.
+
+import { useState } from &quot;react&quot;;
+import { Link, Navigate, useLocation, useNavigate } from &quot;react-router&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+
+function LoginPage() {
+  const { user, login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || &quot;/&quot;; // ?. : state 가 없어도(null) 오류 없이 undefined
+
+  const [form, setForm] = useState({ username: &quot;&quot;, password: &quot;&quot; });
+  const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  if (user) return &lt;Navigate to={from} replace /&gt;;
+
+  const handleChange = (e) =&gt; setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    try {
+      await login(form.username.trim(), form.password);
+      navigate(from, { replace: true }); // 로그인 화면은 방문 기록에서 지운다
+    } catch (err) {
+      setError(err.message); // &quot;아이디 또는 비밀번호가 올바르지 않습니다&quot;
+      setBusy(false);
+    }
+  };
+
+  return (
+    &lt;form className=&quot;post-form auth-form&quot; onSubmit={handleSubmit}&gt;
+      &lt;h2&gt;로그인&lt;/h2&gt;
+      {/* ProtectedRoute 에서 튕겨 왔으면 이유를 알려 준다 */}
+      {location.state?.from &amp;&amp; !error &amp;&amp; &lt;p className=&quot;info-box&quot;&gt;로그인이 필요한 화면입니다.&lt;/p&gt;}
+      {error &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;}
+      &lt;label&gt;
+        아이디
+        &lt;input name=&quot;username&quot; value={form.username} onChange={handleChange} autoComplete=&quot;username&quot; autoFocus /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        비밀번호
+        &lt;input
+          name=&quot;password&quot;
+          type=&quot;password&quot; // 입력한 글자를 ●●● 로 가린다
+          value={form.password}
+          onChange={handleChange}
+          autoComplete=&quot;current-password&quot;
+        /&gt;
+      &lt;/label&gt;
+      &lt;button type=&quot;submit&quot; className=&quot;primary wide&quot; disabled={busy || !form.username || !form.password}&gt;
+        {busy ? &quot;확인 중...&quot; : &quot;로그인&quot;}
+      &lt;/button&gt;
+      &lt;p className=&quot;hint&quot;&gt;
+        계정이 없나요? &lt;Link to=&quot;/signup&quot;&gt;회원가입&lt;/Link&gt;
+      &lt;/p&gt;
+    &lt;/form&gt;
+  );
+}
+
+export default LoginPage;
+</code></pre>
+<figure><a href="../images/a9_login.png" target="_blank"><img src="../images/a9_login.png" alt="로그인이 필요한 화면에서 튕겨 온 경우" loading="lazy"></a><figcaption>로그인이 필요한 화면에서 튕겨 온 경우</figcaption></figure>
+<figure><a href="../images/a9_login_error.png" target="_blank"><img src="../images/a9_login_error.png" alt="비밀번호가 틀렸을 때" loading="lazy"></a><figcaption>비밀번호가 틀렸을 때</figcaption></figure>
+<div class="file"><span>📄 advanced/board/frontend/src/pages/SignupPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/pages/SignupPage.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// SignupPage.jsx - 회원가입 ( /signup )
+//
+// 이 파일이 보여 주는 것
+//   - 서버(SignupRequest.java)와 같은 규칙을 화면에서도 미리 검사해, 무엇이 틀렸는지 한국어로 알려 준다.
+//       아이디: 영문 소문자·숫자·밑줄 4~20자 / 비밀번호: 8자 이상 / 닉네임: 1~30자
+//     (화면 검사는 &quot;친절&quot; 을 위한 것이고, 진짜 검사는 서버가 한다. 둘 다 필요하다)
+//   - 비밀번호 확인 칸은 서버로 보내지 않는다 (화면에서만 쓰는 값)
+//   - 가입 성공 → 자동 로그인 → 목록으로
+
+import { useState } from &quot;react&quot;;
+import { Link, Navigate, useNavigate } from &quot;react-router&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+
+// 검사 함수: 문제가 있으면 안내 문장을, 없으면 null 을 돌려준다
+function validate(form) {
+  if (!/^[a-z0-9_]{4,20}$/.test(form.username)) return &quot;아이디는 영문 소문자·숫자·밑줄(_)로 4~20자입니다.&quot;;
+  if (form.password.length &lt; 8) return &quot;비밀번호는 8자 이상이어야 합니다.&quot;;
+  if (form.password !== form.password2) return &quot;비밀번호 확인이 일치하지 않습니다.&quot;;
+  if (!form.nickname.trim()) return &quot;닉네임을 입력하세요.&quot;;
+  return null;
+}
+
+function SignupPage() {
+  const { user, signup } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ username: &quot;&quot;, password: &quot;&quot;, password2: &quot;&quot;, nickname: &quot;&quot; });
+  const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  if (user) return &lt;Navigate to=&quot;/&quot; replace /&gt;;
+
+  const handleChange = (e) =&gt; setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    const problem = validate(form);
+    if (problem) {
+      setError(problem);
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      // password2 는 빼고 서버가 원하는 세 값만 보낸다
+      await signup({ username: form.username, password: form.password, nickname: form.nickname.trim() });
+      navigate(&quot;/&quot;, { replace: true });
+    } catch (err) {
+      setError(err.message); // 예: &quot;이미 사용 중인 아이디입니다&quot; (409)
+      setBusy(false);
+    }
+  };
+
+  return (
+    &lt;form className=&quot;post-form auth-form&quot; onSubmit={handleSubmit}&gt;
+      &lt;h2&gt;회원가입&lt;/h2&gt;
+      {error &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;}
+      &lt;label&gt;
+        아이디 &lt;small&gt;영문 소문자·숫자·_ 4~20자&lt;/small&gt;
+        &lt;input name=&quot;username&quot; value={form.username} onChange={handleChange} autoComplete=&quot;username&quot; /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        비밀번호 &lt;small&gt;8자 이상&lt;/small&gt;
+        &lt;input name=&quot;password&quot; type=&quot;password&quot; value={form.password} onChange={handleChange} autoComplete=&quot;new-password&quot; /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        비밀번호 확인
+        &lt;input name=&quot;password2&quot; type=&quot;password&quot; value={form.password2} onChange={handleChange} autoComplete=&quot;new-password&quot; /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        닉네임 &lt;small&gt;글에 작성자로 보이는 이름&lt;/small&gt;
+        &lt;input name=&quot;nickname&quot; value={form.nickname} onChange={handleChange} maxLength={30} /&gt;
+      &lt;/label&gt;
+      &lt;button type=&quot;submit&quot; className=&quot;primary wide&quot; disabled={busy}&gt;
+        {busy ? &quot;가입 중...&quot; : &quot;가입하기&quot;}
+      &lt;/button&gt;
+      &lt;p className=&quot;hint&quot;&gt;
+        이미 계정이 있나요? &lt;Link to=&quot;/login&quot;&gt;로그인&lt;/Link&gt;
+      &lt;/p&gt;
+    &lt;/form&gt;
+  );
+}
+
+export default SignupPage;
+</code></pre>
+<figure><a href="../images/a9_signup.png" target="_blank"><img src="../images/a9_signup.png" alt="회원가입" loading="lazy"></a><figcaption>회원가입</figcaption></figure>
+<h2 id="9-8-게시판-화면-고치기">9-8. 게시판 화면 고치기</h2>
+<h3 id="목록---내-글-탭">목록 - 내 글 탭</h3>
+<div class="file"><span>📄 advanced/board/frontend/src/pages/PostListPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/pages/PostListPage.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostListPage.jsx - 글 목록 ( / , 내 글만: /?mine=1 )
+//
+// 7장 목록에서 달라진 점 (9장)
+//   - 로그인했으면 [전체 | 내 글] 탭을 보여 준다. 고른 탭은 주소의 ?mine=1 에 둔다
+//     (state 가 아니라 주소에 두면 새로 고침·뒤로 가기에도 유지된다 - 4장 useSearchParams)
+//   - 내 글 탭이면 getPosts(user.id) → 서버에 /posts?user_id=번호 로 요청
+//   - 글쓰기 버튼: 로그인 전에는 &quot;로그인하고 글쓰기&quot; 로 바뀐다
+
+import { Link, useSearchParams } from &quot;react-router&quot;;
+import { getPosts } from &quot;../api&quot;;
+import { useApi } from &quot;../hooks/useApi&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+import { formatDate } from &quot;../format&quot;;
+
+function PostListPage() {
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const mine = Boolean(user) &amp;&amp; searchParams.get(&quot;mine&quot;) === &quot;1&quot;; // 로그아웃 상태면 항상 전체
+  const userId = mine ? user.id : null;
+
+  // userId 가 바뀌면(탭을 바꾸면) 다시 불러온다
+  const { data: posts, loading, error } = useApi(() =&gt; getPosts(userId), [userId]);
+
+  return (
+    &lt;div&gt;
+      &lt;div className=&quot;toolbar&quot;&gt;
+        &lt;div className=&quot;tabs&quot;&gt;
+          &lt;button className={mine ? &quot;&quot; : &quot;active&quot;} onClick={() =&gt; setSearchParams({})}&gt;
+            전체
+          &lt;/button&gt;
+          {user &amp;&amp; (
+            &lt;button className={mine ? &quot;active&quot; : &quot;&quot;} onClick={() =&gt; setSearchParams({ mine: &quot;1&quot; })}&gt;
+              내 글
+            &lt;/button&gt;
+          )}
+          {posts &amp;&amp; &lt;span className=&quot;count&quot;&gt;{posts.length}개&lt;/span&gt;}
+        &lt;/div&gt;
+        {user ? (
+          &lt;Link to=&quot;/posts/new&quot; className=&quot;button primary&quot;&gt;
+            ✏️ 글쓰기
+          &lt;/Link&gt;
+        ) : (
+          &lt;Link to=&quot;/login&quot; state={{ from: &quot;/posts/new&quot; }} className=&quot;button&quot;&gt;
+            🔒 로그인하고 글쓰기
+          &lt;/Link&gt;
+        )}
+      &lt;/div&gt;
+
+      {loading &amp;&amp; &lt;p className=&quot;info&quot;&gt;⏳ 불러오는 중...&lt;/p&gt;}
+      {error &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ {error.message}&lt;/p&gt;}
+      {posts &amp;&amp; !loading &amp;&amp; posts.length === 0 &amp;&amp; (
+        &lt;p className=&quot;info&quot;&gt;{mine ? &quot;아직 내가 쓴 글이 없습니다.&quot; : &quot;아직 글이 없습니다.&quot;}&lt;/p&gt;
+      )}
+      {posts &amp;&amp; !loading &amp;&amp; posts.length &gt; 0 &amp;&amp; (
+        &lt;table className=&quot;post-table&quot;&gt;
+          &lt;thead&gt;
+            &lt;tr&gt;
+              &lt;th className=&quot;col-id&quot;&gt;번호&lt;/th&gt;
+              &lt;th&gt;제목&lt;/th&gt;
+              &lt;th className=&quot;col-writer&quot;&gt;작성자&lt;/th&gt;
+              &lt;th className=&quot;col-date&quot;&gt;작성일&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+            {posts.map((post) =&gt; (
+              &lt;tr key={post.id}&gt;
+                &lt;td className=&quot;col-id&quot;&gt;{post.id}&lt;/td&gt;
+                &lt;td&gt;
+                  &lt;Link to={`/posts/${post.id}`}&gt;{post.title}&lt;/Link&gt;
+                  {/* 내 글 표시 */}
+                  {user?.id === post.user_id &amp;&amp; &lt;span className=&quot;mine-badge&quot;&gt;내 글&lt;/span&gt;}
+                &lt;/td&gt;
+                &lt;td className=&quot;col-writer&quot;&gt;{post.writer}&lt;/td&gt;
+                &lt;td className=&quot;col-date&quot;&gt;{formatDate(post.created_at)}&lt;/td&gt;
+              &lt;/tr&gt;
+            ))}
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default PostListPage;
+</code></pre>
+<figure><a href="../images/a9_list_user.png" target="_blank"><img src="../images/a9_list_user.png" alt="로그인 후 목록 - 내 글 표시" loading="lazy"></a><figcaption>로그인 후 목록 - 내 글 표시</figcaption></figure>
+<figure><a href="../images/a9_list_mine.png" target="_blank"><img src="../images/a9_list_mine.png" alt="내 글 탭 (주소 /?mine=1)" loading="lazy"></a><figcaption>내 글 탭 (주소 /?mine=1)</figcaption></figure>
+<h3 id="읽기---본인에게만-수정삭제">읽기 - 본인에게만 수정·삭제</h3>
+<div class="file"><span>📄 advanced/board/frontend/src/pages/PostDetailPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/pages/PostDetailPage.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostDetailPage.jsx - 글 읽기 ( /posts/:id )
+//
+// 7장에서 달라진 점 (9장)
+//   - 글쓴이 본인(user.id === post.user_id)에게만 수정·삭제 버튼을 보여 준다.
+//   - 버튼을 숨기는 것은 &quot;편의&quot; 일 뿐이다. 남이 주소(/posts/3/edit)를 직접 치거나
+//     요청을 직접 보내도 서버가 403 으로 막는다 (PostService.checkOwner).
+
+import { Link, useNavigate, useParams } from &quot;react-router&quot;;
+import { deletePost, getPost } from &quot;../api&quot;;
+import { useApi } from &quot;../hooks/useApi&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+import { formatDate } from &quot;../format&quot;;
+
+function PostDetailPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: post, loading, error } = useApi(() =&gt; getPost(id), [id]);
+
+  const handleDelete = async () =&gt; {
+    if (!confirm(&quot;정말 삭제할까요? 되돌릴 수 없습니다.&quot;)) return;
+    try {
+      await deletePost(id);
+      navigate(&quot;/&quot;, { replace: true });
+    } catch (err) {
+      alert(err.message); // 403: &quot;본인이 쓴 글만 ...&quot;, 401: &quot;로그인이 만료되었습니다 ...&quot;
+    }
+  };
+
+  if (loading) return &lt;p className=&quot;info&quot;&gt;⏳ 불러오는 중...&lt;/p&gt;;
+  if (error)
+    return (
+      &lt;div&gt;
+        &lt;p className=&quot;error&quot;&gt;⚠️ {error.status === 404 ? &quot;글을 찾을 수 없습니다.&quot; : error.message}&lt;/p&gt;
+        &lt;Link to=&quot;/&quot;&gt;목록으로&lt;/Link&gt;
+      &lt;/div&gt;
+    );
+
+  const isOwner = user?.id === post.user_id; // 로그인 안 했으면 user 가 null → user?.id 는 undefined → false
+
+  return (
+    &lt;article className=&quot;post-detail&quot;&gt;
+      &lt;h2&gt;{post.title}&lt;/h2&gt;
+      &lt;div className=&quot;meta&quot;&gt;
+        {post.writer} · {formatDate(post.created_at)}
+        {post.updated_at !== post.created_at &amp;&amp; ` · 수정 ${formatDate(post.updated_at)}`}
+      &lt;/div&gt;
+      &lt;div className=&quot;content&quot;&gt;{post.content || &quot;(내용 없음)&quot;}&lt;/div&gt;
+
+      &lt;div className=&quot;buttons&quot;&gt;
+        &lt;Link to=&quot;/&quot; className=&quot;button&quot;&gt;
+          목록
+        &lt;/Link&gt;
+        {isOwner &amp;&amp; (
+          &lt;&gt;
+            &lt;Link to={`/posts/${post.id}/edit`} className=&quot;button&quot;&gt;
+              수정
+            &lt;/Link&gt;
+            &lt;button className=&quot;danger&quot; onClick={handleDelete}&gt;
+              삭제
+            &lt;/button&gt;
+          &lt;/&gt;
+        )}
+      &lt;/div&gt;
+    &lt;/article&gt;
+  );
+}
+
+export default PostDetailPage;
+</code></pre>
+<figure><a href="../images/a9_detail_owner.png" target="_blank"><img src="../images/a9_detail_owner.png" alt="내 글 - 수정·삭제 버튼이 보인다" loading="lazy"></a><figcaption>내 글 - 수정·삭제 버튼이 보인다</figcaption></figure>
+<figure><a href="../images/a9_detail_other.png" target="_blank"><img src="../images/a9_detail_other.png" alt="남의 글 - 목록 버튼만 보인다" loading="lazy"></a><figcaption>남의 글 - 목록 버튼만 보인다</figcaption></figure>
+<h3 id="글쓰기수정---작성자-칸-없애기">글쓰기·수정 - 작성자 칸 없애기</h3>
+<div class="file"><span>📄 advanced/board/frontend/src/pages/PostFormPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/frontend/src/pages/PostFormPage.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// PostFormPage.jsx - 글쓰기 ( /posts/new ) · 수정 ( /posts/:id/edit )
+//
+// 7장에서 달라진 점 (9장)
+//   - 작성자 입력 칸이 없어졌다. 작성자는 서버가 토큰을 보고 정한다 (남의 이름으로 쓰기 불가)
+//   - 이 화면은 ProtectedRoute 안에 있으므로, 여기까지 왔다면 user 는 항상 있다.
+//   - 수정 화면에서 남의 글을 불러오면 안내 문구를 보여 주고 저장 버튼을 막는다.
+//     (그래도 서버가 마지막에 한 번 더 403 으로 막는다)
+
+import { useEffect, useState } from &quot;react&quot;;
+import { useNavigate, useParams } from &quot;react-router&quot;;
+import { createPost, getPost, updatePost } from &quot;../api&quot;;
+import { useAuth } from &quot;../context/AuthContext&quot;;
+
+function PostFormPage() {
+  const { id } = useParams();
+  const isEdit = id !== undefined;
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [form, setForm] = useState({ title: &quot;&quot;, content: &quot;&quot; });
+  const [notMine, setNotMine] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    if (!isEdit) return;
+    getPost(id)
+      .then((post) =&gt; {
+        setForm({ title: post.title, content: post.content });
+        setNotMine(post.user_id !== user.id);
+      })
+      .catch((err) =&gt; setError(err.message));
+  }, [id, isEdit, user.id]);
+
+  const handleChange = (e) =&gt; setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    if (!form.title.trim()) {
+      setError(&quot;제목을 입력하세요.&quot;);
+      return;
+    }
+    setSaving(true);
+    try {
+      const saved = isEdit ? await updatePost(id, form) : await createPost(form);
+      navigate(`/posts/${saved.id}`, { replace: true });
+    } catch (err) {
+      setError(err.message);
+      setSaving(false);
+    }
+  };
+
+  return (
+    &lt;form className=&quot;post-form&quot; onSubmit={handleSubmit}&gt;
+      &lt;h2&gt;{isEdit ? `${id}번 글 수정` : &quot;새 글 쓰기&quot;}&lt;/h2&gt;
+      &lt;p className=&quot;hint&quot;&gt;
+        작성자: &lt;strong&gt;{user.nickname}&lt;/strong&gt;
+      &lt;/p&gt;
+      {notMine &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ 본인이 쓴 글만 수정할 수 있습니다.&lt;/p&gt;}
+      {error &amp;&amp; &lt;p className=&quot;error&quot;&gt;⚠️ {error}&lt;/p&gt;}
+      &lt;label&gt;
+        제목
+        &lt;input name=&quot;title&quot; value={form.title} onChange={handleChange} maxLength={100} /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        내용
+        &lt;textarea name=&quot;content&quot; value={form.content} onChange={handleChange} rows={8} /&gt;
+      &lt;/label&gt;
+      &lt;div className=&quot;buttons&quot;&gt;
+        &lt;button type=&quot;button&quot; onClick={() =&gt; navigate(-1)}&gt;
+          취소
+        &lt;/button&gt;
+        &lt;button type=&quot;submit&quot; className=&quot;primary&quot; disabled={saving || notMine}&gt;
+          {saving ? &quot;저장 중...&quot; : &quot;저장&quot;}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  );
+}
+
+export default PostFormPage;
+</code></pre>
+<figure><a href="../images/a9_form.png" target="_blank"><img src="../images/a9_form.png" alt="글쓰기 - 작성자는 로그인한 사람" loading="lazy"></a><figcaption>글쓰기 - 작성자는 로그인한 사람</figcaption></figure>
+<h2 id="9-9-스타일-추가">9-9. 스타일 추가</h2>
+<p><code>src/App.css</code> 맨 끝에 덧붙인다.</p>
+<pre><code class="language-css">/* 머리글 오른쪽의 로그인 상태 (margin-left: auto 로 오른쪽 끝에 붙인다) */
+.auth-nav { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 14px; }
+
+/* 전체 | 내 글 탭 */
+.tabs { display: flex; align-items: center; gap: 4px; }
+.tabs button.active { border-color: #1f3a5f; background: #1f3a5f; color: white; }
+.count { margin-left: 6px; color: #6b7280; }
+
+/* 목록에서 내 글 옆의 작은 표시 */
+.mine-badge { margin-left: 6px; padding: 1px 6px; border-radius: 8px;
+  background: #e0f4fb; color: #03588c; font-size: 11px; }
+
+/* 로그인·회원가입 폼 */
+.auth-form { max-width: 380px; margin: 30px auto; padding: 24px;
+  border: 1px solid #e5e9ef; border-radius: 12px; }
+.auth-form small { font-weight: normal; color: #6b7280; }
+button.wide { width: 100%; padding: 10px; font-size: 15px; }
+.hint { color: #6b7280; font-size: 14px; text-align: center; }
+.post-form .hint { text-align: left; }
+.info-box { padding: 10px 12px; border-radius: 6px; background: #eef3f8; color: #1f3a5f; }
+</code></pre>
+<p>(완성본 <code>advanced/board/frontend/src/App.css</code> 에는 같은 내용이 한 줄에 한 속성씩 주석과 함께 들어 있다.)</p>
+<h2 id="9-10-전체-시험하기">9-10. 전체 시험하기</h2>
+<p>세 가지를 켠다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>어디서</th>
+<th>폴더</th>
+<th>할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code 터미널 1</td>
+<td><code>C:\study\authboard</code></td>
+<td><code>docker compose up -d</code></td>
+</tr>
+<tr>
+<td>IntelliJ</td>
+<td><code>C:\study\authboard\backend</code></td>
+<td><code>BoardApplication</code> ▶ 실행</td>
+</tr>
+<tr>
+<td>VS Code 터미널 2</td>
+<td><code>C:\study\authboard\frontend</code></td>
+<td><code>npm run dev</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>아래 시나리오는 교안을 만들 때 브라우저 자동 시험(Playwright)으로 그대로 해 보고 모두 통과한 것이다. 하나씩 따라 해 보자.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>해 보기</th>
+<th>기대 결과</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>로그인 전 목록</td>
+<td>[🔒 로그인하고 글쓰기], 탭은 "전체" 만</td>
+</tr>
+<tr>
+<td>2</td>
+<td>🔒 버튼 클릭</td>
+<td><code>/login</code> 으로 이동, "로그인이 필요한 화면입니다."</td>
+</tr>
+<tr>
+<td>3</td>
+<td>틀린 비밀번호로 로그인</td>
+<td>"아이디 또는 비밀번호가 올바르지 않습니다"</td>
+</tr>
+<tr>
+<td>4</td>
+<td>주소창에 <code>/posts/new</code> 직접 입력</td>
+<td>로그인 화면으로 보내진다 (ProtectedRoute)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>회원가입: 아이디 <code>MinSu</code></td>
+<td>"아이디는 영문 소문자·숫자·밑줄(_)로 4~20자입니다." (화면 검사)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>회원가입: 이미 있는 아이디</td>
+<td>"이미 사용 중인 아이디입니다" (서버 409)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>회원가입: 비밀번호 확인 불일치</td>
+<td>"비밀번호 확인이 일치하지 않습니다."</td>
+</tr>
+<tr>
+<td>8</td>
+<td>올바르게 가입</td>
+<td>자동 로그인, 머리글에 "민수 님"</td>
+</tr>
+<tr>
+<td>9</td>
+<td>글쓰기 → 저장</td>
+<td>내 글 화면, [수정] [삭제] 보임</td>
+</tr>
+<tr>
+<td>10</td>
+<td>남의 글 열기</td>
+<td>[목록] 만 보임</td>
+</tr>
+<tr>
+<td>11</td>
+<td>주소창에 <code>/posts/1/edit</code> (남의 글)</td>
+<td>"본인이 쓴 글만 수정할 수 있습니다.", 저장 버튼 막힘</td>
+</tr>
+<tr>
+<td>12</td>
+<td>[내 글] 탭</td>
+<td>주소 <code>/?mine=1</code>, 내 글만. F5 해도 그대로</td>
+</tr>
+<tr>
+<td>13</td>
+<td>F5 (새로 고침)</td>
+<td>로그인 유지</td>
+</tr>
+<tr>
+<td>14</td>
+<td>F12 → Application → Local storage 의 <code>access_token</code> 끝 글자를 고치고 F5</td>
+<td>로그아웃 상태가 되고 토큰이 지워진다</td>
+</tr>
+<tr>
+<td>15</td>
+<td>로그인 상태에서 토큰을 <code>expired.token.value</code> 로 바꾸고 삭제 클릭</td>
+<td>"로그인이 만료되었습니다. 다시 로그인하세요" 알림, 머리글이 로그아웃 상태로</td>
+</tr>
+<tr>
+<td>16</td>
+<td>[로그아웃]</td>
+<td>토큰 삭제, 목록으로</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="note">
+<p>14·15번은 "토큰이 위조·만료되면?" 을 흉내 낸 것이다. 실제로는 로그인하고 60분이 지나면 15번과 같은 일이 생긴다. 시험해 보고 싶으면 서버를 <code>ACCESS_TOKEN_MINUTES</code> 환경 변수로 1분으로 줄여 실행한다. IntelliJ 오른쪽 위 실행 목록(BoardApplication) → <strong>Edit Configurations...</strong> → <strong>Environment variables</strong> 칸에 <code>ACCESS_TOKEN_MINUTES=1</code> 을 넣고 다시 ▶. (터미널이라면 <code>$env:ACCESS_TOKEN_MINUTES = "1"</code> 을 친 뒤 같은 터미널에서 <code>.\gradlew.bat bootRun</code>)</p>
+</blockquote>
+<p><strong>F12 → Network</strong> 탭에서 글쓰기 요청을 눌러 <strong>Headers → Request Headers</strong> 를 보면 <code>Authorization: Bearer eyJ...</code> 가 붙어 있는 것을 확인할 수 있다.</p>
+<h2 id="9-11-도전-과제">9-11. 도전 과제</h2>
+<ol>
+<li><strong>내 정보 화면</strong> - <code>/me</code> 주소에 아이디·닉네임·내가 쓴 글 수를 보여 주는 화면을 만들고 ProtectedRoute 로 보호하기.</li>
+<li><strong>닉네임 변경</strong> - 백엔드에 <code>PUT /api/auth/me</code> (닉네임만 바꾸기)를 만들고, React 에서 바꾼 뒤 머리글에 바로 반영하기. (힌트: AuthContext 에 <code>setUser</code> 를 이용하는 <code>updateUser</code> 함수 추가)</li>
+<li><strong>댓글</strong> - <code>comments</code> 테이블(post_id, user_id, content)과 API 를 만들고, 글 읽기 화면 아래에 댓글 목록·작성(로그인 필요)·삭제(본인만)를 붙이기. 이 과정에서 배운 모든 것을 다시 쓰게 된다.</li>
+</ol>
+<h2 id="정리">정리</h2>
+<ul>
+<li>토큰은 api.js 의 <code>request</code> 한 곳에서 붙이고, 401 도 한 곳에서 처리한다.</li>
+<li>AuthContext: 시작 시 <code>/me</code> 로 복원, login 은 토큰 저장 + user 갱신, logout 은 토큰 삭제.</li>
+<li>ProtectedRoute: <code>&lt;Navigate to="/login" state={{ from }} replace /&gt;</code> → 로그인 후 <code>from</code> 으로 돌아간다.</li>
+<li>버튼 숨기기(화면)는 친절함, 401·403(서버)이 진짜 보안.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>로그인 상태에서 F5 를 눌러도 로그인이 유지되는 원리를 순서대로 쓰시오.</li>
+<li>AuthProvider 의 <code>if (!ready) return &lt;p&gt;...확인하는 중...&lt;/p&gt;;</code> 를 지우면, 로그인한 사람이 <code>/posts/new</code> 에서 F5 를 눌렀을 때 어떤 일이 생기는가?</li>
+<li>남의 글 수정 버튼은 화면에 보이지 않는다. 그런데도 서버의 403 검사가 꼭 필요한 이유를 쓰시오.</li>
+<li>LoginPage 에서 로그인 성공 후 <code>navigate(from, { replace: true })</code> 를 쓰는 이유를 쓰시오. (replace 가 없으면 뒤로 가기를 눌렀을 때?)</li>
+<li>목록의 "내 글" 탭 상태를 <code>useState</code> 가 아니라 주소(<code>?mine=1</code>)에 둔 장점을 두 가지 쓰시오.</li>
+</ol>
+<nav class="pager"><a href="ch08.html"><small>← 이전</small>8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a class="next" href="appA.html"><small>다음 →</small>부록 A 자주 만나는 오류와 해결</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 2단계 React 심화 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

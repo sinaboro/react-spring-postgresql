@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3장. JSX - 자바스크립트 안의 HTML - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="3장. JSX - 자바스크립트 안의 HTML - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html" class=on>3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html">5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html">6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html">8장 useEffect 와 데이터 불러오기</a><a href="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html" selected>3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html">5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html">6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html">8장 useEffect 와 데이터 불러오기</option><option value="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="3장-jsx---자바스크립트-안의-html">3장. JSX - 자바스크립트 안의 HTML</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>JSX 가 무엇이고 HTML 과 무엇이 다른지 안다.</li>
+<li><code>{ }</code> 안에 변수와 식을 넣어 화면에 값을 보여 준다.</li>
+<li>JSX 의 다섯 가지 규칙(부모 하나, 닫기, className, style 객체, 주석)을 지킨다.</li>
+<li>예제 파일을 내 프로젝트에 만들고 App 에서 불러 실행할 수 있다.</li>
+</ul>
+<h2 id="3-1-jsx-란">3-1. JSX 란?</h2>
+<p>1장의 <code>App</code> 함수는 이런 것을 돌려줬다.</p>
+<pre><code class="language-jsx">return (
+  &lt;div&gt;
+    &lt;h1&gt;안녕하세요, React!&lt;/h1&gt;
+  &lt;/div&gt;
+);
+</code></pre>
+<p>자바스크립트 함수가 HTML 을 돌려주다니 이상하다. 이것이 <strong>JSX</strong>(JavaScript XML)다. HTML 처럼 보이지만, Vite 가 이것을 아래 같은 <strong>자바스크립트 함수 호출</strong>로 바꿔서 실행한다.</p>
+<pre><code class="language-js">// 위 JSX 가 실제로 바뀌는 모양 (직접 쓸 일은 없다)
+jsx(&quot;div&quot;, { children: jsx(&quot;h1&quot;, { children: &quot;안녕하세요, React!&quot; }) });
+</code></pre>
+<p>그래서 JSX 안에서는 <strong>자바스크립트 값을 자유롭게 섞어 쓸 수</strong> 있다. 대신 HTML 과 조금 다른 규칙이 있다.</p>
+<h2 id="3-2-이-장부터의-실습-방법">3-2. 이 장부터의 실습 방법</h2>
+<p>3~8장은 1장에서 만든 <code>my-react</code> 프로젝트에서 실습한다.</p>
+<ol>
+<li>
+<p>예제마다 <code>src/examples/장번호</code> 폴더에 파일을 만든다. 예: <code>src/examples/ch03/Ex0301Hello.jsx</code>
+   (VS Code 탐색기에서 <code>src</code> 를 오른쪽 클릭 → <strong>새 파일</strong> → <code>examples/ch03/Ex0301Hello.jsx</code> 라고 치면 폴더까지 한 번에 만들어진다.)</p>
+</li>
+<li>
+<p><code>src/App.jsx</code> 를 아래처럼 바꿔, 지금 공부하는 예제만 보이게 한다.</p>
+</li>
+</ol>
+<pre><code class="language-jsx">// App.jsx - 지금 연습하는 예제 하나를 보여 준다
+import Ex0301Hello from &quot;./examples/ch03/Ex0301Hello&quot;;
+
+function App() {
+  return &lt;Ex0301Hello /&gt;;
+}
+
+export default App;
+</code></pre>
+<p>다음 예제로 넘어갈 때는 <code>import</code> 줄과 <code>&lt;Ex0301Hello /&gt;</code> 의 이름만 바꾸면 된다.</p>
+<blockquote class="note">
+<p>저장소 <code>basic/examples</code> 완성본 앱은 이 일을 왼쪽 메뉴가 대신해 준다. 파일 이름과 경로는 완성본과 똑같이 맞춰 두었다.</p>
+</blockquote>
+<h2 id="3-3-로-값-넣기">3-3. { } 로 값 넣기</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch03/Ex0301Hello.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch03/Ex0301Hello.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0301Hello.jsx - 첫 JSX: { } 안에 자바스크립트 값 넣기
+//
+// 이 예제가 보여 주는 것
+//   - 컴포넌트 = &quot;화면 조각(JSX)을 돌려주는 함수&quot;. 이름은 반드시 대문자로 시작한다.
+//   - JSX 안의 { } 에는 변수, 계산식, 함수 호출처럼 &quot;값이 되는 식&quot; 을 넣을 수 있다.
+//   - export default 로 내보내야 다른 파일(App.jsx)에서 가져다 쓸 수 있다.
+
+function Ex0301Hello() {
+  // return 위쪽은 보통 자바스크립트 영역 - 화면에 쓸 값을 미리 준비한다
+  const name = &quot;민수&quot;;
+  const today = new Date().toLocaleDateString(&quot;ko-KR&quot;); // 예: 2026. 11. 20.
+  const score = 87;
+
+  // return 아래는 JSX 영역 - HTML 처럼 생겼지만 자바스크립트로 바뀌어 실행된다
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;안녕하세요, {name} 님!&lt;/h2&gt; {/* { } 안의 변수 값이 들어간다 */}
+      &lt;p&gt;오늘은 {today} 입니다.&lt;/p&gt;
+      &lt;p&gt;점수: {score}점, 10점 더하면 {score + 10}점&lt;/p&gt; {/* 계산식도 된다 */}
+      &lt;p&gt;이름 글자 수: {name.length}&lt;/p&gt; {/* 속성·메서드도 된다 */}
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0301Hello;
+</code></pre>
+<figure><a href="../images/b3_hello.png" target="_blank"><img src="../images/b3_hello.png" alt="Ex0301Hello 실행 화면" loading="lazy"></a><figcaption>Ex0301Hello 실행 화면</figcaption></figure>
+<p><code>{ }</code> 안에는 <strong>값이 되는 식(expression)</strong> 이면 무엇이든 넣을 수 있다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>넣을 수 있다 (식)</th>
+<th>넣을 수 없다 (문장)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{name}</code>, <code>{score + 10}</code>, <code>{name.length}</code></td>
+<td><code>{if (a) ...}</code></td>
+</tr>
+<tr>
+<td><code>{isOk ? "예" : "아니오"}</code> (삼항 연산자)</td>
+<td><code>{for (...) ...}</code></td>
+</tr>
+<tr>
+<td><code>{list.map(...)}</code> (5장)</td>
+<td><code>{const x = 1}</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="note">
+<p><strong>if 와 for 는 어떻게 하지?</strong> <code>return</code> <strong>위쪽</strong>(자바스크립트 영역)에서 미리 계산해 두거나, 삼항 연산자 <code>? :</code> 와 <code>map</code> 을 쓴다. 5장에서 자세히 배운다.</p>
+</blockquote>
+<h2 id="3-4-jsx-의-다섯-가지-규칙">3-4. JSX 의 다섯 가지 규칙</h2>
+<div class="file"><span>📄 basic/examples/src/examples/ch03/Ex0302Rules.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch03/Ex0302Rules.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0302Rules.jsx - JSX 의 규칙 5가지
+//
+// 이 예제가 보여 주는 것
+//   1. 돌려주는 JSX 는 &quot;부모 태그 하나&quot; 로 감싼다. 감쌀 태그가 필요 없으면 &lt;&gt; &lt;/&gt; (Fragment)
+//   2. 모든 태그는 닫는다. &lt;img&gt;, &lt;br&gt;, &lt;input&gt; 도 &lt;img /&gt; 처럼 스스로 닫는다
+//   3. class 대신 className (class 는 자바스크립트 예약어라서)
+//   4. style 은 문자열이 아니라 객체로 쓰고, 속성 이름은 camelCase (font-size → fontSize)
+//   5. JSX 안의 주석은 {/* ... */}
+
+function Ex0302Rules() {
+  // 4번 규칙: style 에 넘길 객체. 값이 숫자면 px 이 붙는다 (fontSize: 20 → 20px)
+  const boxStyle = {
+    backgroundColor: &quot;#eef3f8&quot;,
+    padding: 12,
+    borderRadius: 8,
+    fontSize: 15,
+  };
+
+  return (
+    // 1번 규칙: 여러 태그를 Fragment(&lt;&gt; &lt;/&gt;) 하나로 감쌌다. 화면에 &lt;div&gt; 가 더 생기지 않는다
+    &lt;&gt;
+      {/* 5번 규칙: JSX 안의 주석은 이렇게 쓴다 */}
+      &lt;h2 className=&quot;title&quot;&gt;JSX 규칙&lt;/h2&gt; {/* 3번 규칙: className */}
+      &lt;div style={boxStyle}&gt;
+        style 은 객체로 넘긴다. 바깥 {&quot;{ }&quot;} 는 &quot;자바스크립트 시작&quot;, 안쪽 {&quot;{ }&quot;} 는 객체.
+      &lt;/div&gt;
+      &lt;p style={{ color: &quot;crimson&quot;, fontWeight: &quot;bold&quot; }}&gt;바로 객체를 써도 된다 (중괄호 두 겹)&lt;/p&gt;
+      &lt;img src=&quot;/favicon.svg&quot; alt=&quot;로고&quot; width=&quot;40&quot; /&gt; {/* 2번 규칙: 스스로 닫기 */}
+      &lt;br /&gt;
+      &lt;input placeholder=&quot;input 도 스스로 닫는다&quot; /&gt;
+    &lt;/&gt;
+  );
+}
+
+export default Ex0302Rules;
+</code></pre>
+<figure><a href="../images/b3_rules.png" target="_blank"><img src="../images/b3_rules.png" alt="Ex0302Rules 실행 화면" loading="lazy"></a><figcaption>Ex0302Rules 실행 화면</figcaption></figure>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>규칙</th>
+<th>HTML</th>
+<th>JSX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 부모 태그 하나</td>
+<td>여러 태그를 나란히 써도 됨</td>
+<td><code>&lt;div&gt;</code> 나 <code>&lt;&gt; &lt;/&gt;</code> 로 하나로 감싼다</td>
+</tr>
+<tr>
+<td>2. 모든 태그를 닫는다</td>
+<td><code>&lt;br&gt;</code>, <code>&lt;img ...&gt;</code></td>
+<td><code>&lt;br /&gt;</code>, <code>&lt;img ... /&gt;</code></td>
+</tr>
+<tr>
+<td>3. 클래스</td>
+<td><code>class="title"</code></td>
+<td><code>className="title"</code></td>
+</tr>
+<tr>
+<td>4. 인라인 스타일</td>
+<td><code>style="font-size: 15px"</code></td>
+<td><code>style={{ fontSize: 15 }}</code> (객체, camelCase)</td>
+</tr>
+<tr>
+<td>5. 주석</td>
+<td><code>&lt;!-- 주석 --&gt;</code></td>
+<td><code>{/* 주석 */}</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>규칙을 어기면 Vite 가 브라우저와 터미널에 오류를 띄운다. 예를 들어 부모 태그 없이 두 태그를 나란히 쓰면 다음과 같은 오류가 난다.</p>
+<pre><code class="language-jsx">// 잘못된 예: 부모가 둘
+return (
+  &lt;h2&gt;제목&lt;/h2&gt;
+  &lt;p&gt;내용&lt;/p&gt;
+);
+</code></pre>
+<pre><code class="language-text">Adjacent JSX elements must be wrapped in an enclosing tag.
+   ╭─[ src/App.jsx:4:5 ]
+   │
+ 4 │     &lt;p&gt;내용&lt;/p&gt;
+   │     ┬
+   │     ╰──
+   │
+   │ Help: Did you want a JSX fragment `&lt;&gt;...&lt;/&gt;`?
+</code></pre>
+<p>"이웃한 JSX 태그는 감싸는 태그 하나로 묶어야 한다" 는 뜻이고, <code>src/App.jsx:4:5</code> 는 <strong>4번째 줄 5번째 글자</strong>라는 뜻이다. 마지막 줄은 친절하게 <code>&lt;&gt;...&lt;/&gt;</code> 로 감싸 보라고 알려 준다. 오류가 나면 겁먹지 말고 <strong>파일 이름·줄 번호·Help</strong> 부터 읽자.</p>
+<h2 id="3-5-컴포넌트-이름은-대문자로">3-5. 컴포넌트 이름은 대문자로</h2>
+<pre><code class="language-jsx">function hello() { ... }   // ✗ 소문자 → &lt;hello /&gt; 를 HTML 태그로 착각한다
+function Hello() { ... }   // ✓ 대문자 → React 컴포넌트
+</code></pre>
+<p>React 는 <code>&lt;div&gt;</code> 처럼 <strong>소문자로 시작하면 HTML 태그</strong>, <code>&lt;Hello&gt;</code> 처럼 <strong>대문자로 시작하면 컴포넌트</strong>로 본다.</p>
+<h2 id="정리">정리</h2>
+<ul>
+<li>JSX 는 자바스크립트로 바뀌어 실행되는 "HTML 처럼 생긴 문법" 이다.</li>
+<li><code>{ }</code> 안에는 값이 되는 식(변수, 계산, 함수 호출, 삼항 연산자)을 넣는다.</li>
+<li>부모 하나로 감싸기, 모든 태그 닫기, <code>className</code>, <code>style={{ }}</code>, <code>{/* 주석 */}</code>.</li>
+<li>컴포넌트 이름은 대문자로 시작한다.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li>다음 HTML 을 JSX 로 바르게 고치시오.</li>
+</ol>
+<pre><code class="language-html">&lt;label class=&quot;name&quot;&gt;이름&lt;/label&gt;
+&lt;input type=&quot;text&quot;&gt;
+&lt;p style=&quot;color: red; font-size: 12px&quot;&gt;필수 입력&lt;/p&gt;
+</code></pre>
+<ol start="2">
+<li><code>const price = 12000; const count = 3;</code> 일 때 화면에 <code>합계: 36,000원</code> 이 보이도록 JSX 를 쓰시오. (힌트: <code>toLocaleString()</code>)</li>
+<li><code>{if (age &gt;= 20) "성인"}</code> 이 왜 오류인지 설명하고, 삼항 연산자로 고쳐 쓰시오.</li>
+<li>자기소개 컴포넌트 <code>MyIntro</code> 를 <code>src/examples/ch03/MyIntro.jsx</code> 에 만들어 App 에서 보여 주시오. 이름·좋아하는 음식·오늘 날짜(<code>new Date().toLocaleDateString("ko-KR")</code>)가 나와야 한다.</li>
+</ol>
+<nav class="pager"><a href="ch02.html"><small>← 이전</small>2장 React 를 위한 JavaScript 문법</a><a class="next" href="ch04.html"><small>다음 →</small>4장 컴포넌트와 props</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

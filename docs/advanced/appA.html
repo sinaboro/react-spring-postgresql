@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부록 A. 자주 만나는 오류와 해결 - 2단계 React 심화</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="부록 A. 자주 만나는 오류와 해결 - 2단계 React 심화"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">2단계 React 심화</div><a href="ch00.html">0장 과정 안내</a><a href="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</a><a href="ch02.html">2장 useRef 와 useReducer</a><a href="ch03.html">3장 커스텀 훅</a><a href="ch04.html">4장 React Router</a><a href="ch05.html">5장 Context API</a><a href="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</a><a href="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</a><a href="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</a><a href="ch09.html">9장 프로젝트 ③ React 로그인 연동</a><a href="appA.html" class=on>부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../basic/ch00.html">→ 1단계 React 기초</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내</option><option value="ch01.html">1장 기초 복습 - 다시 그리기와 컴포넌트 설계</option><option value="ch02.html">2장 useRef 와 useReducer</option><option value="ch03.html">3장 커스텀 훅</option><option value="ch04.html">4장 React Router</option><option value="ch05.html">5장 Context API</option><option value="ch06.html">6장 인증의 이해 - 해시, JWT, 401 과 403</option><option value="ch07.html">7장 프로젝트 ① 게시판을 Router 로 바꾸기</option><option value="ch08.html">8장 프로젝트 ② Spring Boot 회원가입·로그인 API</option><option value="ch09.html">9장 프로젝트 ③ React 로그인 연동</option><option value="appA.html" selected>부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="부록-a-자주-만나는-오류와-해결">부록 A. 자주 만나는 오류와 해결</h1>
+<p>기초 교안 부록 A 의 내용(설치, JSX, CORS, Docker 등)도 그대로 해당된다. 여기서는 심화 과정에서 새로 만나는 것만 모았다.</p>
+<h2 id="a-1-hookcontext">A-1. Hook·Context</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cannot read properties of null (reading 'focus')</code></td>
+<td>화면이 그려지기 전에 <code>ref.current</code> 를 씀, 또는 <code>ref={...}</code> 연결을 빠뜨림</td>
+<td>useEffect 나 이벤트 안에서 쓰기, 태그에 <code>ref</code> 확인</td>
+</tr>
+<tr>
+<td><code>모르는 action: ...</code> (리듀서의 default 오류)</td>
+<td>dispatch 의 type 오타</td>
+<td>리듀서의 case 이름과 똑같이</td>
+</tr>
+<tr>
+<td>리듀서로 바꿨는데 화면이 안 바뀜</td>
+<td>리듀서에서 <code>state.push</code> 등 원본을 고치고 같은 state 를 return</td>
+<td>새 배열·객체를 return</td>
+</tr>
+<tr>
+<td><code>useTheme 은 &lt;ThemeProvider&gt; 안에서만 ...</code>, <code>useAuth 는 &lt;AuthProvider&gt; 안에서만 ...</code></td>
+<td>Provider 로 감싸지 않은 곳에서 사용</td>
+<td>main.jsx(또는 상위)에서 Provider 로 감쌌는지 확인</td>
+</tr>
+<tr>
+<td><code>Invalid hook call</code></td>
+<td>일반 함수·조건문 안에서 Hook 을 부름</td>
+<td>Hook 은 컴포넌트·커스텀 훅의 맨 위에서만</td>
+</tr>
+<tr>
+<td>커스텀 훅에서 무한 요청</td>
+<td>useEffect 의존성에 매번 새로 만들어지는 함수·객체를 넣음</td>
+<td><code>useApi(fn, [id])</code> 처럼 값(deps)만 넣기</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-2-react-router">A-2. React Router</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>useNavigate() may be used only in the context of a &lt;Router&gt; component</code></td>
+<td><code>&lt;BrowserRouter&gt;</code> 로 감싸지 않음, 또는 Router 바깥 컴포넌트에서 사용</td>
+<td>main.jsx 에서 <code>&lt;BrowserRouter&gt;</code> 로 App 을 감싼다 (AuthProvider 보다 바깥)</td>
+</tr>
+<tr>
+<td><code>Failed to resolve import "react-router"</code></td>
+<td>패키지를 설치하지 않음</td>
+<td><code>npm install react-router</code></td>
+</tr>
+<tr>
+<td>링크를 누르면 화면이 깜빡이고 state 가 사라짐</td>
+<td><code>&lt;a href&gt;</code> 사용</td>
+<td><code>&lt;Link to&gt;</code> 로 바꾼다</td>
+</tr>
+<tr>
+<td>화면이 안 바뀌고 머리글만 보임</td>
+<td>Layout 에 <code>&lt;Outlet /&gt;</code> 이 없음</td>
+<td>자식 화면이 들어갈 자리에 <code>&lt;Outlet /&gt;</code></td>
+</tr>
+<tr>
+<td><code>useParams()</code> 값이 <code>undefined</code></td>
+<td>Route path 의 이름과 꺼내는 이름이 다름 (<code>:id</code> vs <code>postId</code>)</td>
+<td>이름을 똑같이</td>
+</tr>
+<tr>
+<td>id 비교가 항상 false</td>
+<td>주소 값은 문자열 (<code>"2" === 2</code> 는 false)</td>
+<td><code>Number(id)</code> 로 바꿔 비교</td>
+</tr>
+<tr>
+<td>메뉴 "홈" 이 항상 active</td>
+<td><code>/</code> 는 모든 주소의 앞부분</td>
+<td><code>&lt;NavLink to="/" end&gt;</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-3-로그인jwt">A-3. 로그인·JWT</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>로그인했는데 글쓰기가 401</td>
+<td>요청에 Authorization 헤더가 없음</td>
+<td>Network 탭 → Request Headers 확인. api.js 의 <code>request</code> 에서 토큰을 붙이는지</td>
+</tr>
+<tr>
+<td>모든 요청이 401 "로그인이 만료되었습니다"</td>
+<td>토큰 만료, 또는 서버의 jwt.secret 이 바뀜</td>
+<td>다시 로그인</td>
+</tr>
+<tr>
+<td>로그인했다가 새로 고침하면 로그아웃됨</td>
+<td>토큰을 localStorage 에 저장하지 않음, 또는 시작할 때 <code>/me</code> 복원 코드 누락</td>
+<td>AuthContext 의 login, 첫 useEffect 확인</td>
+</tr>
+<tr>
+<td><code>/posts/new</code> 에서 F5 → 잠깐 로그인 화면으로 튕김</td>
+<td>토큰 확인이 끝나기 전에 ProtectedRoute 가 user=null 로 판단</td>
+<td>AuthProvider 의 <code>ready</code> 처리</td>
+</tr>
+<tr>
+<td>회원가입 400 "아이디는 영문 소문자·숫자·밑줄(_)로 4~20자입니다" 등</td>
+<td>아이디(소문자·숫자·_ 4~20), 비밀번호(8~72) 규칙 위반 (<code>SignupRequest</code> 의 검사)</td>
+<td>화면의 validate 와 서버 SignupRequest 규칙을 맞춘다</td>
+</tr>
+<tr>
+<td>409 "이미 사용 중인 아이디입니다"</td>
+<td>아이디 중복</td>
+<td>다른 아이디</td>
+</tr>
+<tr>
+<td>남의 글 수정 403</td>
+<td>정상 동작 (PostService 의 소유권 검사)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>로그인했는데 글쓰기가 401, 서버 로그에는 오류 없음</td>
+<td>SecurityConfig 의 주소 규칙에서 막힘 (토큰이 안 붙었거나 틀림)</td>
+<td>Network 탭에서 Authorization 헤더 확인</td>
+</tr>
+<tr>
+<td>CORS 오류인데 Authorization 헤더가 있는 요청만 실패</td>
+<td>CORS 설정에서 Authorization 헤더를 허락하지 않음</td>
+<td>SecurityConfig 의 <code>setAllowedHeaders(List.of("*"))</code></td>
+</tr>
+<tr>
+<td>IntelliJ 에서 <code>io.jsonwebtoken</code> 이나 <code>springframework.security</code> 에 빨간 줄</td>
+<td>build.gradle 을 바꾼 뒤 Gradle sync 를 안 함</td>
+<td>오른쪽 Gradle 창 → 🔄 Reload All Gradle Projects</td>
+</tr>
+<tr>
+<td>서버 시작 실패 <code>WeakKeyException</code> (key byte array is ... bits)</td>
+<td><code>jwt.secret</code> 이 32글자(256비트)보다 짧음</td>
+<td>application.yml 의 jwt.secret 을 32글자 이상으로</td>
+</tr>
+<tr>
+<td>콘솔에 <code>Using generated security password: ...</code></td>
+<td>UserDetailsService Bean 이 없음</td>
+<td>저장소 SecurityConfig 처럼 빈 UserDetailsService 를 등록 (동작에는 영향 없음)</td>
+</tr>
+<tr>
+<td>서버 시작 실패 <code>Connection to localhost:5434 refused</code></td>
+<td>심화 DB(spring-auth-db)가 꺼져 있음</td>
+<td><code>C:\study\authboard</code> 에서 <code>docker compose up -d</code></td>
+</tr>
+<tr>
+<td><code>Web server failed to start. Port 8080 was already in use.</code></td>
+<td>기초 과정 서버가 아직 8080 을 쓰는 중</td>
+<td>IntelliJ 에서 기초 과정 서버를 ■ 로 끈다</td>
+</tr>
+</tbody>
+</table></div>
+<nav class="pager"><a href="ch09.html"><small>← 이전</small>9장 프로젝트 ③ React 로그인 연동</a><a class="next" href="appB.html"><small>다음 →</small>부록 B 용어 풀이</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 2단계 React 심화 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

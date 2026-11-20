@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부록 A. 자주 만나는 오류와 해결 - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="부록 A. 자주 만나는 오류와 해결 - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html">3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html">5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html">6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html">8장 useEffect 와 데이터 불러오기</a><a href="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html" class=on>부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html">3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html">5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html">6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html">8장 useEffect 와 데이터 불러오기</option><option value="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html" selected>부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="부록-a-자주-만나는-오류와-해결">부록 A. 자주 만나는 오류와 해결</h1>
+<p>오류가 나면 먼저 <strong>어디서</strong> 났는지 본다. ① VS Code 터미널(npm, docker)·IntelliJ Run 창(Spring Boot), ② 브라우저 화면의 빨간 오류 상자(Vite), ③ 브라우저 F12 → Console 탭, ④ F12 → Network 탭(요청 상태 코드). 오류 문장 안의 <strong>파일 이름과 줄 번호</strong>가 가장 큰 힌트다.</p>
+<h2 id="a-1-설치실행">A-1. 설치·실행</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'npm' 용어가 ... 인식되지 않습니다</code></td>
+<td>Node.js 미설치, 또는 설치 전에 연 터미널</td>
+<td>Node.js 설치 후 VS Code 를 완전히 껐다 켠다</td>
+</tr>
+<tr>
+<td><code>npm run dev</code> → <code>Missing script: "dev"</code></td>
+<td><code>package.json</code> 이 없는 폴더에서 실행</td>
+<td><code>cd</code> 로 프로젝트 폴더(예: <code>my-react</code>)에 들어간다</td>
+</tr>
+<tr>
+<td><code>'vite' 은(는) 내부 또는 외부 명령...이 아닙니다</code></td>
+<td><code>npm install</code> 을 안 함</td>
+<td>그 폴더에서 <code>npm install</code></td>
+</tr>
+<tr>
+<td><code>Port 5173 is in use, trying another one...</code></td>
+<td>다른 개발 서버가 5173 을 쓰는 중</td>
+<td>오류는 아니다. 터미널에 나온 새 주소로 연다. 9장에서는 하나만 켜자 (CORS 는 5173 만 허락)</td>
+</tr>
+<tr>
+<td>저장했는데 화면이 안 바뀜</td>
+<td>파일을 저장 안 함 / 다른 프로젝트의 파일을 고침</td>
+<td>탭 옆 ● 확인, VS Code 왼쪽 탐색기에서 경로 확인</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-2-jsxreact">A-2. JSX·React</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상 (오류 문장)</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Adjacent JSX elements must be wrapped in an enclosing tag</code></td>
+<td>return 안에 부모 태그가 둘 이상</td>
+<td><code>&lt;div&gt;</code> 나 <code>&lt;&gt; &lt;/&gt;</code> 로 감싼다</td>
+</tr>
+<tr>
+<td><code>Expected corresponding JSX closing tag for 'input'</code></td>
+<td><code>&lt;input&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;img&gt;</code> 를 안 닫음</td>
+<td><code>&lt;input /&gt;</code> 처럼 스스로 닫는다</td>
+</tr>
+<tr>
+<td>화면이 하얗고 콘솔에 <code>... is not defined</code></td>
+<td>import 를 안 했거나 이름 오타</td>
+<td>파일 위쪽 <code>import</code> 확인. 대소문자까지 같아야 한다</td>
+</tr>
+<tr>
+<td><code>does not provide an export named 'default'</code></td>
+<td>그 파일에 <code>export default</code> 가 없음</td>
+<td>파일 끝에 <code>export default 컴포넌트이름;</code></td>
+</tr>
+<tr>
+<td><code>Too many re-renders</code></td>
+<td><code>onClick={setCount(1)}</code> 처럼 그릴 때 바로 실행</td>
+<td><code>onClick={() =&gt; setCount(1)}</code></td>
+</tr>
+<tr>
+<td><code>Each child in a list should have a unique "key" prop</code></td>
+<td>map 으로 만든 태그에 key 가 없음</td>
+<td>가장 바깥 태그에 <code>key={item.id}</code></td>
+</tr>
+<tr>
+<td><code>Objects are not valid as a React child</code></td>
+<td><code>{user}</code> 처럼 객체를 그대로 JSX 에 넣음</td>
+<td><code>{user.name}</code> 처럼 글자·숫자를 넣는다</td>
+</tr>
+<tr>
+<td>입력 칸에 글자가 안 쳐짐</td>
+<td><code>value</code> 만 있고 <code>onChange</code> 가 없음</td>
+<td><code>onChange={e =&gt; setX(e.target.value)}</code> 추가</td>
+</tr>
+<tr>
+<td>state 를 바꿨는데 화면이 그대로</td>
+<td><code>push</code>, <code>obj.x = ...</code> 로 원본을 직접 고침</td>
+<td><code>[...arr, x]</code>, <code>{...obj, x}</code> 로 새로 만든다</td>
+</tr>
+<tr>
+<td><code>Cannot read properties of null (reading 'title')</code></td>
+<td>데이터가 오기 전에 <code>post.title</code> 을 그림</td>
+<td><code>if (!post) return &lt;p&gt;불러오는 중...&lt;/p&gt;;</code> 를 먼저</td>
+</tr>
+<tr>
+<td><code>Cannot read properties of undefined (reading 'map')</code></td>
+<td>배열 state 의 처음값이 없음</td>
+<td><code>useState([])</code> 처럼 빈 배열로 시작</td>
+</tr>
+<tr>
+<td>콘솔 로그가 두 번씩 찍힘</td>
+<td>개발 모드의 StrictMode</td>
+<td>정상이다 (8-2 참고)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-3-spring-boot서버-통신-9장">A-3. Spring Boot·서버 통신 (9장)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>화면에 "API 서버에 연결할 수 없습니다", 콘솔 <code>Failed to fetch</code></td>
+<td>Spring Boot 서버가 꺼져 있음 / 주소 오타</td>
+<td>IntelliJ 에서 <code>BoardApplication</code> ▶, <code>config.js</code> 의 주소(<code>localhost:8080</code>) 확인</td>
+</tr>
+<tr>
+<td>콘솔 <code>blocked by CORS policy</code></td>
+<td>서버의 CORS 허락 목록에 지금 주소(포트)가 없음</td>
+<td><code>WebConfig.java</code> 의 <code>allowedOrigins</code> 확인. React 를 5173 으로 실행. 고친 뒤 서버를 ■ → ▶ 로 다시 켠다</td>
+</tr>
+<tr>
+<td>저장 시 400 <code>{"detail": "제목을 입력하세요"}</code></td>
+<td><code>@Valid</code> 입력 검사 실패</td>
+<td>정상 동작. Network 탭 → Response 의 <code>detail</code> 을 읽는다</td>
+</tr>
+<tr>
+<td>저장 시 415</td>
+<td><code>Content-Type: application/json</code> 헤더를 빠뜨림</td>
+<td>fetch 의 <code>headers</code> 확인</td>
+</tr>
+<tr>
+<td>404 "없는 주소입니다" / "글을 찾을 수 없습니다"</td>
+<td>주소 오타(<code>/api/post</code>) / 없는 글 번호</td>
+<td>Network 탭에서 실제 요청 주소 확인</td>
+</tr>
+<tr>
+<td>400 "'id' 값이 올바르지 않습니다"</td>
+<td>주소의 번호 자리에 숫자가 아닌 값 (<code>/api/posts/undefined</code> 등)</td>
+<td>React 에서 id 를 제대로 넘겼는지 확인 (<code>post.id</code>)</td>
+</tr>
+<tr>
+<td>서버 시작 실패 <code>Connection to localhost:5433 refused</code></td>
+<td>DB 컨테이너가 꺼져 있음</td>
+<td><code>docker compose up -d</code> 후 <code>docker compose ps</code> 가 healthy 인지</td>
+</tr>
+<tr>
+<td>서버 시작 실패 <code>Web server failed to start. Port 8080 was already in use.</code></td>
+<td>서버가 이미 하나 켜져 있음</td>
+<td>IntelliJ Run 창의 다른 탭이나 bootRun 터미널을 끈다</td>
+</tr>
+<tr>
+<td>IntelliJ 에서 java 파일에 빨간 줄, <code>Cannot resolve symbol 'springframework'</code></td>
+<td>Gradle sync 가 안 됐거나 실패함</td>
+<td>오른쪽 Gradle 창 → 🔄 Reload. 인터넷 연결 확인</td>
+</tr>
+<tr>
+<td>IntelliJ 위쪽에 <code>Project JDK is not defined</code></td>
+<td>JDK 가 지정되지 않음</td>
+<td>Setup SDK → 21 선택 또는 Download JDK (Temurin 21)</td>
+</tr>
+<tr>
+<td>Gradle: <code>Cannot find a Java installation ... matching ... languageVersion=21</code></td>
+<td>JDK 21 이 없음 (17 등 다른 버전만 있음)</td>
+<td>JDK 21 설치 후 IntelliJ 를 다시 시작</td>
+</tr>
+<tr>
+<td><code>.\gradlew.bat bootRun</code> → <code>JAVA_HOME is not set and no 'java' command could be found</code></td>
+<td>터미널이 JDK 를 못 찾음</td>
+<td>JDK 설치 때 JAVA_HOME 설정. 또는 IntelliJ ▶ 로 실행</td>
+</tr>
+<tr>
+<td><code>gradlew build</code> 가 <code>BoardApplicationTests &gt; contextLoads() FAILED</code> 로 실패</td>
+<td>테스트가 서버를 실제로 켜 보는데 DB 가 꺼져 있음</td>
+<td><code>docker compose up -d</code> 후 다시. 테스트를 건너뛰려면 <code>.\gradlew.bat build -x test</code></td>
+</tr>
+<tr>
+<td>코드를 고쳤는데 서버 동작이 그대로</td>
+<td>서버를 다시 켜지 않음</td>
+<td>IntelliJ ■ → ▶</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-4-docker">A-4. Docker</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>failed to connect to the docker API</code> / <code>error during connect</code></td>
+<td>Docker Desktop 이 꺼져 있음</td>
+<td>Docker Desktop 실행 → Engine running 확인</td>
+</tr>
+<tr>
+<td><code>Bind for 0.0.0.0:5433 failed: port is already allocated</code></td>
+<td>다른 프로그램(컨테이너)이 5433 사용</td>
+<td><code>docker ps</code> 로 확인 후 그 컨테이너를 멈추거나, compose 의 포트를 <code>"5435:5432"</code> 로 바꾸고 <code>application.yml</code> 의 <code>datasource.url</code> 포트도 같이 바꾼다</td>
+</tr>
+<tr>
+<td>한쪽 과정 DB 를 켰더니 다른 과정 DB 컨테이너가 사라짐</td>
+<td>compose 파일에 <code>name:</code> 이 없어서 폴더 이름(board)이 겹침</td>
+<td>저장소의 compose 파일처럼 <code>name:</code> 을 붙인다</td>
+</tr>
+<tr>
+<td>글이 모두 사라짐</td>
+<td><code>docker compose down -v</code> 로 볼륨까지 지움</td>
+<td>되돌릴 수 없다. 평소에는 <code>stop</code> 또는 <code>down</code>(볼륨 유지)을 쓴다</td>
+</tr>
+</tbody>
+</table></div>
+<nav class="pager"><a href="ch09.html"><small>← 이전</small>9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a class="next" href="appB.html"><small>다음 →</small>부록 B 용어 풀이</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>

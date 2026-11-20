@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5장. 조건부 렌더링과 목록 그리기 - 1단계 React 기초</title>
+<meta name="description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다.">
+<meta property="og:title" content="5장. 조건부 렌더링과 목록 그리기 - 1단계 React 기초"><meta property="og:description" content="React 를 처음 배우는 학생을 위한 2단계(기초 · 심화) 학습 교안과 실습 코드입니다. 하나의 게시판을 기초 과정에서 만들고, 심화 과정에서 Router · Context · 로그인(JWT)을 더해 키워 갑니다. 서버는 Spring Boot(IntelliJ IDEA 로 실행)를 씁니다."><meta property="og:image" content="https://sinaboro.github.io/react-spring-postgresql/images/a9_list_guest.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='none' stroke='%2361dafb' stroke-width='1.6'%3E%3Cellipse rx='10' ry='4'/%3E%3Cellipse rx='10' ry='4' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='4' transform='rotate(120)'/%3E%3C/g%3E%3Ccircle r='2' fill='%2361dafb'/%3E%3C/svg%3E">
+<script>
+if(/KAKAOTALK/i.test(navigator.userAgent)){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href);}
+</script>
+<style>
+:root{--ink:#1f2328;--sub:#59636e;--line:#e3e6ea;--bg:#f7f8fa;--card:#fff;--navy:#16202e;--acc:#61dafb;--acc2:#0b7fab;
+--note:#eef8fc;--noteline:#61dafb;--code:#f3f5f7;--link:#0969da}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6edf3;--sub:#9da7b3;--line:#30363d;--bg:#0f141a;
+--card:#161b22;--navy:#0b1017;--note:#10232b;--noteline:#2a8fb0;--code:#1b222b;--link:#58a6ff;--acc2:#61dafb}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;word-break:keep-all}
+a{color:var(--link)}img{max-width:100%;height:auto}
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+header.top a{color:#fff;text-decoration:none}.logo{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.logo b{color:var(--acc)}
+header.top .sp{flex:1}header.top .btn{font-size:14px;border:1px solid #ffffff55;border-radius:8px;padding:4px 10px;white-space:nowrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.doc{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:24px 16px 60px;max-width:1180px;margin:0 auto}
+.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;font-size:14px}
+.side .cap{font-weight:800;margin:4px 10px 6px;color:var(--sub)}
+.side a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.45}
+.side a.on{background:var(--acc);color:#111;font-weight:700}.side a:hover:not(.on){background:var(--line)}
+.side .other{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+article{min-width:0}
+article h1{font-size:28px;line-height:1.35;margin:0 0 20px;padding-bottom:12px;border-bottom:4px solid var(--acc)}
+article h2{font-size:22px;margin:40px 0 12px;padding-left:10px;border-left:5px solid var(--acc2)}
+article h3{font-size:18px;margin:28px 0 8px}
+figure{margin:18px 0;text-align:center}figure img{border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+blockquote.note{margin:16px 0;padding:10px 16px;background:var(--note);border-left:5px solid var(--noteline);border-radius:6px}
+blockquote.note p{margin:6px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-family:Consolas,"D2Coding",monospace;font-size:.92em}
+.file{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:18px 0 -6px;padding:6px 12px;
+background:var(--navy);color:#dfe6ee;border-radius:8px 8px 0 0;font:13px Consolas,monospace}
+.file a{color:var(--acc);font-family:inherit;white-space:nowrap}.file span{overflow-wrap:anywhere}
+.file+pre{border-top-left-radius:0;border-top-right-radius:0;margin-top:6px}
+pre{position:relative;background:var(--code);padding:34px 14px 12px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code.hljs{padding:0;background:none}
+.copy{position:absolute;top:6px;right:6px;font-size:12px;padding:3px 9px;border-radius:6px;border:1px solid var(--line);
+background:var(--card);color:var(--ink);cursor:pointer;opacity:.85}.copy:hover{opacity:1}.copy.ok{background:#2da44e;color:#fff;border-color:#2da44e}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--card)}
+.pager a small{display:block;color:var(--sub)}.pager .next{text-align:right}
+select.jump{display:none;width:100%;font-size:16px;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.doc{display:block;padding-top:16px}.side{display:none}select.jump{display:block}article h1{font-size:23px}
+header.top .hide-s{display:none}}
+.hero{background:var(--navy);color:#fff;padding:44px 0 36px}
+.hero h1{font-size:38px;margin:0 0 10px;line-height:1.25}.hero h1 b{color:var(--acc)}
+.hero p{margin:6px 0;color:#c9d4e0;max-width:760px}.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.cta a{padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.cta .main{background:var(--acc);color:#111}.cta .sub{border:1px solid #ffffff66;color:#fff}
+.hero .twin{margin-top:16px;font-size:14px}.hero .twin a{color:var(--acc)}
+section{padding:36px 0 8px}section h2{font-size:24px;margin:0 0 6px}section .lead{color:var(--sub);margin:0 0 18px}
+.course{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.course>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.course h3{margin:0 0 4px;font-size:21px}.course .pdf{font-size:14px}
+.course ol{list-style:none;padding:0;margin:12px 0 0}
+.course li a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.course li a:hover{background:var(--line)}
+.course li img{width:72px;height:44px;object-fit:cover;object-position:left top;border:1px solid var(--line);border-radius:5px;background:#fff;flex:none}
+.course li .noimg{width:72px;height:44px;border-radius:5px;background:var(--code);flex:none}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.dl a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-decoration:none;color:var(--ink)}
+.dl a:hover{border-color:var(--acc)}.dl b{font-family:Consolas,monospace}.dl small{display:block;color:var(--sub)}
+footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
+@media (max-width:600px){.hero h1{font-size:28px}.course{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top"><div class="in">
+<a class="logo" href="../index.html">React + <b>Spring Boot</b></a><span class="sp"></span>
+<a class="btn hide-s" href="../basic/ch00.html">기초</a>
+<a class="btn hide-s" href="../advanced/ch00.html">심화</a>
+<a class="btn" href="../index.html#pdf">PDF</a>
+<a class="btn" href="https://github.com/sinaboro/react-spring-postgresql" target="_blank">GitHub</a>
+</div></header>
+<div class="doc">
+<nav class="side"><div class="cap">1단계 React 기초</div><a href="ch00.html">0장 과정 안내와 실습 준비</a><a href="ch01.html">1장 React 시작하기</a><a href="ch02.html">2장 React 를 위한 JavaScript 문법</a><a href="ch03.html">3장 JSX - 자바스크립트 안의 HTML</a><a href="ch04.html">4장 컴포넌트와 props</a><a href="ch05.html" class=on>5장 조건부 렌더링과 목록 그리기</a><a href="ch06.html">6장 state 와 이벤트</a><a href="ch07.html">7장 폼 다루기와 할 일 앱</a><a href="ch08.html">8장 useEffect 와 데이터 불러오기</a><a href="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</a><a href="appA.html">부록 A 자주 만나는 오류와 해결</a><a href="appB.html">부록 B 용어 풀이</a><a href="appC.html">부록 C 확인 문제 풀이</a><div class="other"><a href="../advanced/ch00.html">→ 2단계 React 심화</a></div></nav>
+<article>
+<select class="jump" onchange="location.href=this.value" aria-label="장 이동"><option value="ch00.html">0장 과정 안내와 실습 준비</option><option value="ch01.html">1장 React 시작하기</option><option value="ch02.html">2장 React 를 위한 JavaScript 문법</option><option value="ch03.html">3장 JSX - 자바스크립트 안의 HTML</option><option value="ch04.html">4장 컴포넌트와 props</option><option value="ch05.html" selected>5장 조건부 렌더링과 목록 그리기</option><option value="ch06.html">6장 state 와 이벤트</option><option value="ch07.html">7장 폼 다루기와 할 일 앱</option><option value="ch08.html">8장 useEffect 와 데이터 불러오기</option><option value="ch09.html">9장 프로젝트 - Spring Boot + PostgreSQL 게시판 CRUD</option><option value="appA.html">부록 A 자주 만나는 오류와 해결</option><option value="appB.html">부록 B 용어 풀이</option><option value="appC.html">부록 C 확인 문제 풀이</option></select>
+<h1 id="5장-조건부-렌더링과-목록-그리기">5장. 조건부 렌더링과 목록 그리기</h1>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>조건에 따라 다른 화면을 보여 준다: 삼항 연산자, <code>&amp;&amp;</code>, <code>if</code> + 일찍 return.</li>
+<li>배열을 <code>map</code> 으로 목록(<code>&lt;li&gt;</code>, <code>&lt;tr&gt;</code>)으로 그린다.</li>
+<li>목록의 각 항목에 알맞은 <code>key</code> 를 준다.</li>
+<li><code>filter</code> 로 걸러 낸 결과를 그린다.</li>
+</ul>
+<h2 id="5-1-조건부-렌더링">5-1. 조건부 렌더링</h2>
+<p>로그인했으면 "로그아웃" 버튼, 아니면 "로그인" 버튼. 데이터가 없으면 "글이 없습니다". 이처럼 <strong>조건에 따라 다른 화면</strong>을 그리는 것을 조건부 렌더링이라 한다. JSX 의 <code>{ }</code> 에는 <code>if</code> 문을 못 쓰므로 세 가지 방법을 쓴다.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>방법</th>
+<th>모양</th>
+<th>언제</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>삼항 연산자</td>
+<td><code>{조건 ? &lt;A /&gt; : &lt;B /&gt;}</code></td>
+<td>둘 중 하나</td>
+</tr>
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td><code>{조건 &amp;&amp; &lt;A /&gt;}</code></td>
+<td>참일 때만 보이고 거짓이면 아무것도 없음</td>
+</tr>
+<tr>
+<td><code>if</code> + <code>return</code></td>
+<td>컴포넌트 위쪽에서 <code>if (!ok) return &lt;X /&gt;;</code></td>
+<td>경우에 따라 화면 전체가 다를 때</td>
+</tr>
+</tbody>
+</table></div>
+<div class="file"><span>📄 basic/examples/src/examples/ch05/Ex0501Condition.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch05/Ex0501Condition.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0501Condition.jsx - 조건부 렌더링 (조건에 따라 다른 화면 보여 주기)
+//
+// 이 예제가 보여 주는 것
+//   1. 조건 ? A : B   → 둘 중 하나를 보여 줄 때
+//   2. 조건 &amp;&amp; A      → 조건이 참일 때만 보여 줄 때 (거짓이면 아무것도 안 그림)
+//   3. if 문 + 일찍 return → 경우가 완전히 다를 때
+//   JSX 의 { } 안에는 &quot;식&quot; 만 들어가므로 if 문은 쓸 수 없다. 그래서 1·2 를 주로 쓴다.
+
+// 3번 방식: 컴포넌트 안에서 if 로 먼저 걸러 내기
+function LoginMessage({ isLogin, name }) {
+  if (!isLogin) {
+    return &lt;p&gt;로그인이 필요합니다.&lt;/p&gt;; // 여기서 끝. 아래 줄은 실행되지 않는다
+  }
+  return &lt;p&gt;{name} 님, 환영합니다!&lt;/p&gt;;
+}
+
+function Ex0501Condition() {
+  const isLogin = true; // false 로 바꿔 저장하면 화면이 어떻게 바뀌는지 보자
+  const name = &quot;민수&quot;;
+  const unread = 3; // 0 으로도 바꿔 보자
+
+  return (
+    &lt;div&gt;
+      {/* 1. 삼항 연산자: 버튼 글자를 둘 중 하나로 */}
+      &lt;button&gt;{isLogin ? &quot;로그아웃&quot; : &quot;로그인&quot;}&lt;/button&gt;
+
+      {/* 2. &amp;&amp; : 읽지 않은 알림이 있을 때만 보여 준다 */}
+      {unread &gt; 0 &amp;&amp; &lt;p&gt;🔔 읽지 않은 알림 {unread}개&lt;/p&gt;}
+      {/* 주의: {unread &amp;&amp; ...} 로 쓰면 unread 가 0 일 때 화면에 0 이 찍힌다. 비교식을 쓰자 */}
+
+      {/* 3. if 문을 쓴 컴포넌트 */}
+      &lt;LoginMessage isLogin={isLogin} name={name} /&gt;
+      &lt;LoginMessage isLogin={false} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0501Condition;
+</code></pre>
+<figure><a href="../images/b5_condition.png" target="_blank"><img src="../images/b5_condition.png" alt="Ex0501Condition 실행 화면" loading="lazy"></a><figcaption>Ex0501Condition 실행 화면</figcaption></figure>
+<p><code>isLogin</code> 을 <code>false</code> 로, <code>unread</code> 를 <code>0</code> 으로 바꿔 저장하고 화면이 어떻게 바뀌는지 확인하자.</p>
+<blockquote class="note">
+<p><strong><code>&amp;&amp;</code> 의 함정</strong> <code>{count &amp;&amp; &lt;p&gt;...&lt;/p&gt;}</code> 에서 <code>count</code> 가 <code>0</code> 이면 화면에 <strong>0 이 그대로 찍힌다.</strong> React 는 <code>false</code>, <code>null</code>, <code>undefined</code> 는 그리지 않지만 숫자 0 은 그린다. 그래서 <code>{count &gt; 0 &amp;&amp; ...}</code> 처럼 <strong>비교식</strong>을 쓰는 습관을 들이자.</p>
+</blockquote>
+<h2 id="5-2-map-으로-목록-그리기">5-2. map 으로 목록 그리기</h2>
+<p>서버에서 받은 글 목록, 상품 목록은 모두 <strong>배열</strong>이다. 배열의 칸마다 태그를 하나씩 만들려면 2장에서 배운 <code>map</code> 을 쓴다.</p>
+<pre><code class="language-jsx">const fruits = [&quot;사과&quot;, &quot;배&quot;, &quot;포도&quot;];
+
+&lt;ul&gt;
+  {fruits.map((f) =&gt; &lt;li key={f}&gt;{f}&lt;/li&gt;)}
+&lt;/ul&gt;
+// → &lt;ul&gt;&lt;li&gt;사과&lt;/li&gt;&lt;li&gt;배&lt;/li&gt;&lt;li&gt;포도&lt;/li&gt;&lt;/ul&gt;
+</code></pre>
+<p><code>map</code> 이 <strong>JSX 의 배열</strong>을 돌려주고, React 는 배열 안의 JSX 를 차례대로 그린다.</p>
+<div class="file"><span>📄 basic/examples/src/examples/ch05/Ex0502List.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/basic/examples/src/examples/ch05/Ex0502List.jsx" target="_blank">GitHub 에서 보기</a></div>
+
+<pre><code class="language-jsx">// Ex0502List.jsx - 배열을 map 으로 목록 그리기 + key
+//
+// 이 예제가 보여 주는 것
+//   - 배열.map(항목 =&gt; &lt;태그&gt;...&lt;/태그&gt;) 로 배열의 칸마다 태그를 하나씩 만든다.
+//   - 목록의 각 태그에는 key 를 꼭 준다. 어느 칸이 바뀌었는지 React 가 알아보는 이름표다.
+//   - key 는 형제끼리 겹치지 않는 값(보통 DB 의 id)을 쓴다. 배열 순서(index)는 되도록 피한다.
+//   - filter 로 걸러 낸 뒤 map 으로 그리면 &quot;검색 결과&quot; 가 된다.
+
+// 서버에서 받아 왔다고 생각하자 (9장에서는 진짜로 Spring Boot 서버에서 받아 온다)
+const products = [
+  { id: 101, name: &quot;키보드&quot;, price: 35000, stock: 5 },
+  { id: 102, name: &quot;마우스&quot;, price: 18000, stock: 0 },
+  { id: 103, name: &quot;모니터&quot;, price: 210000, stock: 2 },
+  { id: 104, name: &quot;USB 허브&quot;, price: 12000, stock: 11 },
+];
+
+function Ex0502List() {
+  const inStock = products.filter((p) =&gt; p.stock &gt; 0); // 재고가 있는 것만
+
+  return (
+    &lt;div&gt;
+      &lt;h3&gt;전체 상품 ({products.length}개)&lt;/h3&gt;
+      &lt;ul&gt;
+        {products.map((p) =&gt; (
+          // key 는 map 이 돌려주는 &quot;가장 바깥&quot; 태그에 준다
+          &lt;li key={p.id}&gt;
+            {p.name} - {p.price.toLocaleString()}원 {/* 35000 → 35,000 */}
+            {p.stock === 0 &amp;&amp; &lt;span style={{ color: &quot;crimson&quot; }}&gt; (품절)&lt;/span&gt;}
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+
+      &lt;h3&gt;구매 가능 ({inStock.length}개)&lt;/h3&gt;
+      &lt;table border=&quot;1&quot; cellPadding=&quot;6&quot; style={{ borderCollapse: &quot;collapse&quot; }}&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;번호&lt;/th&gt;
+            &lt;th&gt;상품&lt;/th&gt;
+            &lt;th&gt;재고&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          {inStock.map((p) =&gt; (
+            &lt;tr key={p.id}&gt;
+              &lt;td&gt;{p.id}&lt;/td&gt;
+              &lt;td&gt;{p.name}&lt;/td&gt;
+              &lt;td&gt;{p.stock}&lt;/td&gt;
+            &lt;/tr&gt;
+          ))}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Ex0502List;
+</code></pre>
+<figure><a href="../images/b5_list.png" target="_blank"><img src="../images/b5_list.png" alt="Ex0502List 실행 화면" loading="lazy"></a><figcaption>Ex0502List 실행 화면</figcaption></figure>
+<h2 id="5-3-key-는-왜-필요한가">5-3. key 는 왜 필요한가?</h2>
+<p>목록에 항목이 추가·삭제되면 React 는 "어느 칸이 바뀌었나" 를 찾아 <strong>바뀐 칸만</strong> 다시 그린다. 이때 칸마다 붙은 이름표가 <strong>key</strong> 다.</p>
+<ul>
+<li>key 가 없으면 콘솔(F12)에 경고가 뜬다: <code>Each child in a list should have a unique "key" prop.</code></li>
+<li>key 는 <strong>형제끼리 겹치지 않는 고유한 값</strong>이어야 한다. DB 에서 온 데이터라면 <code>id</code> 가 딱 좋다.</li>
+<li>배열 순서 번호(index)를 key 로 쓰면, 중간에 삭제·끼워 넣기를 할 때 엉뚱한 칸이 바뀌는 문제가 생길 수 있다. <strong>바뀌지 않는 목록</strong>일 때만 쓰자.</li>
+<li>key 는 <code>map</code> 이 돌려주는 <strong>가장 바깥 태그</strong>에 준다.</li>
+</ul>
+<blockquote class="note">
+<p><strong>F12 개발자 도구</strong> 브라우저에서 F12 를 누르고 <strong>Console</strong> 탭을 보자. React 의 경고와 오류, 그리고 <code>console.log</code> 로 찍은 값이 여기에 나온다. 앞으로 자주 연다.</p>
+</blockquote>
+<h2 id="5-4-표table로-그리기">5-4. 표(table)로 그리기</h2>
+<p>게시판 목록은 보통 <code>&lt;table&gt;</code> 로 그린다. <code>&lt;tbody&gt;</code> 안에서 <code>map</code> 으로 <code>&lt;tr&gt;</code> 을 만들면 된다 (Ex0502List 아래쪽). 9장 게시판의 목록이 정확히 이 모양이다.</p>
+<h2 id="정리">정리</h2>
+<ul>
+<li>둘 중 하나는 <code>? :</code>, 보이거나 말거나는 <code>&amp;&amp;</code>(비교식으로!), 화면 전체가 다르면 <code>if</code> + <code>return</code>.</li>
+<li>목록은 <code>배열.map(x =&gt; &lt;태그 key={x.id}&gt;...&lt;/태그&gt;)</code>.</li>
+<li>key 는 형제 사이에서 고유하고 바뀌지 않는 값(보통 id).</li>
+<li><code>filter</code> 로 걸러 낸 뒤 <code>map</code> 으로 그리면 검색·분류 결과가 된다.</li>
+</ul>
+<h2 id="확인-문제">확인 문제</h2>
+<ol>
+<li><code>const score = 75;</code> 가 60 이상이면 <code>합격</code>, 아니면 <code>불합격</code> 을 보여 주는 JSX 를 쓰시오.</li>
+<li>다음 코드에서 <code>items</code> 가 빈 배열일 때 화면에 무엇이 보이는지 쓰고, 아무것도 안 보이게 고치시오.</li>
+</ol>
+<pre><code class="language-jsx">{items.length &amp;&amp; &lt;p&gt;{items.length}개 있습니다&lt;/p&gt;}
+</code></pre>
+<ol start="3">
+<li>아래 배열을 <code>&lt;ol&gt;</code> 목록으로 그리되, <code>done</code> 이 참인 항목은 글자 뒤에 <code>✔</code> 를 붙이시오.</li>
+</ol>
+<pre><code class="language-js">const tasks = [
+  { id: 1, text: &quot;JSX 복습&quot;, done: true },
+  { id: 2, text: &quot;props 연습&quot;, done: false },
+  { id: 3, text: &quot;map 연습&quot;, done: true },
+];
+</code></pre>
+<ol start="4">
+<li>Ex0502List 의 상품 중 가격이 <strong>3만 원 이상</strong>인 것만 표로 보여 주도록 바꾸시오.</li>
+</ol>
+<nav class="pager"><a href="ch04.html"><small>← 이전</small>4장 컴포넌트와 props</a><a class="next" href="ch06.html"><small>다음 →</small>6장 state 와 이벤트</a></nav>
+</article></div>
+<footer>React + Spring Boot + PostgreSQL · 1단계 React 기초 · 강사 김대철 · <a href="https://github.com/sinaboro/react-spring-postgresql">GitHub</a></footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script>
+document.querySelectorAll('pre code').forEach(function(el){
+  if(window.hljs && !/language-(text|plaintext)/.test(el.className)){ try{ hljs.highlightElement(el); }catch(e){} }
+  var b=document.createElement('button'); b.className='copy'; b.textContent='복사';
+  b.onclick=function(){                       // 코드 상자의 글자를 그대로 클립보드에 복사
+    navigator.clipboard.writeText(el.innerText).then(function(){
+      b.textContent='복사됨'; b.classList.add('ok');
+      setTimeout(function(){ b.textContent='복사'; b.classList.remove('ok'); },1500);
+    });
+  };
+  el.parentNode.appendChild(b);
+});
+</script>
+</body></html>
