@@ -88,6 +88,8 @@ function Ex0801Effect() {
 export default Ex0801Effect;
 ```
 
+![Ex0801Effect - 버튼을 한 번 누른 뒤. 화면에는 안 보이지만 브라우저 탭 제목도 "클릭 1번" 으로 바뀌어 있다](../images/b8_effect.png)
+
 예제를 열고 **클릭 0** 버튼을 한 번 누른 뒤 콘솔을 보면 이렇게 찍혀 있다. (실제로 실행해 모은 로그)
 
 ```text

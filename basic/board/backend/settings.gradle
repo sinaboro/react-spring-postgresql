@@ -1,1 +1,4 @@
+// settings.gradle - Gradle 프로젝트 이름
+//   IntelliJ 왼쪽 프로젝트 창과 빌드 결과 파일 이름(build/libs/board-0.0.1-SNAPSHOT.jar)에 쓰인다.
+//   여러 모듈로 나눈 큰 프로젝트라면 여기에 include '모듈이름' 을 적는다 (이 과정은 모듈 하나).
 rootProject.name = 'board'

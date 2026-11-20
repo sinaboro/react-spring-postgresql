@@ -1,4 +1,13 @@
 <!doctype html>
+<!--
+  index.html - 브라우저가 가장 먼저 여는 HTML (Vite 프로젝트의 시작 페이지)
+
+  이 파일이 하는 일
+    - <div id="root"> : 비어 있는 칸. main.jsx 가 이 칸 안에 React 화면(App)을 그린다.
+    - <script type="module" src="/src/main.jsx"> : React 코드의 시작점을 불러온다.
+  React 앱에서는 이 파일을 거의 고치지 않는다. 화면은 모두 src 폴더의 .jsx 파일에서 만든다.
+  (탭 제목을 바꾸고 싶으면 <title> 만 고친다)
+-->
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +16,7 @@
     <title>React 기초 예제</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>  <!-- React 화면이 그려질 자리 -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

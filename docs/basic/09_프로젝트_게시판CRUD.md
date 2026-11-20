@@ -672,14 +672,22 @@ public class ApiException extends RuntimeException {
 ```java
 package com.example.board.common;
 
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * GlobalExceptionHandler - 오류를 한 곳에서 받아 같은 모양의 JSON 으로 응답한다
@@ -689,11 +697,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  *   - @ExceptionHandler(예외클래스.class) : 그 예외가 나면 이 메서드가 응답을 만든다.
  *   - 오류 응답은 항상 { "detail": "이유" } 모양으로 맞춘다.
  *     → React 쪽에서는 data.detail 하나만 읽으면 된다.
+ *     (여기서 처리하지 않으면 Spring 기본 모양 {"timestamp":..., "status":400, "error":"Bad Request"} 이 나가서
+ *      화면에는 "요청 실패 (400)" 처럼 이유 없는 문구만 보이게 된다)
  *
  *   예외                                   상태 코드   언제
  *   ApiException                           지정한 값   없는 글(404) 등 우리가 직접 던진 것
  *   MethodArgumentNotValidException        400        @Valid 검사 실패 (제목이 비었음 등)
- *   HttpMessageNotReadableException        400        본문이 올바른 JSON 이 아님
+ *   HttpMessageNotReadableException        400        본문이 비었거나 올바른 JSON 이 아님
+ *   MethodArgumentTypeMismatchException    400        /api/posts/abc 처럼 숫자 자리에 글자가 옴
+ *   NoResourceFoundException               404        /api/nothing 처럼 없는 주소
+ *   HttpRequestMethodNotSupportedException 405        PATCH 처럼 만들지 않은 요청 방식
  *   HttpMediaTypeNotSupportedException     415        Content-Type 이 application/json 이 아님
  */
 @RestControllerAdvice
@@ -701,28 +714,61 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ApiException.class)
 	public ResponseEntity<Map<String, String>> handleApi(ApiException e) {
-		return ResponseEntity.status(e.getStatus()).body(Map.of("detail", e.getMessage()));
+		return detail(e.getStatus(), e.getMessage());
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException e) {
-		// 여러 칸이 틀렸어도 첫 번째 이유만 보여 준다 (예: "제목을 입력하세요")
-		String message = e.getBindingResult().getFieldErrors().stream()
-				.findFirst()
-				.map(error -> error.getDefaultMessage())
-				.orElse("입력값을 확인하세요");
-		return ResponseEntity.badRequest().body(Map.of("detail", message));
+		return detail(HttpStatus.BAD_REQUEST, firstMessage(e));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<Map<String, String>> handleNotReadable(HttpMessageNotReadableException e) {
-		return ResponseEntity.badRequest().body(Map.of("detail", "요청 본문이 올바른 JSON 이 아닙니다"));
+		return detail(HttpStatus.BAD_REQUEST, "요청 본문이 올바른 JSON 이 아닙니다");
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+		// e.getName() : 값이 잘못된 매개변수 이름 (id, user_id ...)
+		return detail(HttpStatus.BAD_REQUEST, "'" + e.getName() + "' 값이 올바르지 않습니다 (숫자를 넣어야 합니다)");
+	}
+
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<Map<String, String>> handleNoResource(NoResourceFoundException e) {
+		return detail(HttpStatus.NOT_FOUND, "없는 주소입니다");
+	}
+
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<Map<String, String>> handleMethod(HttpRequestMethodNotSupportedException e) {
+		return detail(HttpStatus.METHOD_NOT_ALLOWED, e.getMethod() + " 방식은 이 주소에서 쓸 수 없습니다");
 	}
 
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
 	public ResponseEntity<Map<String, String>> handleMediaType(HttpMediaTypeNotSupportedException e) {
-		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-				.body(Map.of("detail", "Content-Type 을 application/json 으로 보내세요"));
+		return detail(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Content-Type 을 application/json 으로 보내세요");
+	}
+
+	/** { "detail": message } 응답을 만드는 작은 도우미 */
+	private static ResponseEntity<Map<String, String>> detail(HttpStatus status, String message) {
+		return ResponseEntity.status(status).body(Map.of("detail", message));
+	}
+
+	/**
+	 * 여러 칸이 한꺼번에 틀렸을 때 보여 줄 "첫 번째" 이유를 고른다.
+	 *   - Spring 이 돌려주는 오류 목록은 순서가 매번 달라질 수 있다.
+	 *     그래서 record 에 칸을 적은 순서(title → writer ...)대로 골라, 항상 위쪽 칸의 오류가 먼저 보이게 한다.
+	 *   - 한 칸에 오류가 둘이면(빈 아이디: @NotBlank 와 @Pattern) "입력하세요"(NotBlank) 를 먼저 보여 준다.
+	 */
+	private static String firstMessage(MethodArgumentNotValidException e) {
+		Object target = e.getBindingResult().getTarget(); // 검사한 객체 (PostRequest 등)
+		List<String> order = (target != null && target.getClass().isRecord())
+				? Arrays.stream(target.getClass().getRecordComponents()).map(RecordComponent::getName).toList()
+				: List.of();
+		return e.getBindingResult().getFieldErrors().stream()
+				.min(Comparator.<FieldError>comparingInt(err -> order.indexOf(err.getField()))
+						.thenComparingInt(err -> "NotBlank".equals(err.getCode()) ? 0 : 1))
+				.map(FieldError::getDefaultMessage)
+				.orElse("입력값을 확인하세요");
 	}
 }
 ```
@@ -775,8 +821,9 @@ has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is pres
 | 200 OK | 성공 | 목록, 읽기, 수정 |
 | 201 Created | 새로 만들었음 | 글쓰기 |
 | 204 No Content | 성공, 돌려줄 내용 없음 | 삭제 |
-| 400 Bad Request | 입력이 규칙에 안 맞음 | 제목이 비었음, 100자 초과 (`@Valid` 검사), JSON 모양이 틀림 |
-| 404 Not Found | 없음 | 없는 글 번호 |
+| 400 Bad Request | 입력이 규칙에 안 맞음 | 제목이 비었음, 100자 초과 (`@Valid` 검사), JSON 모양이 틀림, `/api/posts/abc` 처럼 번호 자리에 글자 |
+| 404 Not Found | 없음 | 없는 글 번호, `/api/nothing` 처럼 없는 주소 |
+| 405 Method Not Allowed | 그 주소에 없는 요청 방식 | `PATCH /api/posts/1` (만들지 않은 방식) |
 | 415 Unsupported Media Type | 본문 종류가 틀림 | `Content-Type: application/json` 을 빠뜨림 |
 
 ## 9-6. 서버 실행과 /docs 에서 시험하기
@@ -816,6 +863,8 @@ public class BoardApplication {
 ... INFO ... o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
 ... INFO ... com.example.board.BoardApplication : Started BoardApplication in 8.349 seconds (process running for 9.294)
 ```
+
+> **노란색 WARN 줄은 괜찮다.** 시작할 때 `SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production ...` 같은 WARN 이 두 줄 보인다. "실제 서비스에서는 API 시험 화면(/docs)을 꺼 두라" 는 안내일 뿐, 실습에서는 켜 두는 것이 맞다. **ERROR** 줄이 보이거나 `Started BoardApplication` 이 나오지 않을 때만 부록 A 를 찾아보자.
 
 한 번 실행한 뒤에는 화면 오른쪽 위의 ▶(Run) 버튼으로 다시 실행하고, ■(Stop) 버튼으로 끈다. 코드를 고쳤으면 **■ 로 끄고 다시 ▶**.
 
@@ -1480,7 +1529,11 @@ button.link:hover {
 | IntelliJ | `C:\study\board\backend` | `BoardApplication` ▶ 실행 | http://localhost:8080/docs |
 | VS Code 터미널 2 | `C:\study\board\frontend` | `npm run dev` | http://localhost:5173 |
 
-http://localhost:5173 을 열면 게시판이 나온다.
+http://localhost:5173 을 열면 게시판이 나온다. 처음에는 글이 없어서 이렇게 보인다.
+
+![글이 없을 때](../images/b9_empty.png)
+
+글을 몇 개 쓰면 목록이 채워진다.
 
 ![글 목록 (PostList)](../images/b9_list.png)
 

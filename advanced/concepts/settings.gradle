@@ -1,1 +1,2 @@
+// settings.gradle - 6장 개념 실습 프로젝트의 이름
 rootProject.name = 'concepts'

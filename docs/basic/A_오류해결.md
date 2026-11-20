@@ -37,13 +37,15 @@
 | 콘솔 `blocked by CORS policy` | 서버의 CORS 허락 목록에 지금 주소(포트)가 없음 | `WebConfig.java` 의 `allowedOrigins` 확인. React 를 5173 으로 실행. 고친 뒤 서버를 ■ → ▶ 로 다시 켠다 |
 | 저장 시 400 `{"detail": "제목을 입력하세요"}` | `@Valid` 입력 검사 실패 | 정상 동작. Network 탭 → Response 의 `detail` 을 읽는다 |
 | 저장 시 415 | `Content-Type: application/json` 헤더를 빠뜨림 | fetch 의 `headers` 확인 |
-| 404 | 주소 오타(`/api/post`), 없는 글 번호 | Network 탭에서 실제 요청 주소 확인 |
+| 404 "없는 주소입니다" / "글을 찾을 수 없습니다" | 주소 오타(`/api/post`) / 없는 글 번호 | Network 탭에서 실제 요청 주소 확인 |
+| 400 "'id' 값이 올바르지 않습니다" | 주소의 번호 자리에 숫자가 아닌 값 (`/api/posts/undefined` 등) | React 에서 id 를 제대로 넘겼는지 확인 (`post.id`) |
 | 서버 시작 실패 `Connection to localhost:5433 refused` | DB 컨테이너가 꺼져 있음 | `docker compose up -d` 후 `docker compose ps` 가 healthy 인지 |
 | 서버 시작 실패 `Web server failed to start. Port 8080 was already in use.` | 서버가 이미 하나 켜져 있음 | IntelliJ Run 창의 다른 탭이나 bootRun 터미널을 끈다 |
 | IntelliJ 에서 java 파일에 빨간 줄, `Cannot resolve symbol 'springframework'` | Gradle sync 가 안 됐거나 실패함 | 오른쪽 Gradle 창 → 🔄 Reload. 인터넷 연결 확인 |
 | IntelliJ 위쪽에 `Project JDK is not defined` | JDK 가 지정되지 않음 | Setup SDK → 21 선택 또는 Download JDK (Temurin 21) |
 | Gradle: `Cannot find a Java installation ... matching ... languageVersion=21` | JDK 21 이 없음 (17 등 다른 버전만 있음) | JDK 21 설치 후 IntelliJ 를 다시 시작 |
 | `.\gradlew.bat bootRun` → `JAVA_HOME is not set and no 'java' command could be found` | 터미널이 JDK 를 못 찾음 | JDK 설치 때 JAVA_HOME 설정. 또는 IntelliJ ▶ 로 실행 |
+| `gradlew build` 가 `BoardApplicationTests > contextLoads() FAILED` 로 실패 | 테스트가 서버를 실제로 켜 보는데 DB 가 꺼져 있음 | `docker compose up -d` 후 다시. 테스트를 건너뛰려면 `.\gradlew.bat build -x test` |
 | 코드를 고쳤는데 서버 동작이 그대로 | 서버를 다시 켜지 않음 | IntelliJ ■ → ▶ |
 
 ## A-4. Docker
