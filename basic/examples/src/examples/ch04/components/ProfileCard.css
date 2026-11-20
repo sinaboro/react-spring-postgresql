@@ -1,0 +1,22 @@
+/* ProfileCard.css - ProfileCard 컴포넌트의 모양
+   className="profile-card" 이 붙은 태그에 적용된다. (CSS 문법은 HTML 때와 똑같다) */
+.profile-card {
+  display: inline-block;
+  width: 180px;
+  margin: 6px;
+  padding: 10px 14px;
+  border: 1px solid #c9d3df;
+  border-radius: 10px;
+  background: #f9fbfd;
+  vertical-align: top;
+}
+
+.profile-card h3 {
+  margin: 4px 0 8px;
+  color: #1f3a5f;
+}
+
+.profile-card p {
+  margin: 3px 0;
+  font-size: 14px;
+}

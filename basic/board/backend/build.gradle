@@ -1,0 +1,41 @@
+// build.gradle - 기초 과정 게시판 API 서버의 빌드 설정 (Gradle)
+//
+// 이 파일이 하는 일
+//   - 어떤 Java 버전으로 빌드할지, 어떤 라이브러리(의존성)를 쓸지 적는다.
+//   - IntelliJ 로 backend 폴더를 열면 이 파일을 읽어 라이브러리를 자동으로 받는다.
+//     (처음 열 때 오른쪽 아래에 진행 막대가 보이고, 몇 분 걸릴 수 있다)
+//   - Spring Initializr(start.spring.io)가 만들어 준 파일에 springdoc 한 줄을 더하고 주석을 달았다.
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.2'              // Spring Boot
+	id 'io.spring.dependency-management' version '1.1.7'       // 라이브러리 버전을 Spring Boot 에 맞춰 준다
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)          // Java 21 로 빌드
+	}
+}
+
+repositories {
+	mavenCentral()                                            // 라이브러리를 받아 올 곳
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'      // REST API (@RestController)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'    // JPA (자바 객체 ↔ DB 테이블)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'  // 입력값 검사 (@NotBlank 등)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'  // API 시험 화면 (/docs)
+	runtimeOnly 'org.postgresql:postgresql'                                   // PostgreSQL 접속 드라이버
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,44 @@
+// build.gradle - 심화 과정 로그인 게시판 API 서버의 빌드 설정 (Gradle)
+//
+// 기초 과정 build.gradle 에 더해진 것
+//   - spring-boot-starter-security : 로그인 확인, 주소별 접근 규칙, BCrypt 비밀번호 해시
+//   - jjwt (api / impl / jackson)  : JWT 토큰 만들기·검사하기
+// IntelliJ 로 backend 폴더를 열면 이 파일을 읽어 라이브러리를 자동으로 받는다.
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'     // ← 심화에서 추가: 인증·인가
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'
+	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'                           // ← 심화에서 추가: JWT
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,42 @@
+# =====================================================================
+# 심화 과정 8~9장 - 로그인 게시판 데이터베이스 (PostgreSQL 18)
+#
+#   시작        : docker compose up -d        (이 파일이 있는 폴더에서)
+#   상태 확인   : docker compose ps           (STATUS 가 healthy 이면 준비 완료)
+#   멈추기      : docker compose stop         (데이터는 남는다)
+#   완전히 지우기: docker compose down -v      (컨테이너 + 데이터 볼륨 삭제, 되돌릴 수 없음)
+#
+# 접속 정보
+#   호스트 localhost / 포트 5434 / DB authboard / 사용자 postgres / 비밀번호 postgres
+#   ※ 기초 과정 DB(5433, spring-board-db)와 따로 쓴다. 테이블 구조(users 추가)가 달라서
+#     기초 과정 글과 섞이지 않게 하려는 것. 두 DB 를 동시에 켜 두어도 포트가 달라 괜찮다.
+# =====================================================================
+
+# 프로젝트 이름. 적지 않으면 "폴더 이름"(board)이 프로젝트 이름이 되는데,
+# 기초·심화 두 과정의 폴더 이름이 모두 board 라서 서로를 같은 프로젝트로 보고
+# 한쪽을 켜면 다른 쪽 컨테이너를 지워 버린다. 이름을 따로 붙여 이 문제를 막는다.
+name: react-spring-auth-board
+
+services:
+  db:
+    image: postgres:18
+    container_name: spring-auth-db
+    restart: unless-stopped
+    ports:
+      - "5434:5432"                   # 내 PC 5434 → 컨테이너 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres     # 실습용 비밀번호
+      POSTGRES_DB: authboard
+      TZ: Asia/Seoul
+    command: ["postgres", "-c", "timezone=Asia/Seoul"]
+    volumes:
+      - authboard_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d authboard"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  authboard_data:

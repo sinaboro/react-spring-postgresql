@@ -1,0 +1,42 @@
+# =====================================================================
+# 기초 과정 9장 - 게시판 데이터베이스 (PostgreSQL 18) 를 Docker 로 실행
+#
+#   시작        : docker compose up -d        (이 파일이 있는 폴더에서)
+#   상태 확인   : docker compose ps           (STATUS 가 healthy 이면 준비 완료)
+#   로그 보기   : docker compose logs -f db   (Ctrl+C 로 빠져나옴)
+#   멈추기      : docker compose stop         (데이터는 남는다)
+#   완전히 지우기: docker compose down -v      (컨테이너 + 데이터 볼륨 삭제, 되돌릴 수 없음)
+#
+# 접속 정보 (Spring Boot·DBeaver 공통)
+#   호스트 localhost / 포트 5433 / DB board / 사용자 postgres / 비밀번호 postgres
+#   ※ 5432 가 아니라 5433 이다. 다른 과정에서 만든 PostgreSQL(5432)과 겹치지 않게 하려고.
+# =====================================================================
+
+# 프로젝트 이름. 적지 않으면 "폴더 이름"(board)이 프로젝트 이름이 되는데,
+# 기초·심화 두 과정의 폴더 이름이 모두 board 라서 서로를 같은 프로젝트로 보고
+# 한쪽을 켜면 다른 쪽 컨테이너를 지워 버린다. 이름을 따로 붙여 이 문제를 막는다.
+name: react-spring-basic-board
+
+services:
+  db:
+    image: postgres:18                # Docker Hub 의 공식 PostgreSQL 18 이미지
+    container_name: spring-board-db    # docker 명령에서 부를 컨테이너 이름
+    restart: unless-stopped           # Docker Desktop 이 켜지면 자동으로 다시 시작
+    ports:
+      - "5433:5432"                   # "내 PC 포트:컨테이너 포트"
+    environment:
+      POSTGRES_USER: postgres         # 관리자 계정
+      POSTGRES_PASSWORD: postgres     # 실습용 비밀번호 (실제 서비스에서는 절대 이렇게 쓰지 않는다)
+      POSTGRES_DB: board              # 처음 시작할 때 만들어 둘 데이터베이스 이름
+      TZ: Asia/Seoul
+    command: ["postgres", "-c", "timezone=Asia/Seoul"]   # now() 가 한국 시간으로 나오게
+    volumes:
+      - board_data:/var/lib/postgresql   # 데이터는 볼륨에 → 컨테이너를 지워도 글이 남는다
+    healthcheck:                         # "접속 받을 준비가 됐나?" 를 5초마다 검사
+      test: ["CMD-SHELL", "pg_isready -U postgres -d board"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  board_data:                         # Docker 가 관리하는 저장 공간

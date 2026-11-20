@@ -1,0 +1,32 @@
+# application.yml - 로그인 게시판 API 서버 설정
+#   ${이름:기본값} → 환경 변수 "이름" 이 있으면 그 값, 없으면 기본값
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: board
+  datasource:                    # 심화 과정 DB (docker-compose.yml: 포트 5434, DB authboard)
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/authboard}
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update           # Entity 를 보고 users, posts 테이블을 만든다
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+# JWT(로그인 토큰) 설정 - JwtProvider 가 읽어 간다
+jwt:
+  # 토큰 서명에 쓰는 비밀 열쇠. 이 값이 새면 누구나 토큰을 위조할 수 있다.
+  # 실제 서비스에서는 환경 변수 JWT_SECRET 으로 넣고 코드·GitHub 에 올리지 않는다. (32글자 이상)
+  secret: ${JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
+  expiration-minutes: ${ACCESS_TOKEN_MINUTES:60}    # 토큰 유효 시간(분)
+
+springdoc:
+  swagger-ui:
+    path: /docs

@@ -1,0 +1,202 @@
+/* App.css - 게시판 화면 꾸미기 (CSS 는 HTML 수업 때와 똑같다. className 으로 연결) */
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ---------- 머리글 */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 3px solid #61dafb;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #1f3a5f;
+  cursor: pointer;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eef3f8;
+  color: #03588c;
+  font-size: 12px;
+}
+
+/* 제목 글자 링크 (Layout 의 <Link className="logo">) */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1f3a5f;
+  text-decoration: none;
+}
+
+/* 목록 표 안의 제목 링크 */
+.post-table a {
+  color: #1f3a5f;
+  text-decoration: none;
+}
+
+.post-table a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 버튼 (<button> 과 버튼처럼 보이는 <Link className="button">) */
+button,
+a.button {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid #c9d3df;
+  border-radius: 6px;
+  background: white;
+  font-family: inherit; /* 버튼은 기본으로 다른 글꼴을 쓰므로 바깥 글꼴을 물려받게 한다 */
+  font-size: 14px;
+  color: #222;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:hover,
+a.button:hover {
+  background: #f2f6fa;
+}
+
+button.primary,
+a.button.primary {
+  border-color: #03588c;
+  background: #03588c;
+  color: white;
+}
+
+button.danger {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 링크처럼 보이는 버튼 (목록의 제목) */
+button.link {
+  padding: 0;
+  font-size: 15px;
+  border: none;
+  background: none;
+  color: #1f3a5f;
+  text-align: left;
+}
+
+button.link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 목록 */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #6b7280;
+}
+
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.post-table th {
+  padding: 9px 6px;
+  background: #1f3a5f;
+  color: white;
+  font-weight: normal;
+}
+
+.post-table td {
+  padding: 9px 6px;
+  font-size: 15px;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.col-id,
+.col-writer {
+  width: 80px;
+  text-align: center;
+}
+
+.col-date {
+  width: 190px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* ---------- 읽기 */
+.post-detail h2 {
+  margin: 0 0 6px;
+}
+
+.meta {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e9ef;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.content {
+  min-height: 120px;
+  padding: 16px 2px;
+  white-space: pre-wrap; /* 내용의 줄바꿈을 그대로 보여 준다 */
+  line-height: 1.7;
+}
+
+.buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* ---------- 글쓰기·수정 */
+.post-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #374151;
+}
+
+.post-form input,
+.post-form textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #c9d3df;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: normal;
+}
+
+/* ---------- 안내·오류 문구 */
+.info {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fdecea;
+  color: #c0392b;
+}

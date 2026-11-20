@@ -1,0 +1,27 @@
+# application.yml - 게시판 API 서버 설정
+#
+#   들여쓰기(빈칸 2칸)가 곧 구조다. 탭 문자는 쓰지 않는다.
+#   ${이름:기본값} → 환경 변수 "이름" 이 있으면 그 값, 없으면 기본값
+
+server:
+  port: 8080                     # API 서버 주소 http://localhost:8080
+
+spring:
+  application:
+    name: board
+  datasource:                    # 데이터베이스 접속 정보 (docker-compose.yml 과 맞춘다)
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/board}
+    username: postgres
+    password: postgres           # 실습용 비밀번호
+  jpa:
+    hibernate:
+      ddl-auto: update           # 서버가 켜질 때 Entity 를 보고 테이블이 없으면 만들고, 열이 늘면 추가한다
+    show-sql: true               # 실행되는 SQL 을 콘솔에 보여 준다 (공부용)
+    properties:
+      hibernate:
+        format_sql: true         # SQL 을 보기 좋게 줄바꿈
+    open-in-view: false          # 요청이 끝날 때까지 DB 연결을 붙잡지 않는다 (권장 설정, 경고도 사라진다)
+
+springdoc:
+  swagger-ui:
+    path: /docs                  # API 시험 화면 주소 http://localhost:8080/docs

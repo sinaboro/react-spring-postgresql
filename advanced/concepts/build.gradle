@@ -1,0 +1,42 @@
+// build.gradle - 6장 인증 개념 실습 (BCrypt 해시 · JWT 실험)
+//   서버가 아니라 main 메서드 하나로 끝나는 작은 Java 프로그램이다.
+//   IntelliJ: AuthDemo.java 를 열고 ▶ 버튼 / 터미널: .\gradlew.bat run
+//   심화 8장 서버(advanced/board/backend)가 쓰는 것과 같은 라이브러리를 쓴다.
+
+plugins {
+	id 'java'
+	id 'application'                                        // gradlew run 으로 main 실행
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.boot:spring-boot-dependencies:4.1.2' // 서버와 같은 버전으로 맞춘다
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.security:spring-security-crypto'   // BCryptPasswordEncoder
+	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+	runtimeOnly 'commons-logging:commons-logging'                         // spring-security-crypto 가 쓰는 로그 라이브러리
+}
+
+application {
+	mainClass = 'com.example.concepts.AuthDemo'
+}
+
+tasks.named('run') {
+	standardOutput = System.out
+}

@@ -1,0 +1,71 @@
+/* App.css - 예제 메뉴 화면의 배치 (왼쪽 메뉴 + 오른쪽 예제) */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.menu {
+  width: 210px;
+  flex-shrink: 0;
+  padding: 14px 10px;
+  background: #1f3a5f;
+}
+
+.menu h1 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  margin: 2px 0;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #d6e2f0;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: #2c4f7c;
+}
+
+.menu button.active {
+  background: #61dafb;
+  color: #1f3a5f;
+  font-weight: bold;
+}
+
+.stage {
+  flex: 1;
+  padding: 18px 24px;
+}
+
+.file {
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.ex-title {
+  margin: 4px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #61dafb;
+}
+
+.ex-body button {
+  margin: 2px 4px 2px 0;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.ex-body input,
+.ex-body textarea {
+  padding: 5px 8px;
+  font-size: 15px;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "react-js-warmup",
+  "private": true,
+  "type": "module",
+  "description": "2장 React 를 위한 JavaScript 문법 예제. type=module 이라서 import/export 를 node 로 바로 실행할 수 있다."
+}

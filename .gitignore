@@ -1,0 +1,24 @@
+# Node / Vite
+node_modules/
+dist/
+*.log
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# 편집기·OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Java / Gradle
+build/
+.gradle/
+*.class
+out/
+.idea/
+*.iml
