@@ -217,7 +217,7 @@ export default Ex0802Fetch;
 
 > **useEffect 에 async 를 바로 붙이면 안 된다.** `useEffect(async () => {...})` 처럼 쓰면 함수가 Promise 를 돌려주는데, React 는 useEffect 가 "정리 함수" 나 아무것도 돌려주지 않기를 기대한다. 그래서 안쪽에 `async function load()` 를 만들고 바로 `load()` 를 부른다.
 
-> **F12 → Network 탭**을 열고 다시 불러오면 `products.json` 요청과 상태 코드(200, 404)를 직접 볼 수 있다. 9장에서 서버와 통신할 때 가장 많이 보게 될 탭이다.
+> **F12 → Network 탭**을 열고 다시 불러오면 `products.json` 요청과 상태 코드를 직접 볼 수 있다. 틀린 주소도 상태 코드는 **200** 이고, **Response** 를 눌러 보면 JSON 대신 HTML(`<!doctype html>...`)이 와 있다. 진짜 **404** 는 9장에서 API 서버에 없는 글을 요청할 때 볼 수 있다. 9장에서 서버와 통신할 때 가장 많이 보게 될 탭이다.
 
 ## 8-4. 정리(clean-up) 함수
 

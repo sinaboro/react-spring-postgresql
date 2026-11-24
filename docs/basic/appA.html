@@ -297,7 +297,7 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <tr>
 <td><code>Bind for 0.0.0.0:5433 failed: port is already allocated</code></td>
 <td>다른 프로그램(컨테이너)이 5433 사용</td>
-<td><code>docker ps</code> 로 확인 후 그 컨테이너를 멈추거나, compose 의 포트를 <code>"5435:5432"</code> 로 바꾸고 <code>application.yml</code> 의 <code>datasource.url</code> 포트도 같이 바꾼다</td>
+<td><code>docker ps</code> 로 확인 후 그 컨테이너를 멈추거나, compose 의 포트를 <code>"5440:5432"</code> 처럼 비어 있는 번호로 바꾸고 <code>application.yml</code> 의 <code>datasource.url</code> 포트도 같이 바꾼다</td>
 </tr>
 <tr>
 <td>한쪽 과정 DB 를 켰더니 다른 과정 DB 컨테이너가 사라짐</td>

@@ -635,7 +635,7 @@ public class PostController {
 
 > **객체를 new 로 만들지 않았는데 어떻게 쓰지?** `@Service`, `@RestController`, `@Repository` 가 붙은 클래스는 Spring 이 서버를 켤 때 **하나씩 만들어 보관**한다(이런 객체를 **Bean** 이라 한다). 생성자에 필요한 것(`PostService(PostRepository ...)`)을 적어 두면 Spring 이 보관해 둔 객체를 넣어 준다. 이것을 **의존성 주입**(DI)이라 한다.
 
-**오류 응답을 한 곳에서** - 없는 글, 입력 규칙 위반 등 모든 오류를 `{ "detail": "이유" }` 모양으로 돌려준다. React 쪽은 `data.detail` 하나만 읽으면 된다.
+**오류 응답을 한 곳에서** - 없는 글, 입력 규칙 위반 등 모든 오류를 `{ "detail": "이유" }` 모양으로 돌려준다. React 쪽은 `data.detail` 하나만 읽으면 된다. (이 장의 기초 게시판 화면은 간단하게 `저장하지 못했습니다 (400)` 처럼 **상태 코드만** 보여 주고, 이유는 F12 → Network → Response 에서 본다. 이유 글자를 화면에 띄우는 것은 심화 과정 7장의 `api.js` 에서 한다)
 
 <!-- file: basic/board/backend/src/main/java/com/example/board/common/ApiException.java -->
 

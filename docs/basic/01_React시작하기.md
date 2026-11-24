@@ -235,7 +235,7 @@ Port 5173 is in use, trying another one...
 ## 정리
 
 - React 는 화면(UI)을 **컴포넌트** 단위로 만들고, **데이터(state)가 바뀌면 화면을 알아서 다시 그리는** 라이브러리다.
-- `npm create vite@latest 이름 -- --template react` → `npm install` → `npm run dev` 순서로 프로젝트를 만들고 실행한다.
+- `npm create vite@latest 이름 -- --template react --no-interactive` → `npm install` → `npm run dev` 순서로 프로젝트를 만들고 실행한다.
 - 코드는 `src` 폴더에 쓴다. 시작점은 `main.jsx`, 첫 화면은 `App.jsx` 다.
 - 개발 서버는 켜 둔 채로 고치고, 끌 때는 **Ctrl+C**.
 

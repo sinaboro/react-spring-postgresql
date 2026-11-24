@@ -53,6 +53,6 @@
 | 증상 | 원인 | 해결 |
 |---|---|---|
 | `failed to connect to the docker API` / `error during connect` | Docker Desktop 이 꺼져 있음 | Docker Desktop 실행 → Engine running 확인 |
-| `Bind for 0.0.0.0:5433 failed: port is already allocated` | 다른 프로그램(컨테이너)이 5433 사용 | `docker ps` 로 확인 후 그 컨테이너를 멈추거나, compose 의 포트를 `"5435:5432"` 로 바꾸고 `application.yml` 의 `datasource.url` 포트도 같이 바꾼다 |
+| `Bind for 0.0.0.0:5433 failed: port is already allocated` | 다른 프로그램(컨테이너)이 5433 사용 | `docker ps` 로 확인 후 그 컨테이너를 멈추거나, compose 의 포트를 `"5440:5432"` 처럼 비어 있는 번호로 바꾸고 `application.yml` 의 `datasource.url` 포트도 같이 바꾼다 |
 | 한쪽 과정 DB 를 켰더니 다른 과정 DB 컨테이너가 사라짐 | compose 파일에 `name:` 이 없어서 폴더 이름(board)이 겹침 | 저장소의 compose 파일처럼 `name:` 을 붙인다 |
 | 글이 모두 사라짐 | `docker compose down -v` 로 볼륨까지 지움 | 되돌릴 수 없다. 평소에는 `stop` 또는 `down`(볼륨 유지)을 쓴다 |

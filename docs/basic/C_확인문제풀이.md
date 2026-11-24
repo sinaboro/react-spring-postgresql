@@ -197,4 +197,4 @@ function NoticeList() {
 3. 저장이 실패하고 "저장하지 못했습니다 (415)" 가 보인다. Network 탭의 상태 코드는 **415**. 브라우저가 본문을 `text/plain` 으로 보내서 Spring 이 `PostRequest` 로 바꾸지 못했기 때문이다.
 4. "API 서버에 연결할 수 없습니다. 서버가 켜져 있나요?" 가 보인다. `PostList.jsx` 의 `catch` 블록에서 `err.message === "Failed to fetch"` 일 때 넣는 문구다.
 5. `down` 은 컨테이너만 지우고 **볼륨(데이터)은 남긴다** → 다시 `up -d` 하면 글이 그대로 있다. `down -v` 는 볼륨까지 지워 **모든 글이 사라진다.**
-6. 저장되지 않고 "⚠️ 제목은 100자까지 쓸 수 있습니다" 가 보인다. 규칙(max)은 바꿨지만 **message 글자는 그대로**이기 때문이다. message 도 "50자까지" 로 함께 고쳐야 한다. (DB 열은 여전히 varchar(100) 이다. `ddl-auto: update` 는 열 크기를 줄이지 않는다.)
+6. 저장되지 않고 화면에 "⚠️ 저장하지 못했습니다 (400)" 이 보인다(PostForm 은 상태 코드만 보여 준다). F12 → Network → Response 를 보면 `{"detail": "제목은 100자까지 쓸 수 있습니다"}` 가 와 있다. 규칙(max)은 50 으로 바꿨지만 **message 글자는 그대로**이기 때문이다. message 도 "50자까지" 로 함께 고쳐야 한다. (DB 열은 여전히 varchar(100) 이다. `ddl-auto: update` 는 열 크기를 줄이지 않는다.)

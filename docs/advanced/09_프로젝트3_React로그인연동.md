@@ -890,7 +890,7 @@ button.wide { width: 100%; padding: 10px; font-size: 15px; }
 | 12 | [내 글] 탭 | 주소 `/?mine=1`, 내 글만. F5 해도 그대로 |
 | 13 | F5 (새로 고침) | 로그인 유지 |
 | 14 | F12 → Application → Local storage 의 `access_token` 끝 글자를 고치고 F5 | 로그아웃 상태가 되고 토큰이 지워진다 |
-| 15 | 로그인 상태에서 토큰을 `expired.token.value` 로 바꾸고 삭제 클릭 | "로그인이 만료되었습니다. 다시 로그인하세요" 알림, 머리글이 로그아웃 상태로 |
+| 15 | 로그인 상태로 **내 글 화면**을 열어 둔 채, F12 → Application 에서 토큰을 `expired.token.value` 로 바꾸고 (F5 없이) 삭제 클릭 | "로그인이 만료되었습니다. 다시 로그인하세요" 알림, 머리글이 로그아웃 상태로 |
 | 16 | [로그아웃] | 토큰 삭제, 목록으로 |
 
 > 14·15번은 "토큰이 위조·만료되면?" 을 흉내 낸 것이다. 실제로는 로그인하고 60분이 지나면 15번과 같은 일이 생긴다. 시험해 보고 싶으면 서버를 `ACCESS_TOKEN_MINUTES` 환경 변수로 1분으로 줄여 실행한다. IntelliJ 오른쪽 위 실행 목록(BoardApplication) → **Edit Configurations...** → **Environment variables** 칸에 `ACCESS_TOKEN_MINUTES=1` 을 넣고 다시 ▶. (터미널이라면 `$env:ACCESS_TOKEN_MINUTES = "1"` 을 친 뒤 같은 터미널에서 `.\gradlew.bat bootRun`)
