@@ -110,7 +110,18 @@ volumes:
 
 `spring-auth-db` 가 `(healthy)` 이면 DB 준비 끝. 기초 과정 DB(spring-board-db, 5433)와 **동시에 켜 두어도** 포트와 프로젝트 이름이 달라 괜찮다.
 
-그다음 IntelliJ 에서 **File → Open** → `C:\study\authboard\backend` 를 연다. (기초 과정 서버가 IntelliJ 에서 실행 중이면 먼저 ■ 로 끈다. 두 서버 모두 8080 포트를 쓴다.)
+그다음 IntelliJ 로 `C:\study\authboard\backend` 를 연다. 순서는 기초 과정 9-3 과 같다(그림도 그곳에 더 있다).
+
+1. 기초 과정 서버가 실행 중이면 먼저 위쪽 ■ 로 끈다. 두 서버 모두 8080 포트를 쓴다.
+2. 기초 과정 프로젝트가 열려 있으면 ☰ → **파일(File) → 프로젝트 닫기**(Close Project).
+3. 첫 화면 왼쪽의 **열기**(Open) → `C:\study\authboard` 안의 **`backend`** 를 한 번 클릭 → **폴더 선택**.
+4. **프로젝트 신뢰**(Defender 칸은 해제) → 오른쪽 아래 Gradle 가져오기 막대가 끝날 때까지 기다린다. 처음에는 Spring Security·JWT 라이브러리를 받느라 기초보다 조금 더 걸린다.
+
+![파일 열기 - C:\study\authboard 안의 backend (기초의 C:\study\board 와 헷갈리지 않게 경로를 본다)](../images/ij_a8_open.jpg)
+
+![프로젝트 창 - 맨 위 경로가 C:\study\authboard\backend 인지 확인](../images/ij_a8_tree.jpg)
+
+> **두 프로젝트의 이름이 모두 `board` 다.** IntelliJ 첫 화면 목록이나 창 제목만 보면 기초인지 심화인지 헷갈린다. 프로젝트 창 맨 위의 **경로**(`C:\study\authboard\backend`)로 구분한다.
 
 <!-- file: advanced/board/backend/build.gradle -->
 
@@ -1225,7 +1236,11 @@ public class OpenApiConfig {
 
 ## 8-8. 서버 실행과 /docs 로 시험하기
 
-IntelliJ 에서 `BoardApplication` 을 ▶ 실행하고 http://localhost:8080/docs 를 연다. 자물쇠 🔒 가 붙은 API 가 로그인이 필요한 API 다.
+IntelliJ 에서 `BoardApplication` 을 ▶ 실행한다(기초 9-6 과 같은 방법). 실행 창에 `Started BoardApplication` 이 보이면 켜진 것이다.
+
+![실행 창 - 심화 서버도 "Started BoardApplication" 이 보이면 성공. 중간에 Spring Security 의 AuthenticationManager 줄이 하나 더 보인다](../images/ij_a8_run_log.jpg)
+
+그다음 http://localhost:8080/docs 를 연다. 자물쇠 🔒 가 붙은 API 가 로그인이 필요한 API 다.
 
 ![로그인 API 가 추가된 /docs](../images/a8_docs.png)
 

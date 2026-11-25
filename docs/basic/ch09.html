@@ -258,14 +258,26 @@ volumes:
 </blockquote>
 <h2 id="9-3-intellij-로-spring-boot-프로젝트-열기">9-3. IntelliJ 로 Spring Boot 프로젝트 열기</h2>
 <p><strong>Spring Boot</strong> 는 Java 로 웹 서버를 쉽게 만드는 프레임워크다. 설정을 거의 하지 않아도 내장 웹 서버(Tomcat)가 함께 실행된다. 프로젝트는 <strong>Gradle</strong> 이라는 빌드 도구로 관리하고, 서버 코드는 <strong>IntelliJ IDEA</strong> 로 연다.</p>
-<ol>
-<li>IntelliJ IDEA 를 실행하고 <strong>Open</strong> (메뉴에서는 <strong>File → Open</strong>) 을 누른다.</li>
-<li><code>C:\study\board\backend</code> 폴더를 고르고 <strong>OK</strong>. "Trust Project?" 라고 물으면 <strong>Trust Project</strong>.</li>
-<li>오른쪽 아래에 진행 막대가 보이며 Gradle 이 필요한 라이브러리를 받는다(<strong>Gradle sync</strong>). 처음에는 몇 분 걸린다. 끝날 때까지 기다린다.</li>
-<li>화면 위쪽에 <strong>"Project JDK is not defined"</strong> 같은 노란 줄이 보이면 JDK 를 골라 준다. <strong>Setup SDK</strong> → 설치한 <strong>21</strong> 버전을 고르거나, <strong>Download JDK</strong> → Version <strong>21</strong>, Vendor <strong>Eclipse Temurin</strong> → Download.</li>
-</ol>
+<p>화면은 IntelliJ IDEA 2026.3 (한국어, 어두운 테마) 기준이다. 버전에 따라 단추 위치가 조금 다를 수 있지만 순서는 같다. 메뉴가 영어로 보이면 괄호 안의 영어 이름을 찾는다.</p>
+<p><strong>① 프로젝트 열기</strong> - IntelliJ 를 실행하면 첫 화면(Home)이 나온다. 가운데 <strong>파일 열기</strong>(Open) 를 누른다.</p>
+<figure><a href="../images/ij_home.jpg" target="_blank"><img src="../images/ij_home.jpg" alt="IntelliJ 첫 화면 - 가운데 &quot;파일 열기&quot;" loading="lazy"></a><figcaption>IntelliJ 첫 화면 - 가운데 &quot;파일 열기&quot;</figcaption></figure>
+<p>전에 다른 프로젝트를 열었던 적이 있으면 첫 화면 왼쪽에 <strong>프로젝트 및 파일</strong> 목록이 보인다. 그때는 맨 위의 <strong>열기</strong> 를 누른다. 다른 프로젝트가 열린 채라면 왼쪽 위 ☰ → <strong>파일(File) → 열기(Open)</strong>.</p>
+<figure><a href="../images/ij_home_list.jpg" target="_blank"><img src="../images/ij_home_list.jpg" alt="첫 화면 왼쪽 - 전에 연 프로젝트가 있으면 &quot;열기&quot;" loading="lazy"></a><figcaption>첫 화면 왼쪽 - 전에 연 프로젝트가 있으면 &quot;열기&quot;</figcaption></figure>
+<p><strong>② backend 폴더 고르기</strong> - <code>C:\study\board</code> 로 들어가서 <strong><code>backend</code> 를 한 번 클릭</strong>하고 <strong>폴더 선택</strong>. <code>board</code> 가 아니라 그 안의 <code>backend</code> 다. (<code>build.gradle</code> 이 들어 있는 폴더를 열어야 IntelliJ 가 Gradle 프로젝트로 알아본다)</p>
+<figure><a href="../images/ij_b9_open.jpg" target="_blank"><img src="../images/ij_b9_open.jpg" alt="파일 열기 - C:\study\board 안의 backend 를 고르고 &quot;폴더 선택&quot;" loading="lazy"></a><figcaption>파일 열기 - C:\study\board 안의 backend 를 고르고 &quot;폴더 선택&quot;</figcaption></figure>
+<p><strong>③ 프로젝트 신뢰</strong> - "프로젝트 'backend'을(를) 신뢰하고 여시겠어요?" 가 나오면 <strong>프로젝트 신뢰</strong>(Trust Project). 아래의 <strong>Microsoft Defender 제외 목록에 추가</strong> 칸은 체크를 <strong>해제</strong>한다. 켜 두면 관리자 권한을 묻고 백신 검사에서 이 폴더를 빼 버린다. 실습에는 필요 없다.</p>
+<figure><a href="../images/ij_b9_trust.jpg" target="_blank"><img src="../images/ij_b9_trust.jpg" alt="프로젝트 신뢰 - Defender 칸은 해제하고 &quot;프로젝트 신뢰&quot;" loading="lazy"></a><figcaption>프로젝트 신뢰 - Defender 칸은 해제하고 &quot;프로젝트 신뢰&quot;</figcaption></figure>
+<p><strong>④ Gradle 가져오기 기다리기</strong> - 오른쪽 아래에 "Gradle 프로젝트 가져오는 중" 막대가 돈다. Gradle 이 필요한 라이브러리를 받는 중이다(<strong>Gradle sync</strong>). 처음에는 <strong>1~5분</strong> 걸린다. 막대가 사라질 때까지 기다린다. 끝나면 <code>src/main/java</code> 가 파란 폴더로 보이고, 위쪽 실행 구성 칸에 <code>BoardApplication</code> 이 나타난다.</p>
+<figure><a href="../images/ij_b9_tree.jpg" target="_blank"><img src="../images/ij_b9_tree.jpg" alt="프로젝트 창 - 가져오기가 끝나면 src/main/java 가 파란 폴더(소스 폴더)로 보인다" loading="lazy"></a><figcaption>프로젝트 창 - 가져오기가 끝나면 src/main/java 가 파란 폴더(소스 폴더)로 보인다</figcaption></figure>
 <blockquote class="note">
-<p><strong>IntelliJ 왼쪽 프로젝트 창이 비어 있거나 java 파일 아이콘에 빨간 표시가 있다면</strong> 아직 Gradle sync 가 끝나지 않았거나 JDK 가 지정되지 않은 것이다. 오른쪽 끝의 <strong>Gradle</strong> 창(코끼리 아이콘)을 열고 🔄 (Reload All Gradle Projects)을 누른다.</p>
+<p>오른쪽 아래에 <strong>"Microsoft Defender 가 IDE 에 영향을 줄 수 있습니다"</strong> 알림이 뜨기도 한다. <strong>폴더 제외</strong> 를 누르지 않고 그냥 둔다. (③ 과 같은 이유)</p>
+</blockquote>
+<figure><a href="../images/ij_defender_notice.jpg" target="_blank"><img src="../images/ij_defender_notice.jpg" alt="Defender 알림 - &quot;폴더 제외&quot; 를 누르지 않고 둔다" loading="lazy"></a><figcaption>Defender 알림 - &quot;폴더 제외&quot; 를 누르지 않고 둔다</figcaption></figure>
+<p><strong>⑤ JDK 21 확인</strong> - 화면 위쪽에 <strong>"Project JDK is not defined"</strong>(프로젝트 JDK 가 정의되지 않음) 같은 노란 줄이 보이거나, java 파일에 빨간 줄이 가득하면 JDK 를 골라 준다. ☰ → <strong>파일(File) → 프로젝트 구조(Project Structure)</strong> → <strong>프로젝트</strong> → <strong>SDK</strong> 칸.</p>
+<figure><a href="../images/ij_file_menu.jpg" target="_blank"><img src="../images/ij_file_menu.jpg" alt="파일 메뉴 - &quot;프로젝트 구조...&quot;" loading="lazy"></a><figcaption>파일 메뉴 - &quot;프로젝트 구조...&quot;</figcaption></figure>
+<figure><a href="../images/ij_sdk_dropdown.jpg" target="_blank"><img src="../images/ij_sdk_dropdown.jpg" alt="SDK 목록 - 설치한 21 을 고르거나, 없으면 &quot;JDK 다운로드...&quot; → 버전 21, Eclipse Temurin" loading="lazy"></a><figcaption>SDK 목록 - 설치한 21 을 고르거나, 없으면 &quot;JDK 다운로드...&quot; → 버전 21, Eclipse Temurin</figcaption></figure>
+<blockquote class="note">
+<p><strong>IntelliJ 왼쪽 프로젝트 창이 비어 있거나 java 파일 아이콘에 빨간 표시가 있다면</strong> 아직 Gradle sync 가 끝나지 않았거나 JDK 가 지정되지 않은 것이다. 오른쪽 끝의 <strong>Gradle</strong> 창(코끼리 아이콘)을 열고 🔄 (모든 Gradle 프로젝트 다시 로드)을 누른다.</p>
 </blockquote>
 <p>열린 프로젝트는 이렇게 생겼다.</p>
 <pre><code class="language-text">backend
@@ -1024,14 +1036,20 @@ public class BoardApplication {
     }
 }
 </code></pre>
-<p><code>class BoardApplication</code> 왼쪽의 <strong>초록색 ▶</strong> → <strong>Run 'BoardApplication'</strong> 을 누른다. 아래쪽 <strong>Run</strong> 창에 로그가 흐르다가 다음 줄이 보이면 성공이다. (교안을 만들 때 실행한 로그에서 앞부분을 줄였다)</p>
+<p>프로젝트 창에서 <code>src</code> → <code>main</code> → <code>java</code> → <code>com.example.board</code> 의 화살표(▸)를 차례로 눌러 펼치고 <strong>BoardApplication</strong> 을 <strong>두 번 클릭</strong>한다.</p>
+<figure><a href="../images/ij_b9_app.jpg" target="_blank"><img src="../images/ij_b9_app.jpg" alt="BoardApplication.java - class 이름 왼쪽(17번째 줄)의 초록색 ▶" loading="lazy"></a><figcaption>BoardApplication.java - class 이름 왼쪽(17번째 줄)의 초록색 ▶</figcaption></figure>
+<p><code>class BoardApplication</code> 왼쪽의 <strong>초록색 ▶</strong> 를 누르고 맨 위의 <strong>'BoardApplication.main()' 실행</strong>(Run) 을 고른다.</p>
+<figure><a href="../images/ij_b9_run_menu.jpg" target="_blank"><img src="../images/ij_b9_run_menu.jpg" alt="▶ 를 누르면 나오는 메뉴 - 맨 위 &quot;실행&quot;" loading="lazy"></a><figcaption>▶ 를 누르면 나오는 메뉴 - 맨 위 &quot;실행&quot;</figcaption></figure>
+<p>아래쪽 <strong>실행</strong>(Run) 창에 로그가 흐르다가 다음 줄이 보이면 성공이다. (교안을 만들 때 실행한 로그에서 앞부분을 줄였다)</p>
+<figure><a href="../images/ij_b9_run_log.jpg" target="_blank"><img src="../images/ij_b9_run_log.jpg" alt="실행 창 - &quot;Tomcat started on port 8080&quot;, &quot;Started BoardApplication&quot; 뒤에 노란 WARN 두 줄" loading="lazy"></a><figcaption>실행 창 - &quot;Tomcat started on port 8080&quot;, &quot;Started BoardApplication&quot; 뒤에 노란 WARN 두 줄</figcaption></figure>
 <pre><code class="language-text">... INFO ... o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
 ... INFO ... com.example.board.BoardApplication : Started BoardApplication in 8.349 seconds (process running for 9.294)
 </code></pre>
 <blockquote class="note">
 <p><strong>노란색 WARN 줄은 괜찮다.</strong> 시작할 때 <code>SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production ...</code> 같은 WARN 이 두 줄 보인다. "실제 서비스에서는 API 시험 화면(/docs)을 꺼 두라" 는 안내일 뿐, 실습에서는 켜 두는 것이 맞다. <strong>ERROR</strong> 줄이 보이거나 <code>Started BoardApplication</code> 이 나오지 않을 때만 부록 A 를 찾아보자.</p>
 </blockquote>
-<p>한 번 실행한 뒤에는 화면 오른쪽 위의 ▶(Run) 버튼으로 다시 실행하고, ■(Stop) 버튼으로 끈다. 코드를 고쳤으면 <strong>■ 로 끄고 다시 ▶</strong>.</p>
+<p>한 번 실행한 뒤에는 화면 위쪽 실행 구성(<code>BoardApplication</code>) 옆의 단추로 다시 실행하고 끈다. 코드를 고쳤으면 <strong>■ 로 끄고 다시 ▶</strong>.</p>
+<figure><a href="../images/ij_run_toolbar.jpg" target="_blank"><img src="../images/ij_run_toolbar.jpg" alt="위쪽 단추 - 실행 중일 때: ↻ 다시 실행, 벌레 모양 디버그, ■ 중지 (꺼져 있으면 ↻ 자리에 ▶)" loading="lazy"></a><figcaption>위쪽 단추 - 실행 중일 때: ↻ 다시 실행, 벌레 모양 디버그, ■ 중지 (꺼져 있으면 ↻ 자리에 ▶)</figcaption></figure>
 <blockquote class="note">
 <p><strong>터미널에서 실행하려면</strong> <code>C:\study\board\backend</code> 에서 <code>.\gradlew.bat bootRun</code> 을 친다. (JDK 설치 때 JAVA_HOME 을 설정했어야 한다.) 끌 때는 <strong>Ctrl+C</strong>.</p>
 <p><strong><code>Port 8080 was already in use</code></strong> 오류가 나면 이미 서버가 하나 켜져 있는 것이다. IntelliJ 의 Run 창 탭이 여러 개인지, 다른 터미널에서 bootRun 을 하고 있는지 확인해 하나를 끈다.</p>

@@ -339,6 +339,7 @@ def figure(path, caption):
     src = IMG_DIR / Path(path).name
     iw, ih = ImageReader(str(src)).getSize()
     w = TEXT_W if Path(path).name.startswith("fig_") else TEXT_W * 0.86  # 화면 캡처는 조금 작게
+    w = min(w, iw * 0.55)  # 작은 캡처(단추·알림)는 억지로 키우지 않는다 (흐려지지 않게)
     h = w * ih / iw
     if h > 115 * mm:  # 너무 길면 높이에 맞춘다
         h = 115 * mm

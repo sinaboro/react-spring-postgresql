@@ -129,12 +129,39 @@ docker compose ps
 
 **Spring Boot** 는 Java 로 웹 서버를 쉽게 만드는 프레임워크다. 설정을 거의 하지 않아도 내장 웹 서버(Tomcat)가 함께 실행된다. 프로젝트는 **Gradle** 이라는 빌드 도구로 관리하고, 서버 코드는 **IntelliJ IDEA** 로 연다.
 
-1. IntelliJ IDEA 를 실행하고 **Open** (메뉴에서는 **File → Open**) 을 누른다.
-2. `C:\study\board\backend` 폴더를 고르고 **OK**. "Trust Project?" 라고 물으면 **Trust Project**.
-3. 오른쪽 아래에 진행 막대가 보이며 Gradle 이 필요한 라이브러리를 받는다(**Gradle sync**). 처음에는 몇 분 걸린다. 끝날 때까지 기다린다.
-4. 화면 위쪽에 **"Project JDK is not defined"** 같은 노란 줄이 보이면 JDK 를 골라 준다. **Setup SDK** → 설치한 **21** 버전을 고르거나, **Download JDK** → Version **21**, Vendor **Eclipse Temurin** → Download.
+화면은 IntelliJ IDEA 2026.3 (한국어, 어두운 테마) 기준이다. 버전에 따라 단추 위치가 조금 다를 수 있지만 순서는 같다. 메뉴가 영어로 보이면 괄호 안의 영어 이름을 찾는다.
 
-> **IntelliJ 왼쪽 프로젝트 창이 비어 있거나 java 파일 아이콘에 빨간 표시가 있다면** 아직 Gradle sync 가 끝나지 않았거나 JDK 가 지정되지 않은 것이다. 오른쪽 끝의 **Gradle** 창(코끼리 아이콘)을 열고 🔄 (Reload All Gradle Projects)을 누른다.
+**① 프로젝트 열기** - IntelliJ 를 실행하면 첫 화면(Home)이 나온다. 가운데 **파일 열기**(Open) 를 누른다.
+
+![IntelliJ 첫 화면 - 가운데 "파일 열기"](../images/ij_home.jpg)
+
+전에 다른 프로젝트를 열었던 적이 있으면 첫 화면 왼쪽에 **프로젝트 및 파일** 목록이 보인다. 그때는 맨 위의 **열기** 를 누른다. 다른 프로젝트가 열린 채라면 왼쪽 위 ☰ → **파일(File) → 열기(Open)**.
+
+![첫 화면 왼쪽 - 전에 연 프로젝트가 있으면 "열기"](../images/ij_home_list.jpg)
+
+**② backend 폴더 고르기** - `C:\study\board` 로 들어가서 **`backend` 를 한 번 클릭**하고 **폴더 선택**. `board` 가 아니라 그 안의 `backend` 다. (`build.gradle` 이 들어 있는 폴더를 열어야 IntelliJ 가 Gradle 프로젝트로 알아본다)
+
+![파일 열기 - C:\study\board 안의 backend 를 고르고 "폴더 선택"](../images/ij_b9_open.jpg)
+
+**③ 프로젝트 신뢰** - "프로젝트 'backend'을(를) 신뢰하고 여시겠어요?" 가 나오면 **프로젝트 신뢰**(Trust Project). 아래의 **Microsoft Defender 제외 목록에 추가** 칸은 체크를 **해제**한다. 켜 두면 관리자 권한을 묻고 백신 검사에서 이 폴더를 빼 버린다. 실습에는 필요 없다.
+
+![프로젝트 신뢰 - Defender 칸은 해제하고 "프로젝트 신뢰"](../images/ij_b9_trust.jpg)
+
+**④ Gradle 가져오기 기다리기** - 오른쪽 아래에 "Gradle 프로젝트 가져오는 중" 막대가 돈다. Gradle 이 필요한 라이브러리를 받는 중이다(**Gradle sync**). 처음에는 **1~5분** 걸린다. 막대가 사라질 때까지 기다린다. 끝나면 `src/main/java` 가 파란 폴더로 보이고, 위쪽 실행 구성 칸에 `BoardApplication` 이 나타난다.
+
+![프로젝트 창 - 가져오기가 끝나면 src/main/java 가 파란 폴더(소스 폴더)로 보인다](../images/ij_b9_tree.jpg)
+
+> 오른쪽 아래에 **"Microsoft Defender 가 IDE 에 영향을 줄 수 있습니다"** 알림이 뜨기도 한다. **폴더 제외** 를 누르지 않고 그냥 둔다. (③ 과 같은 이유)
+
+![Defender 알림 - "폴더 제외" 를 누르지 않고 둔다](../images/ij_defender_notice.jpg)
+
+**⑤ JDK 21 확인** - 화면 위쪽에 **"Project JDK is not defined"**(프로젝트 JDK 가 정의되지 않음) 같은 노란 줄이 보이거나, java 파일에 빨간 줄이 가득하면 JDK 를 골라 준다. ☰ → **파일(File) → 프로젝트 구조(Project Structure)** → **프로젝트** → **SDK** 칸.
+
+![파일 메뉴 - "프로젝트 구조..."](../images/ij_file_menu.jpg)
+
+![SDK 목록 - 설치한 21 을 고르거나, 없으면 "JDK 다운로드..." → 버전 21, Eclipse Temurin](../images/ij_sdk_dropdown.jpg)
+
+> **IntelliJ 왼쪽 프로젝트 창이 비어 있거나 java 파일 아이콘에 빨간 표시가 있다면** 아직 Gradle sync 가 끝나지 않았거나 JDK 가 지정되지 않은 것이다. 오른쪽 끝의 **Gradle** 창(코끼리 아이콘)을 열고 🔄 (모든 Gradle 프로젝트 다시 로드)을 누른다.
 
 열린 프로젝트는 이렇게 생겼다.
 
@@ -857,7 +884,17 @@ public class BoardApplication {
 }
 ```
 
-`class BoardApplication` 왼쪽의 **초록색 ▶** → **Run 'BoardApplication'** 을 누른다. 아래쪽 **Run** 창에 로그가 흐르다가 다음 줄이 보이면 성공이다. (교안을 만들 때 실행한 로그에서 앞부분을 줄였다)
+프로젝트 창에서 `src` → `main` → `java` → `com.example.board` 의 화살표(▸)를 차례로 눌러 펼치고 **BoardApplication** 을 **두 번 클릭**한다.
+
+![BoardApplication.java - class 이름 왼쪽(17번째 줄)의 초록색 ▶](../images/ij_b9_app.jpg)
+
+`class BoardApplication` 왼쪽의 **초록색 ▶** 를 누르고 맨 위의 **'BoardApplication.main()' 실행**(Run) 을 고른다.
+
+![▶ 를 누르면 나오는 메뉴 - 맨 위 "실행"](../images/ij_b9_run_menu.jpg)
+
+아래쪽 **실행**(Run) 창에 로그가 흐르다가 다음 줄이 보이면 성공이다. (교안을 만들 때 실행한 로그에서 앞부분을 줄였다)
+
+![실행 창 - "Tomcat started on port 8080", "Started BoardApplication" 뒤에 노란 WARN 두 줄](../images/ij_b9_run_log.jpg)
 
 ```text
 ... INFO ... o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/'
@@ -866,7 +903,9 @@ public class BoardApplication {
 
 > **노란색 WARN 줄은 괜찮다.** 시작할 때 `SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production ...` 같은 WARN 이 두 줄 보인다. "실제 서비스에서는 API 시험 화면(/docs)을 꺼 두라" 는 안내일 뿐, 실습에서는 켜 두는 것이 맞다. **ERROR** 줄이 보이거나 `Started BoardApplication` 이 나오지 않을 때만 부록 A 를 찾아보자.
 
-한 번 실행한 뒤에는 화면 오른쪽 위의 ▶(Run) 버튼으로 다시 실행하고, ■(Stop) 버튼으로 끈다. 코드를 고쳤으면 **■ 로 끄고 다시 ▶**.
+한 번 실행한 뒤에는 화면 위쪽 실행 구성(`BoardApplication`) 옆의 단추로 다시 실행하고 끈다. 코드를 고쳤으면 **■ 로 끄고 다시 ▶**.
+
+![위쪽 단추 - 실행 중일 때: ↻ 다시 실행, 벌레 모양 디버그, ■ 중지 (꺼져 있으면 ↻ 자리에 ▶)](../images/ij_run_toolbar.jpg)
 
 > **터미널에서 실행하려면** `C:\study\board\backend` 에서 `.\gradlew.bat bootRun` 을 친다. (JDK 설치 때 JAVA_HOME 을 설정했어야 한다.) 끌 때는 **Ctrl+C**.
 
