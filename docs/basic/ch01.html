@@ -133,8 +133,10 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <figure><a href="../images/fig_vite_flow.png" target="_blank"><img src="../images/fig_vite_flow.png" alt="npm run dev 를 하면 일어나는 일" loading="lazy"></a><figcaption>npm run dev 를 하면 일어나는 일</figcaption></figure>
 <p>VS Code 터미널에서 다음을 차례로 친다.</p>
 <p><strong>[PS]</strong> ① 실습 폴더로 이동해 프로젝트 만들기</p>
-<pre><code class="language-powershell">cd C:\study
-npm create vite@latest my-react -- --template react --no-interactive
+<pre><code class="language-powershell">cd C:\study                # 실습 폴더로
+# npm create vite@latest &lt;폴더&gt; : Vite(React 개발 도구)로 새 프로젝트 뼈대를 만든다
+#   -- 뒤는 Vite 에 넘기는 옵션.  --template react = React 용으로,  --no-interactive = 질문 없이 기본값으로
+npm create vite@latest my-react -- --template react --no-interactive   # → C:\study\my-react 가 생긴다
 </code></pre>
 <div class="tbl"><table>
 <thead>
@@ -180,12 +182,14 @@ create-vite v9.3.4
 <p>처음 실행하면 <code>Need to install the following packages: create-vite ... Ok to proceed? (y)</code> 라고 물을 수 있다. <code>y</code> 를 치고 Enter.</p>
 </blockquote>
 <p><strong>[PS]</strong> ② 필요한 패키지 설치 (처음 한 번)</p>
-<pre><code class="language-powershell">cd my-react
-npm install
+<pre><code class="language-powershell">cd my-react      # 방금 만든 프로젝트 폴더로 (이 폴더 안에서 npm 명령을 쳐야 한다)
+npm install      # package.json 에 적힌 라이브러리(React 등)를 node_modules 폴더로 받는다. 폴더마다 처음 한 번만 (1~2분)
 </code></pre>
 <p><code>npm install</code> 은 <code>package.json</code> 에 적힌 패키지(React, Vite 등)를 인터넷에서 받아 <code>node_modules</code> 폴더에 넣는다. 1~2분 걸릴 수 있다.</p>
 <p><strong>[PS]</strong> ③ 개발 서버 켜기</p>
-<pre><code class="language-powershell">npm run dev
+<pre><code class="language-powershell"># npm run dev : package.json 의 scripts 에 적힌 &quot;dev&quot;(vite) 를 실행 → 개발 서버가 켜진다
+#               코드를 고쳐 저장하면 브라우저가 저절로 바뀐다. 끄기 전까지 이 터미널은 계속 쓰인다 (끌 때는 Ctrl+C)
+npm run dev      # → http://localhost:5173
 </code></pre>
 <pre><code class="language-text">  VITE v8.3.8  ready in 570 ms
 
@@ -316,9 +320,9 @@ createRoot(document.getElementById(&quot;root&quot;)).render(
 <h2 id="1-6-완성본-예제-앱-실행해-보기">1-6. 완성본 예제 앱 실행해 보기</h2>
 <p>저장소의 <code>basic/examples</code> 에는 3~8장의 모든 예제가 들어 있다. 왼쪽 메뉴에서 예제를 고르면 오른쪽에 그 예제가 실행된다. 공부하다 막히면 여기서 정답 화면과 코드를 확인하자.</p>
 <p><strong>[PS]</strong> 새 터미널(+)을 열고</p>
-<pre><code class="language-powershell">cd C:\study\react-spring-postgresql\basic\examples
-npm install
-npm run dev
+<pre><code class="language-powershell">cd C:\study\react-spring-postgresql\basic\examples   # 교안 예제 모음 앱 (장마다 예제를 메뉴로 골라 본다)
+npm install      # package.json 에 적힌 라이브러리(React 등)를 node_modules 폴더로 받는다. 폴더마다 처음 한 번만 (1~2분)
+npm run dev      # my-react 가 이미 5173 을 쓰고 있으면 5174 로 켜진다 → 터미널에 나온 주소로 연다
 </code></pre>
 <pre><code class="language-text">Port 5173 is in use, trying another one...
 

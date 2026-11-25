@@ -53,12 +53,12 @@ src/main/java/com/example/board
 **[PS]**
 
 ```powershell
-mkdir C:\study\authboard
+mkdir C:\study\authboard -Force    # 심화 로그인 게시판 폴더 (기초의 C:\study\board 와 따로)
 cd C:\study\authboard
-Copy-Item C:\study\react-spring-postgresql\advanced\board\docker-compose.yml .
-Copy-Item -Recurse C:\study\react-spring-postgresql\advanced\board\backend .\backend
-docker compose up -d
-docker compose ps
+Copy-Item C:\study\react-spring-postgresql\advanced\board\docker-compose.yml .            # 심화용 DB 설정 (마지막 . = 지금 폴더로)
+Copy-Item -Recurse C:\study\react-spring-postgresql\advanced\board\backend .\backend     # 심화용 Spring Boot 서버 (-Recurse: 폴더 통째로)
+docker compose up -d      # 심화 DB (spring-auth-db) 켜기. 기초 DB 와 포트가 달라 함께 켜도 된다
+docker compose ps         # (healthy) 확인
 ```
 
 <!-- file: advanced/board/docker-compose.yml -->
@@ -1295,6 +1295,7 @@ expired 401 {'detail': '로그인이 만료되었습니다. 다시 로그인하�
 **[PS]**
 
 ```powershell
+# users 테이블 직접 보기 - 비밀번호는 원문이 아니라 해시로 저장돼 있다 (left(칸, 40): 앞 40글자만 잘라 보기)
 docker exec spring-auth-db psql -U postgres -d authboard -c "SELECT id, username, left(password_hash, 40) AS password_hash, nickname FROM users;"
 ```
 

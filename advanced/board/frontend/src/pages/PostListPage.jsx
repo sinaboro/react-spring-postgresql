@@ -13,10 +13,10 @@ import { useAuth } from "../context/AuthContext";
 import { formatDate } from "../format";
 
 function PostListPage() {
-  const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth(); // 로그인한 사람 (안 했으면 null)
+  const [searchParams, setSearchParams] = useSearchParams(); // 주소의 ?mine=1 같은 값을 읽고 바꾸는 도구
   const mine = Boolean(user) && searchParams.get("mine") === "1"; // 로그아웃 상태면 항상 전체
-  const userId = mine ? user.id : null;
+  const userId = mine ? user.id : null; // 내 글 탭이면 내 번호, 아니면 null(= 전체)
 
   // userId 가 바뀌면(탭을 바꾸면) 다시 불러온다
   const { data: posts, loading, error } = useApi(() => getPosts(userId), [userId]);
@@ -25,9 +25,11 @@ function PostListPage() {
     <div>
       <div className="toolbar">
         <div className="tabs">
+          {/* 탭을 누르면 주소만 바꾼다(?mine 지우기) → userId 가 바뀌어 useApi 가 목록을 다시 불러온다 */}
           <button className={mine ? "" : "active"} onClick={() => setSearchParams({})}>
             전체
           </button>
+          {/* 내 글 탭은 로그인했을 때만 보인다 (&& : 앞이 참일 때만 뒤를 그린다) */}
           {user && (
             <button className={mine ? "active" : ""} onClick={() => setSearchParams({ mine: "1" })}>
               내 글
@@ -40,12 +42,14 @@ function PostListPage() {
             ✏️ 글쓰기
           </Link>
         ) : (
+          // state.from: 로그인이 끝나면 글쓰기 화면으로 바로 보내 주려고 "원래 가려던 곳" 을 함께 넘긴다
           <Link to="/login" state={{ from: "/posts/new" }} className="button">
             🔒 로그인하고 글쓰기
           </Link>
         )}
       </div>
 
+      {/* 불러오는 중 / 오류 / 글 없음 / 목록 - 상황마다 하나만 보이게 조건을 나눈다 */}
       {loading && <p className="info">⏳ 불러오는 중...</p>}
       {error && <p className="error">⚠️ {error.message}</p>}
       {posts && !loading && posts.length === 0 && (
@@ -62,12 +66,13 @@ function PostListPage() {
             </tr>
           </thead>
           <tbody>
+            {/* 글마다 한 줄. key 는 React 가 줄을 구분하는 이름표 (글 번호처럼 바뀌지 않는 값) */}
             {posts.map((post) => (
               <tr key={post.id}>
                 <td className="col-id">{post.id}</td>
                 <td>
                   <Link to={`/posts/${post.id}`}>{post.title}</Link>
-                  {/* 내 글 표시 */}
+                  {/* 내 글 표시. user?.id : 로그아웃 상태(user 가 null)여도 오류 없이 undefined 가 된다 */}
                   {user?.id === post.user_id && <span className="mine-badge">내 글</span>}
                 </td>
                 <td className="col-writer">{post.writer}</td>

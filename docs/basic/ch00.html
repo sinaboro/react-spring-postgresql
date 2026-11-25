@@ -289,11 +289,11 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <figure><a href="../images/vs_terminal_profiles.jpg" target="_blank"><img src="../images/vs_terminal_profiles.jpg" alt="+ 옆 ∨ 목록 - PowerShell 을 고른다. 기본값으로 정하려면 Select Default Profile" loading="lazy"></a><figcaption>+ 옆 ∨ 목록 - PowerShell 을 고른다. 기본값으로 정하려면 Select Default Profile</figcaption></figure>
 <p>이제 다음 명령을 하나씩 쳐 보자.</p>
 <p><strong>[PS]</strong></p>
-<pre><code class="language-powershell">node -v
-npm -v
-git --version
-java -version
-docker --version
+<pre><code class="language-powershell">node -v              # Node.js 22 이상 (예: v22.x). React 개발 서버를 돌리는 프로그램
+npm -v               # npm: Node.js 와 함께 설치되는 라이브러리 관리 도구
+git --version        # Git: 교안 저장소를 받을 때(git clone) 쓴다
+java -version        # JDK 21 (예: openjdk version &quot;21.0.x&quot;). 안 나오면 JAVA_HOME 설정을 빠뜨린 것 (0장 JDK 설치)
+docker --version     # Docker Desktop (9장부터 DB 를 켤 때 쓴다)
 </code></pre>
 <p>버전 숫자가 나오면 성공이다. 숫자는 내 화면과 달라도 괜찮다.</p>
 <pre><code class="language-text">v26.13.1
@@ -310,8 +310,9 @@ Docker version 29.9.3, build 5457199
 <h2 id="0-3-실습-저장소-받기">0-3. 실습 저장소 받기</h2>
 <p>모든 실습은 <code>C:\study</code> 폴더에서 한다. (바탕 화면이나 OneDrive 폴더는 경로에 한글·빈칸이 섞여 오류가 나기 쉽다.)</p>
 <p><strong>[PS]</strong></p>
-<pre><code class="language-powershell">mkdir C:\study
-cd C:\study
+<pre><code class="language-powershell">mkdir C:\study -Force      # 실습 폴더 만들기. -Force: 이미 있어도 오류 없이 넘어간다
+cd C:\study                # cd = 폴더 이동 (change directory)
+# git clone &lt;주소&gt; : GitHub 저장소를 통째로 내 PC 에 복사한다 → C:\study\react-spring-postgresql 폴더가 생긴다
 git clone https://github.com/sinaboro/react-spring-postgresql.git
 </code></pre>
 <p>받은 저장소는 이렇게 생겼다.</p>

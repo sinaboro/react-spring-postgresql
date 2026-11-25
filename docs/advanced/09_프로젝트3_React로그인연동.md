@@ -40,10 +40,11 @@
 **[PS]**
 
 ```powershell
+# 7장에서 만든 Router 판 React 를 심화 게시판의 frontend 로 복사해서 이어 만든다
 Copy-Item -Recurse C:\study\board\frontend-router C:\study\authboard\frontend
 cd C:\study\authboard\frontend
-npm install
-mkdir src\context
+npm install          # 복사한 폴더에도 라이브러리가 필요하다
+mkdir src\context    # 로그인 상태(AuthContext)를 둘 폴더를 src 안에 만든다
 ```
 
 > `node_modules` 까지 복사되어 조금 걸린다. 7장을 끝내지 못했다면 저장소의 `advanced\board-router\frontend` 를 복사한 뒤 `npm install` 하면 된다. 이 장의 완성본은 `advanced\board\frontend` 다.
@@ -353,11 +354,11 @@ import { Link, Outlet, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 function Layout() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user, logout } = useAuth(); // 로그인한 사람과 로그아웃 함수 (Context 에서 꺼낸다)
+  const navigate = useNavigate(); // 주소를 코드로 바꿀 때 쓰는 함수
 
   const handleLogout = () => {
-    logout();
+    logout(); // 토큰을 지우고 user 를 null 로 → 머리글이 "로그인 · 회원가입" 으로 바뀐다
     navigate("/"); // 로그아웃하면 목록으로
   };
 
@@ -369,6 +370,7 @@ function Layout() {
         </Link>
         <span className="badge">로그인</span>
         <nav className="auth-nav">
+          {/* 로그인했으면 닉네임과 로그아웃, 아니면 로그인·회원가입 링크 */}
           {user ? (
             <>
               <span>
@@ -388,6 +390,7 @@ function Layout() {
           )}
         </nav>
       </header>
+      {/* Outlet: 주소에 맞는 화면(목록, 상세, 글쓰기 ...)이 이 자리에 그려진다. 머리글은 그대로 남는다 */}
       <Outlet />
     </div>
   );
@@ -589,10 +592,10 @@ import { useAuth } from "../context/AuthContext";
 import { formatDate } from "../format";
 
 function PostListPage() {
-  const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth(); // 로그인한 사람 (안 했으면 null)
+  const [searchParams, setSearchParams] = useSearchParams(); // 주소의 ?mine=1 같은 값을 읽고 바꾸는 도구
   const mine = Boolean(user) && searchParams.get("mine") === "1"; // 로그아웃 상태면 항상 전체
-  const userId = mine ? user.id : null;
+  const userId = mine ? user.id : null; // 내 글 탭이면 내 번호, 아니면 null(= 전체)
 
   // userId 가 바뀌면(탭을 바꾸면) 다시 불러온다
   const { data: posts, loading, error } = useApi(() => getPosts(userId), [userId]);
@@ -601,9 +604,11 @@ function PostListPage() {
     <div>
       <div className="toolbar">
         <div className="tabs">
+          {/* 탭을 누르면 주소만 바꾼다(?mine 지우기) → userId 가 바뀌어 useApi 가 목록을 다시 불러온다 */}
           <button className={mine ? "" : "active"} onClick={() => setSearchParams({})}>
             전체
           </button>
+          {/* 내 글 탭은 로그인했을 때만 보인다 (&& : 앞이 참일 때만 뒤를 그린다) */}
           {user && (
             <button className={mine ? "active" : ""} onClick={() => setSearchParams({ mine: "1" })}>
               내 글
@@ -616,12 +621,14 @@ function PostListPage() {
             ✏️ 글쓰기
           </Link>
         ) : (
+          // state.from: 로그인이 끝나면 글쓰기 화면으로 바로 보내 주려고 "원래 가려던 곳" 을 함께 넘긴다
           <Link to="/login" state={{ from: "/posts/new" }} className="button">
             🔒 로그인하고 글쓰기
           </Link>
         )}
       </div>
 
+      {/* 불러오는 중 / 오류 / 글 없음 / 목록 - 상황마다 하나만 보이게 조건을 나눈다 */}
       {loading && <p className="info">⏳ 불러오는 중...</p>}
       {error && <p className="error">⚠️ {error.message}</p>}
       {posts && !loading && posts.length === 0 && (
@@ -638,12 +645,13 @@ function PostListPage() {
             </tr>
           </thead>
           <tbody>
+            {/* 글마다 한 줄. key 는 React 가 줄을 구분하는 이름표 (글 번호처럼 바뀌지 않는 값) */}
             {posts.map((post) => (
               <tr key={post.id}>
                 <td className="col-id">{post.id}</td>
                 <td>
                   <Link to={`/posts/${post.id}`}>{post.title}</Link>
-                  {/* 내 글 표시 */}
+                  {/* 내 글 표시. user?.id : 로그아웃 상태(user 가 null)여도 오류 없이 undefined 가 된다 */}
                   {user?.id === post.user_id && <span className="mine-badge">내 글</span>}
                 </td>
                 <td className="col-writer">{post.writer}</td>
@@ -683,21 +691,23 @@ import { useAuth } from "../context/AuthContext";
 import { formatDate } from "../format";
 
 function PostDetailPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const { id } = useParams(); // 주소 /posts/3 의 3
+  const navigate = useNavigate(); // 삭제 뒤 목록으로 옮겨 갈 때 쓴다
+  const { user } = useAuth(); // 로그인한 사람 (안 했으면 null)
+  // id 가 바뀔 때마다 그 글을 불러온다. data 를 post 라는 이름으로 꺼낸다
   const { data: post, loading, error } = useApi(() => getPost(id), [id]);
 
   const handleDelete = async () => {
-    if (!confirm("정말 삭제할까요? 되돌릴 수 없습니다.")) return;
+    if (!confirm("정말 삭제할까요? 되돌릴 수 없습니다.")) return; // 취소를 누르면 아무것도 하지 않는다
     try {
       await deletePost(id);
-      navigate("/", { replace: true });
+      navigate("/", { replace: true }); // 지운 글 화면으로 뒤로 가기가 되지 않게 기록을 바꿔치기
     } catch (err) {
       alert(err.message); // 403: "본인이 쓴 글만 ...", 401: "로그인이 만료되었습니다 ..."
     }
   };
 
+  // 아직 글이 없을 때(불러오는 중·오류)는 여기서 먼저 끝낸다 → 아래에서는 post 가 항상 있다
   if (loading) return <p className="info">⏳ 불러오는 중...</p>;
   if (error)
     return (
@@ -714,6 +724,7 @@ function PostDetailPage() {
       <h2>{post.title}</h2>
       <div className="meta">
         {post.writer} · {formatDate(post.created_at)}
+        {/* 한 번이라도 고쳤으면 수정 시각도 보여 준다 */}
         {post.updated_at !== post.created_at && ` · 수정 ${formatDate(post.updated_at)}`}
       </div>
       <div className="content">{post.content || "(내용 없음)"}</div>
@@ -722,6 +733,7 @@ function PostDetailPage() {
         <Link to="/" className="button">
           목록
         </Link>
+        {/* 본인 글일 때만 수정·삭제 단추 (<> </> 는 여러 요소를 감싸는 빈 껍데기, Fragment) */}
         {isOwner && (
           <>
             <Link to={`/posts/${post.id}/edit`} className="button">
@@ -763,40 +775,43 @@ import { createPost, getPost, updatePost } from "../api";
 import { useAuth } from "../context/AuthContext";
 
 function PostFormPage() {
-  const { id } = useParams();
-  const isEdit = id !== undefined;
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [form, setForm] = useState({ title: "", content: "" });
-  const [notMine, setNotMine] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
+  const { id } = useParams(); // 주소의 :id 꺼내기. /posts/new 에는 :id 가 없어서 undefined
+  const isEdit = id !== undefined; // id 가 있으면 수정 화면, 없으면 새 글 화면 (한 컴포넌트로 두 화면을 맡는다)
+  const navigate = useNavigate(); // 저장이 끝나면 다른 주소로 옮겨 갈 때 쓴다
+  const { user } = useAuth(); // 로그인한 사람 (ProtectedRoute 안이라 항상 있다)
+  const [form, setForm] = useState({ title: "", content: "" }); // 입력 칸 두 개를 객체 하나로 관리 (기초 7장)
+  const [notMine, setNotMine] = useState(false); // 남의 글을 수정하려는 중인가
+  const [saving, setSaving] = useState(false); // 저장 요청 중이면 true → 버튼을 막아 두 번 누르기 방지
+  const [error, setError] = useState(null); // 화면에 보여 줄 오류 문구
 
+  // 수정 화면이면 처음 한 번 원래 글을 불러와 입력 칸을 채운다
   useEffect(() => {
-    if (!isEdit) return;
+    if (!isEdit) return; // 새 글이면 불러올 것이 없다
     getPost(id)
       .then((post) => {
         setForm({ title: post.title, content: post.content });
-        setNotMine(post.user_id !== user.id);
+        setNotMine(post.user_id !== user.id); // 글쓴이 번호와 내 번호가 다르면 남의 글
       })
       .catch((err) => setError(err.message));
-  }, [id, isEdit, user.id]);
+  }, [id, isEdit, user.id]); // 이 값들이 바뀔 때만 다시 실행
 
+  // 입력할 때마다: 기존 form 을 펼쳐 복사(...form)하고, 입력한 칸(name 이 title 또는 content)만 새 값으로
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.title.trim()) {
+    e.preventDefault(); // 브라우저가 페이지를 새로 고치는 기본 동작을 막는다
+    if (!form.title.trim()) { // 제목이 비었거나 빈칸뿐이면 서버에 보내지 않는다
       setError("제목을 입력하세요.");
       return;
     }
     setSaving(true);
     try {
-      const saved = isEdit ? await updatePost(id, form) : await createPost(form);
+      const saved = isEdit ? await updatePost(id, form) : await createPost(form); // 수정이면 PUT, 새 글이면 POST
+      // 저장한 글의 상세 화면으로. replace: 뒤로 가기를 눌러도 입력 화면으로 돌아오지 않게 지금 기록을 바꿔치기
       navigate(`/posts/${saved.id}`, { replace: true });
     } catch (err) {
-      setError(err.message);
-      setSaving(false);
+      setError(err.message); // 서버가 돌려준 이유 (401, 403, 422 ...)
+      setSaving(false); // 다시 누를 수 있게
     }
   };
 
@@ -817,9 +832,11 @@ function PostFormPage() {
         <textarea name="content" value={form.content} onChange={handleChange} rows={8} />
       </label>
       <div className="buttons">
+        {/* type="button": form 안의 버튼은 기본이 submit 이라, 취소 버튼은 button 으로 바꿔야 저장되지 않는다. navigate(-1) = 뒤로 가기 */}
         <button type="button" onClick={() => navigate(-1)}>
           취소
         </button>
+        {/* 저장 중이거나 남의 글이면 버튼을 막는다 */}
         <button type="submit" className="primary" disabled={saving || notMine}>
           {saving ? "저장 중..." : "저장"}
         </button>

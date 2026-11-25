@@ -43,9 +43,11 @@
 **[PS]**
 
 ```powershell
-mkdir C:\study\board
+mkdir C:\study\board -Force     # 게시판 프로젝트 폴더 (-Force: 이미 있어도 넘어간다)
 cd C:\study\board
+# Copy-Item <원본> <대상> : 파일 복사.  마지막 . = "지금 폴더로"
 Copy-Item C:\study\react-spring-postgresql\basic\board\docker-compose.yml .
+# -Recurse : 폴더를 안의 파일까지 통째로 복사한다 (없으면 빈 폴더만 생긴다)
 Copy-Item -Recurse C:\study\react-spring-postgresql\basic\board\backend .\backend
 ```
 
@@ -103,6 +105,8 @@ volumes:
 **[PS]** `C:\study\board` 에서
 
 ```powershell
+# up : docker-compose.yml 에 적힌 DB 컨테이너를 만들고 켠다 (처음에는 postgres 이미지를 받느라 1~2분)
+# -d : 뒤에서(detached) 켜고 프롬프트를 돌려준다. 없으면 DB 로그가 화면을 차지하고, 창을 닫으면 DB 도 꺼진다
 docker compose up -d
 ```
 
@@ -118,7 +122,7 @@ docker compose up -d
 **[PS]** 상태 확인
 
 ```powershell
-docker compose ps
+docker compose ps         # 이 compose 파일로 켠 컨테이너 상태. STATUS 가 (healthy) 가 될 때까지 몇 번 다시 쳐 본다
 ```
 
 `spring-board-db` 의 `STATUS` 에 **(healthy)** 가 보이면 접속할 준비가 된 것이다. `(health: starting)` 이면 몇 초 뒤 다시 확인한다.
@@ -947,6 +951,9 @@ public class BoardApplication {
 **[PS]**
 
 ```powershell
+# docker exec <컨테이너> <명령> : 켜져 있는 DB 컨테이너 안에서 psql(PostgreSQL 명령줄 도구)을 실행한다
+#   -U postgres = 사용자,  -d board = 데이터베이스,  -c "SQL" = 이 SQL 하나만 실행하고 끝
+# 화면·API 를 거치지 않고 DB 에 실제로 저장된 그대로 본다
 docker exec spring-board-db psql -U postgres -d board -c "SELECT id, title, writer, created_at FROM posts ORDER BY id;"
 ```
 
@@ -968,9 +975,11 @@ docker exec spring-board-db psql -U postgres -d board -c "SELECT id, title, writ
 
 ```powershell
 cd C:\study\board
-npm create vite@latest frontend -- --template react --no-interactive
+# npm create vite@latest <폴더> : Vite(React 개발 도구)로 새 프로젝트 뼈대를 만든다
+#   -- 뒤는 Vite 에 넘기는 옵션.  --template react = React 용으로,  --no-interactive = 질문 없이 기본값으로
+npm create vite@latest frontend -- --template react --no-interactive   # → C:\study\board\frontend
 cd frontend
-npm install
+npm install      # package.json 에 적힌 라이브러리(React 등)를 node_modules 폴더로 받는다. 폴더마다 처음 한 번만 (1~2분)
 ```
 
 1장에서처럼 정리한다.

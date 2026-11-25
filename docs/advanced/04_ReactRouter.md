@@ -24,10 +24,12 @@ Router 는 주소창을 직접 다루기 때문에 예제 앱 메뉴와 섞지 �
 
 ```powershell
 cd C:\study
-npm create vite@latest router-practice -- --template react --no-interactive
+# npm create vite@latest <폴더> : Vite(React 개발 도구)로 새 프로젝트 뼈대를 만든다
+#   -- 뒤는 Vite 에 넘기는 옵션.  --template react = React 용으로,  --no-interactive = 질문 없이 기본값으로
+npm create vite@latest router-practice -- --template react --no-interactive   # 연습용 새 프로젝트
 cd router-practice
-npm install
-npm install react-router
+npm install                  # 기본 라이브러리
+npm install react-router     # npm install <이름> : 라이브러리 하나를 추가로 설치하고 package.json 에 적어 둔다 (주소에 따라 화면을 바꿔 주는 React Router)
 ```
 
 `npm install react-router` 가 Router 라이브러리를 추가한다. `package.json` 의 dependencies 에 `"react-router": "^8.5.2"` 같은 줄이 생긴다. (이 교안은 8.5.2 로 확인했다.)
@@ -37,9 +39,9 @@ npm install react-router
 **[PS]** 완성본 실행
 
 ```powershell
-cd C:\study\react-spring-postgresql\advanced\router-demo
-npm install
-npm run dev
+cd C:\study\react-spring-postgresql\advanced\router-demo   # 이 장의 완성본
+npm install      # package.json 에 적힌 라이브러리(React 등)를 node_modules 폴더로 받는다. 폴더마다 처음 한 번만 (1~2분)
+npm run dev      # http://localhost:5173
 ```
 
 ## 4-3. BrowserRouter - Router 켜기

@@ -166,7 +166,7 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <p>기초 과정의 DB 와 API 서버를 켠다 (기초 교안 9-13).</p>
 <p><strong>[PS]</strong> DB</p>
 <pre><code class="language-powershell">cd C:\study\board
-docker compose up -d
+docker compose up -d      # 기초 게시판 DB 켜기 (뒤에서 켜고 프롬프트를 돌려준다). 서버는 IntelliJ 에서 BoardApplication ▶
 </code></pre>
 <p>API 서버는 IntelliJ 로 <code>C:\study\board\backend</code> 를 열고 <code>BoardApplication</code> 을 ▶ 실행한다. http://localhost:8080/docs 가 열리면 준비 끝.</p>
 <blockquote class="note">
@@ -174,10 +174,11 @@ docker compose up -d
 </blockquote>
 <p>새 React 프로젝트는 기초 게시판 프런트엔드를 <strong>복사해서</strong> 시작한다. (원래 것은 비교용으로 남겨 둔다.)</p>
 <p><strong>[PS]</strong> 터미널 3</p>
-<pre><code class="language-powershell">Copy-Item -Recurse C:\study\react-spring-postgresql\basic\board\frontend C:\study\board\frontend-router
+<pre><code class="language-powershell"># 기초 완성본 React 를 frontend-router 라는 새 폴더로 복사해서 고친다 (원본은 그대로 두어 비교할 수 있게)
+Copy-Item -Recurse C:\study\react-spring-postgresql\basic\board\frontend C:\study\board\frontend-router
 cd C:\study\board\frontend-router
-npm install
-npm install react-router
+npm install                  # 복사한 폴더에도 라이브러리가 필요하다 (node_modules 는 복사되지 않았거나 깨졌을 수 있다)
+npm install react-router     # 이번 장에서 새로 쓰는 라이브러리
 </code></pre>
 <p>그다음 폴더를 정리한다.</p>
 <ol>
@@ -313,8 +314,11 @@ import { BrowserRouter } from &quot;react-router&quot;;
 import &quot;./index.css&quot;;
 import App from &quot;./App.jsx&quot;;
 
+// index.html 의 &lt;div id=&quot;root&quot;&gt; 를 찾아 그 안에 React 앱을 그린다
 createRoot(document.getElementById(&quot;root&quot;)).render(
+  // StrictMode: 개발 중에만 실수(부작용 등)를 더 잘 찾도록 검사를 켠다. 화면에는 아무것도 그리지 않는다
   &lt;StrictMode&gt;
+    {/* BrowserRouter: 브라우저 주소창과 React 를 이어 준다. 이 안쪽에서만 Route·Link·useNavigate 를 쓸 수 있다 */}
     &lt;BrowserRouter&gt;
       &lt;App /&gt;
     &lt;/BrowserRouter&gt;
@@ -408,8 +412,10 @@ import { useApi } from &quot;../hooks/useApi&quot;;
 import { formatDate } from &quot;../format&quot;;
 
 function PostListPage() {
+  // useApi: 불러오기·로딩·오류 상태를 한 번에 돌려주는 사용자 정의 Hook (3장). [] = 처음 한 번만 불러온다
   const { data: posts, loading, error } = useApi(getPosts, []);
 
+  // 불러오는 중·오류면 여기서 먼저 끝낸다 → 아래에서는 posts 가 항상 있다
   if (loading) return &lt;p className=&quot;info&quot;&gt;⏳ 불러오는 중...&lt;/p&gt;;
   if (error) return &lt;p className=&quot;error&quot;&gt;⚠️ {error.message}&lt;/p&gt;;
 
@@ -417,6 +423,7 @@ function PostListPage() {
     &lt;div&gt;
       &lt;div className=&quot;toolbar&quot;&gt;
         &lt;span&gt;전체 {posts.length}개&lt;/span&gt;
+        {/* 버튼 대신 Link: 글쓰기 화면에도 /posts/new 라는 진짜 주소가 생겼다 */}
         &lt;Link to=&quot;/posts/new&quot; className=&quot;button primary&quot;&gt;
           ✏️ 글쓰기
         &lt;/Link&gt;
@@ -435,10 +442,12 @@ function PostListPage() {
             &lt;/tr&gt;
           &lt;/thead&gt;
           &lt;tbody&gt;
+            {/* 글마다 한 줄. key 는 React 가 줄을 구분하는 이름표 */}
             {posts.map((post) =&gt; (
               &lt;tr key={post.id}&gt;
                 &lt;td className=&quot;col-id&quot;&gt;{post.id}&lt;/td&gt;
                 &lt;td&gt;
+                  {/* 제목을 누르면 /posts/번호 로 → App.jsx 의 Route 가 상세 화면을 그린다 */}
                   &lt;Link to={`/posts/${post.id}`}&gt;{post.title}&lt;/Link&gt;
                 &lt;/td&gt;
                 &lt;td className=&quot;col-writer&quot;&gt;{post.writer}&lt;/td&gt;
@@ -605,12 +614,15 @@ export default PostFormPage;
 <div class="file"><span>📄 advanced/board-router/frontend/src/pages/NotFoundPage.jsx</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board-router/frontend/src/pages/NotFoundPage.jsx" target="_blank">GitHub 에서 보기</a></div>
 
 <pre><code class="language-jsx">// NotFoundPage.jsx - 없는 주소 ( path=&quot;*&quot; )
+//   App.jsx 의 &lt;Route path=&quot;*&quot;&gt; 에 연결된다. * 는 &quot;위의 어떤 주소에도 맞지 않으면&quot; 이라는 뜻.
+//   /abc 처럼 없는 주소로 들어오면 빈 화면 대신 이 안내를 보여 준다.
 import { Link } from &quot;react-router&quot;;
 
 function NotFoundPage() {
   return (
     &lt;div className=&quot;info&quot;&gt;
       &lt;h2&gt;404 - 없는 페이지입니다&lt;/h2&gt;
+      {/* &lt;a href&gt; 대신 &lt;Link&gt;: 페이지를 새로 받지 않고 React 안에서 주소만 바꾼다 (4장) */}
       &lt;Link to=&quot;/&quot;&gt;목록으로 가기&lt;/Link&gt;
     &lt;/div&gt;
   );

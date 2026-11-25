@@ -189,11 +189,11 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <p>기초 과정과 같은 프로그램(Node.js, VS Code, IntelliJ IDEA, JDK 21, Git, Docker Desktop)을 쓴다. 저장소를 최신으로 받는다.</p>
 <p><strong>[PS]</strong> 처음 받는다면</p>
 <pre><code class="language-powershell">cd C:\study
-git clone https://github.com/sinaboro/react-spring-postgresql.git
+git clone https://github.com/sinaboro/react-spring-postgresql.git   # 기초 과정을 안 했다면 저장소 받기
 </code></pre>
 <p><strong>[PS]</strong> 이미 받았다면</p>
 <pre><code class="language-powershell">cd C:\study\react-spring-postgresql
-git pull
+git pull          # GitHub 의 최신 교안·예제를 받아 내 폴더에 합친다 (내가 고친 파일이 있으면 충돌할 수 있다 → 부록 A)
 </code></pre>
 <p>심화 과정에서 쓰는 폴더는 <code>advanced</code> 다.</p>
 <pre><code class="language-text">react-spring-postgresql
@@ -213,9 +213,9 @@ git pull
 <p><strong>단계별 완성본</strong>이 따로 있는 이유: 중간에 막히거나 수업에 빠져도, 다음 장의 시작 상태를 저장소에서 바로 꺼내 이어 갈 수 있다. 예를 들어 8장을 시작할 때 7장이 끝나지 않았다면 <code>board-router</code> 를 복사해서 시작하면 된다.</p>
 </blockquote>
 <p><strong>[PS]</strong> 예제 앱 실행</p>
-<pre><code class="language-powershell">cd C:\study\react-spring-postgresql\advanced\examples
-npm install
-npm run dev
+<pre><code class="language-powershell">cd C:\study\react-spring-postgresql\advanced\examples   # 심화 예제 모음 앱
+npm install      # package.json 에 적힌 라이브러리(React 등)를 node_modules 폴더로 받는다. 폴더마다 처음 한 번만 (1~2분)
+npm run dev      # 터미널에 나온 주소(보통 http://localhost:5173)로 연다
 </code></pre>
 <h2 id="0-2-이-과정에서-새로-쓰는-것">0-2. 이 과정에서 새로 쓰는 것</h2>
 <div class="tbl"><table>

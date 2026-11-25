@@ -216,12 +216,12 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 </code></pre>
 <h2 id="8-2-준비---폴더-만들기-db-켜기-intellij-로-열기">8-2. 준비 - 폴더 만들기, DB 켜기, IntelliJ 로 열기</h2>
 <p><strong>[PS]</strong></p>
-<pre><code class="language-powershell">mkdir C:\study\authboard
+<pre><code class="language-powershell">mkdir C:\study\authboard -Force    # 심화 로그인 게시판 폴더 (기초의 C:\study\board 와 따로)
 cd C:\study\authboard
-Copy-Item C:\study\react-spring-postgresql\advanced\board\docker-compose.yml .
-Copy-Item -Recurse C:\study\react-spring-postgresql\advanced\board\backend .\backend
-docker compose up -d
-docker compose ps
+Copy-Item C:\study\react-spring-postgresql\advanced\board\docker-compose.yml .            # 심화용 DB 설정 (마지막 . = 지금 폴더로)
+Copy-Item -Recurse C:\study\react-spring-postgresql\advanced\board\backend .\backend     # 심화용 Spring Boot 서버 (-Recurse: 폴더 통째로)
+docker compose up -d      # 심화 DB (spring-auth-db) 켜기. 기초 DB 와 포트가 달라 함께 켜도 된다
+docker compose ps         # (healthy) 확인
 </code></pre>
 <div class="file"><span>📄 advanced/board/docker-compose.yml</span><a href="https://github.com/sinaboro/react-spring-postgresql/blob/main/advanced/board/docker-compose.yml" target="_blank">GitHub 에서 보기</a></div>
 
@@ -1405,7 +1405,8 @@ expired 401 {'detail': '로그인이 만료되었습니다. 다시 로그인하�
 <p><code>bad token list 200 []</code> 줄을 보자. 잘못된 토큰을 붙여 <strong>글 목록</strong>을 요청하면 401 이 아니라 그냥 목록이 온다(그때는 글이 없어 빈 배열). 필터는 토큰이 틀려도 막지 않고 "로그인 안 한 요청" 으로 넘기고, 글 목록은 누구나 볼 수 있는 주소이기 때문이다.</p>
 <p><strong>DB 에서 확인하기</strong> - 비밀번호가 아니라 BCrypt 해시가 저장되어 있다.</p>
 <p><strong>[PS]</strong></p>
-<pre><code class="language-powershell">docker exec spring-auth-db psql -U postgres -d authboard -c &quot;SELECT id, username, left(password_hash, 40) AS password_hash, nickname FROM users;&quot;
+<pre><code class="language-powershell"># users 테이블 직접 보기 - 비밀번호는 원문이 아니라 해시로 저장돼 있다 (left(칸, 40): 앞 40글자만 잘라 보기)
+docker exec spring-auth-db psql -U postgres -d authboard -c &quot;SELECT id, username, left(password_hash, 40) AS password_hash, nickname FROM users;&quot;
 </code></pre>
 <pre><code class="language-text"> id | username |              password_hash               | nickname
 ----+----------+------------------------------------------+----------

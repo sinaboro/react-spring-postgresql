@@ -25,8 +25,8 @@ React 코드는 **그냥 JavaScript** 다. React 가 어렵게 느껴지는 이�
 **[PS]**
 
 ```powershell
-cd C:\study\react-spring-postgresql\basic\js
-node 01_arrow.js
+cd C:\study\react-spring-postgresql\basic\js   # JS 문법 예제 폴더
+node 01_arrow.js     # node <파일> : 브라우저 없이 Node.js 로 자바스크립트 파일을 실행하고, console.log 결과를 터미널에 찍는다
 ```
 
 ## 2-2. 화살표 함수와 템플릿 문자열
@@ -317,7 +317,7 @@ console.log(circleArea(10));
 **[PS]**
 
 ```powershell
-node 05_module_main.js
+node 05_module_main.js     # 같은 js 폴더에서. 이 파일이 05_module_math.js 를 import 해서 쓴다 (math 는 혼자 실행하지 않는다)
 ```
 
 ```text
