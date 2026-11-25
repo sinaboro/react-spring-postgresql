@@ -279,7 +279,15 @@ footer{padding:40px 0 50px;color:var(--sub);font-size:14px;text-align:center}
 <li><strong>Prettier - Code formatter</strong> - 저장할 때 코드 모양을 자동으로 정리한다.</li>
 </ul>
 <h2 id="0-2-설치-확인">0-2. 설치 확인</h2>
-<p>VS Code 를 열고 메뉴 <strong>보기(View) → 터미널(Terminal)</strong> (단축키 <code>Ctrl+`</code>)을 누르면 아래쪽에 PowerShell 터미널이 열린다. 다음 명령을 하나씩 쳐 보자.</p>
+<p>VS Code 를 열고 메뉴 <strong>보기(View) → 터미널(Terminal)</strong> (단축키 <code>Ctrl+`</code>)을 누르면 아래쪽에 터미널이 열린다. (화면은 VS Code 영어판이다. 한국어 메뉴를 쓰면 괄호 밖의 한국어 이름을 찾는다)</p>
+<figure><a href="../images/vs_view_menu.jpg" target="_blank"><img src="../images/vs_view_menu.jpg" alt="보기(View) 메뉴 - 맨 아래쪽의 터미널(Terminal)" loading="lazy"></a><figcaption>보기(View) 메뉴 - 맨 아래쪽의 터미널(Terminal)</figcaption></figure>
+<p><strong>터미널 종류부터 확인한다.</strong> 이 교안의 명령은 모두 <strong>PowerShell</strong> 용이다. 프롬프트가 <code>PS C:\...&gt;</code> 로 시작하고 오른쪽에 <code>powershell</code> 이 보이면 된다.</p>
+<figure><a href="../images/vs_terminal_ps.jpg" target="_blank"><img src="../images/vs_terminal_ps.jpg" alt="PowerShell 터미널 - 프롬프트가 PS 로 시작하고 오른쪽 목록에 powershell" loading="lazy"></a><figcaption>PowerShell 터미널 - 프롬프트가 PS 로 시작하고 오른쪽 목록에 powershell</figcaption></figure>
+<p>프롬프트에 <code>PS</code> 가 없고 <code>C:\...&gt;</code> 만 보이거나 오른쪽에 <code>cmd</code> 라고 나오면 <strong>명령 프롬프트(cmd)</strong> 다. cmd 에서는 <code>Copy-Item</code>, <code>.venv\Scripts\Activate.ps1</code> 같은 명령이 동작하지 않는다.</p>
+<figure><a href="../images/vs_terminal_cmd.jpg" target="_blank"><img src="../images/vs_terminal_cmd.jpg" alt="cmd 터미널 - PS 가 없고 오른쪽 위에 cmd. 이대로 쓰지 않는다" loading="lazy"></a><figcaption>cmd 터미널 - PS 가 없고 오른쪽 위에 cmd. 이대로 쓰지 않는다</figcaption></figure>
+<p>그럴 때는 터미널 오른쪽 위 <strong>+</strong> 옆의 <strong>∨</strong> 를 눌러 <strong>PowerShell</strong> 을 고른다. 앞으로 늘 PowerShell 로 열리게 하려면 같은 목록의 <strong>Select Default Profile</strong>(기본 프로필 선택) → <strong>PowerShell</strong>.</p>
+<figure><a href="../images/vs_terminal_profiles.jpg" target="_blank"><img src="../images/vs_terminal_profiles.jpg" alt="+ 옆 ∨ 목록 - PowerShell 을 고른다. 기본값으로 정하려면 Select Default Profile" loading="lazy"></a><figcaption>+ 옆 ∨ 목록 - PowerShell 을 고른다. 기본값으로 정하려면 Select Default Profile</figcaption></figure>
+<p>이제 다음 명령을 하나씩 쳐 보자.</p>
 <p><strong>[PS]</strong></p>
 <pre><code class="language-powershell">node -v
 npm -v

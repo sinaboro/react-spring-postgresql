@@ -6,6 +6,7 @@
 
 | 증상 | 원인 | 해결 |
 |---|---|---|
+| `Copy-Item`, `Activate.ps1` 이 "내부 또는 외부 명령... 이 아닙니다" | VS Code 터미널이 PowerShell 이 아니라 **cmd**(명령 프롬프트)다. 프롬프트에 `PS` 가 없다 | 터미널 오른쪽 위 **+** 옆 **∨** → **PowerShell** (0장 0-2 그림). 늘 PowerShell 로 열리게: 같은 목록의 **Select Default Profile** → PowerShell |
 | `'npm' 용어가 ... 인식되지 않습니다` | Node.js 미설치, 또는 설치 전에 연 터미널 | Node.js 설치 후 VS Code 를 완전히 껐다 켠다 |
 | `npm run dev` → `Missing script: "dev"` | `package.json` 이 없는 폴더에서 실행 | `cd` 로 프로젝트 폴더(예: `my-react`)에 들어간다 |
 | `'vite' 은(는) 내부 또는 외부 명령...이 아닙니다` | `npm install` 을 안 함 | 그 폴더에서 `npm install` |
