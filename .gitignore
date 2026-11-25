@@ -22,3 +22,6 @@ build/
 out/
 .idea/
 *.iml
+
+# 상자 그림 확인용 미리보기
+tools/annot_preview/
